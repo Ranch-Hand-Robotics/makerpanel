@@ -5,20 +5,7 @@ site_url: https://ranch-hand-robotics.github.io/makerpanel
 
 repo_name: Ranch-Hand-Robotics/makerpanel
 repo_url: https://github.com/Ranch-Hand-Robotics/makerpanel
-
-theme:
-  name: material
-  palette:
-    primary: indigo
-    accent: indigo
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - navigation.expand
-    - navigation.top
-    - search.suggest
-    - search.highlight
-    - content.code.copy
+edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
@@ -26,18 +13,19 @@ nav:
   - Gallery: gallery.md
   - Contributing: contributing.md
 
+theme:
+  name: readthedocs
+  color_mode: auto
+  user_color_mode_toggle: true
+
 markdown_extensions:
-  - attr_list
-  - md_in_html
-  - admonition
-  - pymdownx.details
+  - pymdownx.tabbed
   - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
+  - pymdownx.highlight:
+      use_pygments: true
   - tables
   - toc:
       permalink: true
 
-plugins:
-  - search
-  - glightbox
+use_directory_urls: false
+strict: true
