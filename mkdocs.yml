@@ -1,0 +1,43 @@
+site_name: Makerpanel
+site_description: Specification and Gallery of Maker Panels
+site_author: Ranch Hand Robotics
+site_url: https://ranch-hand-robotics.github.io/makerpanel
+
+repo_name: Ranch-Hand-Robotics/makerpanel
+repo_url: https://github.com/Ranch-Hand-Robotics/makerpanel
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Specification: specification.md
+  - Gallery: gallery.md
+  - Contributing: contributing.md
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - glightbox
