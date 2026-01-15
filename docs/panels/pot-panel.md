@@ -42,7 +42,7 @@ Example file structure:
 | 4 | Knob | 20mm diameter, aluminum | $12.00 |
 | 4 | M3 Screw | 8mm length, countersunk | $1.00 |
 | 4 | M-LOK T-nut | Compatible with rail system | $2.00 |
-| 1 | Connector | 5-pin JST or screw terminal | $2.00 |
+| 1 | Connector | 6-pin JST or screw terminal | $2.00 |
 
 **Total Estimated Cost**: ~$40.00
 
@@ -50,12 +50,14 @@ Example file structure:
 
 ```
 Pin 1: Ground
-Pin 2: Pot 1 Wiper
-Pin 3: Pot 2 Wiper
-Pin 4: Pot 3 Wiper
-Pin 5: Pot 4 Wiper
+Pin 2: +V (Potentiometer supply voltage)
+Pin 3: Pot 1 Wiper
+Pin 4: Pot 2 Wiper
+Pin 5: Pot 3 Wiper
+Pin 6: Pot 4 Wiper
 
 Note: All potentiometers share common ground and +V connections
+Typical +V supply: 3.3V or 5V depending on your ADC
 ```
 
 ## Assembly Instructions
