@@ -1,6 +1,15 @@
+---
+title: USB Hub Panel
+category: Connectivity
+size: 12 HP × 3U
+contributor: Ranch Hand Robotics
+thumbnail: images/thumb.svg
+description: Front-panel USB hub with four USB-A ports and two USB-C ports. Integrated power management and status LEDs.
+---
+
 # USB Hub Panel
 
-![USB Hub Panel](../images/panels/usb-panel-thumb.svg)
+![USB Hub Panel](images/thumb.svg)
 
 ## Overview
 
@@ -196,4 +205,4 @@ Date: January 2026
 
 ---
 
-[← Back to Gallery](../gallery.md)
+[← Back to Gallery](../../gallery.md)

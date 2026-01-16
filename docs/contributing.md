@@ -54,6 +54,15 @@ Your panel submission should include:
 Create a new file `docs/panels/your-panel-name.md` with the following structure:
 
 ```markdown
+---
+title: Your Panel Name
+category: Analog Control  # or: Visual Feedback, Connectivity, Digital I/O, Audio, Power
+size: X HP × Y U
+contributor: Your Name
+thumbnail: images/panels/your-panel-name-thumb.png
+description: Brief one-sentence description of your panel.
+---
+
 # Your Panel Name
 
 ![Panel Photo or Render](../images/panels/your-panel-name.jpg)
@@ -61,6 +70,14 @@ Create a new file `docs/panels/your-panel-name.md` with the following structure:
 ## Overview
 
 Brief description of what your panel does and what it's used for.
+
+## Purchase (Optional)
+
+If available, include links to purchase the panel, kit, or parts and brief purchase details:
+
+- Panel / Kit: [Vendor Name — Buy here](https://example.com)
+- Parts kit: [Parts bundle](https://example.com/parts)
+- Notes: Price, shipping, lead time, and warranty (if known)
 
 ## Specifications
 
@@ -114,35 +131,19 @@ Date: Month Year
 
 ### Adding to Gallery
 
-To add your panel to the gallery page:
+The gallery is automatically generated from panel files at build time. To add your panel:
 
-1. Edit `docs/gallery.md`
-2. Add your panel entry following this template:
+1. Create your panel detail page in `docs/panels/your-panel-name.md` with proper front matter
+2. Add your thumbnail image to `docs/images/panels/your-panel-name-thumb.png`
+3. The gallery categories and statistics will be automatically updated
 
-```markdown
----
-
-### Your Panel Name
-
-<div class="panel-card" markdown>
-
-![Your Panel Name](images/panels/your-panel-name-thumb.png){ width="200" }
-
-**Size**: X HP × Y U  
-**Type**: [Category]  
-**Contributor**: Your Name
-
-Brief one-sentence description of your panel.
-
-[View Details →](panels/your-panel-name.md){ .md-button }
-
-</div>
-
----
-```
-
-3. Add your panel to the appropriate category tab
-4. Update the gallery statistics
+**Front matter fields**:
+- `title`: Display name of the panel
+- `category`: One of: Analog Control, Visual Feedback, Connectivity, Digital I/O, Audio, Power
+- `size`: Panel dimensions (e.g., "8 HP × 3U")
+- `contributor`: Your name or organization
+- `thumbnail`: Path to thumbnail image (relative to docs/)
+- `description`: One-sentence summary
 
 ### Submission Process
 

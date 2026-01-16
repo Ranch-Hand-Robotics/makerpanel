@@ -1,6 +1,15 @@
+---
+title: LED Indicator Panel
+category: Visual Feedback
+size: 6 HP × 3U
+contributor: Ranch Hand Robotics
+thumbnail: images/thumb.svg
+description: Eight LED indicators arranged in a vertical array. Perfect for status monitoring, VU meters, or sequential displays.
+---
+
 # LED Indicator Panel
 
-![LED Indicator Panel](../images/panels/led-panel-thumb.svg)
+![LED Indicator Panel](images/thumb.svg)
 
 ## Overview
 
@@ -158,4 +167,4 @@ Date: January 2026
 
 ---
 
-[← Back to Gallery](../gallery.md)
+[← Back to Gallery](../../gallery.md)

@@ -1,6 +1,15 @@
+---
+title: Basic Potentiometer Panel
+category: Analog Control
+size: 8 HP × 3U
+contributor: Ranch Hand Robotics
+thumbnail: images/thumb.svg
+description: A simple panel featuring four potentiometers for analog control applications. Ideal for audio mixing, motor control, or general parameter adjustment.
+---
+
 # Basic Potentiometer Panel
 
-![Basic Potentiometer Panel](../images/panels/pot-panel-thumb.svg)
+![Basic Potentiometer Panel](images/thumb.svg)
 
 ## Overview
 
@@ -118,4 +127,4 @@ Date: January 2026
 
 ---
 
-[← Back to Gallery](../gallery.md)
+[← Back to Gallery](../../gallery.md)
