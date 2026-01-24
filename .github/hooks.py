@@ -132,16 +132,20 @@ def on_page_markdown(markdown, page, config, files):
     # Add "All" tab content
     tabs_html += '<div class="tabbed-block">\n'
     for p in sorted(panels, key=lambda x: x['title']):
-        tabs_html += f'<a href="panels/{p["filename"]}/"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+        tabs_html += '<div class="panel-card">\n'
+        tabs_html += f'<a href="panels/{p["filename"]}/" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
         tabs_html += f'<p>{p["description"]}</p>\n'
+        tabs_html += '</div>\n'
     tabs_html += '</div>\n'
     
     # Add category tab content
     for category in sorted(categories.keys()):
         tabs_html += '<div class="tabbed-block">\n'
         for p in categories[category]:
-            tabs_html += f'<a href="panels/{p["filename"]}/"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+            tabs_html += '<div class="panel-card">\n'
+            tabs_html += f'<a href="panels/{p["filename"]}/" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
             tabs_html += f'<p>{p["description"]}</p>\n'
+            tabs_html += '</div>\n'
         tabs_html += '</div>\n'
     
     tabs_html += '</div>\n</div>\n'
