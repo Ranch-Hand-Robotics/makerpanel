@@ -1,13 +1,23 @@
+// =============================================================================
+// MakerPanel Rail System - T-Slot Compatible Modules
+// Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved.
+// Licensed under MIT License: https://opensource.org/licenses/MIT
+// ============================================================================
+// All rail modules use standard T-slot nuts for universal compatibility
+// Supports M5/M6 T-slot twist nuts and drop-in T-nuts
+// ============================================================================
+
 include <common.scad>
 
-
 // ============================================
-// Module: M-LOK Horizontal Cross-Rail
+// Module: T-Slot Horizontal Cross-Rail
 // ============================================
+// Uses standard T-slot twist nuts (drop-in compatible)
+// Slot geometry sized for M5/M6 T-slot nuts
 
-module mlok_crossrail(width, height=15, depth=12) {
+module t_slot_crossrail(width, height=15, depth=12) {
     /*
-    Creates an M-LOK compatible horizontal cross-rail
+    Creates a horizontal cross-rail with T-slot twist nut compatibility
     Parameters:
       - width: rail length in mm
       - height: rail height in mm
@@ -15,18 +25,18 @@ module mlok_crossrail(width, height=15, depth=12) {
     */
     
     // Calculate number of slots that fit in the width
-    num_slots = floor((width - 20) / MLOK_SLOT_SPACING);
-    first_slot_pos = (width - (num_slots - 1) * MLOK_SLOT_SPACING) / 2;
+    num_slots = floor((width - 20) / T_SLOT_SPACING);
+    first_slot_pos = (width - (num_slots - 1) * T_SLOT_SPACING) / 2;
     
     difference() {
         // Base solid block
         cube([width, height, depth], center=false);
         
-        // Cut M-LOK slots
+        // Cut T-slot compatible slots (elongated rectangular)
         for (i = [0 : num_slots - 1]) {
-            x_pos = first_slot_pos + i * MLOK_SLOT_SPACING;
-            translate([x_pos, -1, depth/2 - MLOK_SLOT_WIDTH/2])
-                cube([MLOK_SLOT_WIDTH, height + 2, MLOK_SLOT_WIDTH], center=false);
+            x_pos = first_slot_pos + i * T_SLOT_SPACING;
+            translate([x_pos, -1, depth/2 - T_SLOT_WIDTH/2])
+                cube([T_SLOT_LENGTH, height + 2, T_SLOT_WIDTH], center=false);
         }
     }
 }
@@ -70,25 +80,7 @@ module rack_19(height) {
       - height: total height in mm (typically multiple of U)
     */
     
-    // Left rail
-    translate([0, 0, 0])
-        rack_rail(height);
-    
-    // Right rail
-    translate([RACK_19_WIDTH - RACK_RAIL_WIDTH, 0, 0])
-        rack_rail(height);
-    
-    // Top horizontal support
-    translate([RACK_RAIL_WIDTH, height - 20, 0])
-        cube([RACK_19_USABLE, 20, RACK_RAIL_DEPTH]);
-    
-    // Bottom horizontal support
-    translate([RACK_RAIL_WIDTH, 0, 0])
-        cube([RACK_19_USABLE, 20, RACK_RAIL_DEPTH]);
-    
-    // Back panel (optional - comment out if not needed)
-    %translate([0, 0, RACK_RAIL_DEPTH - 2])
-        cube([RACK_19_WIDTH, height, 2]);
+    rack_custom(RACK_19_WIDTH, height);
 }
 
 // ============================================
@@ -102,28 +94,7 @@ module rack_10(height) {
       - height: total height in mm (typically multiple of U)
     */
     
-    rack_width = RACK_10_WIDTH;
-    usable = RACK_10_USABLE;
-    
-    // Left rail
-    translate([0, 0, 0])
-        rack_rail(height);
-    
-    // Right rail
-    translate([rack_width - RACK_RAIL_WIDTH, 0, 0])
-        rack_rail(height);
-    
-    // Top support
-    translate([RACK_RAIL_WIDTH, height - 20, 0])
-        cube([usable, 20, RACK_RAIL_DEPTH]);
-    
-    // Bottom support
-    translate([RACK_RAIL_WIDTH, 0, 0])
-        cube([usable, 20, RACK_RAIL_DEPTH]);
-    
-    // Back panel (optional)
-    %translate([0, 0, RACK_RAIL_DEPTH - 2])
-        cube([rack_width, height, 2]);
+    rack_custom(RACK_10_WIDTH, height);
 }
 
 // ============================================
@@ -155,8 +126,4 @@ module rack_custom(width, height) {
     // Bottom support
     translate([RACK_RAIL_WIDTH, 0, 0])
         cube([usable, 20, RACK_RAIL_DEPTH]);
-    
-    // Back panel (optional)
-    %translate([0, 0, RACK_RAIL_DEPTH - 2])
-        cube([width, height, 2]);
 }

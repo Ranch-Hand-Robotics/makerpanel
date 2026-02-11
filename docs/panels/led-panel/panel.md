@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 ---
 title: LED Indicator Panel
 category: Visual Feedback
@@ -22,7 +24,7 @@ An 8-channel LED indicator panel for visual feedback and status monitoring. Feat
 - **Material**: FR4 PCB (1.6mm thickness) with aluminum faceplate
 - **Finish**: Black solder mask with white silkscreen
 - **Power Requirements**: 5V DC, 200mA maximum
-- **Mounting**: M-LOK compatible with 4 mounting points
+- **Mounting**: T-slot compatible with 4 mounting points (M5/M6 twist nuts)
 
 ## Features
 
@@ -54,7 +56,7 @@ Example file structure:
 | 8 | Resistor | 330Ω, 1/4W | $1.00 |
 | 1 | Connector | 10-pin header, 2.54mm | $1.00 |
 | 4 | M3 Screw | 8mm length, countersunk | $1.00 |
-| 4 | M-LOK T-nut | Compatible with rail system | $2.00 |
+| 4 | T-slot T-nut | M5/M6 compatible with rail system | $2.00 |
 | 4 | Spacer | M3, 3mm length (faceplate standoff) | $1.00 |
 
 **Total Estimated Cost**: ~$28.00
@@ -104,7 +106,7 @@ Pin 10: Ground (redundant)
    - Secure with M3 screws from back
 
 4. **Panel Mounting**
-   - Install M-LOK T-nuts in panel mounting slots
+   - Install T-slot twist nuts (M5/M6) in panel mounting slots
    - Position panel on rail
    - Insert and tighten mounting screws
    - Connect input cable

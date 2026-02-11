@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 # Panel Gallery
 
 Welcome to the Makerpanel gallery! Browse community-contributed panel designs, download files, and get inspired for your next project.

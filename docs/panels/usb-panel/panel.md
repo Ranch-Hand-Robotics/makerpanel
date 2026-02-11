@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 ---
 title: USB Hub Panel
 category: Connectivity
@@ -23,7 +25,7 @@ A front-panel USB hub providing convenient access to USB connectivity in your Ma
 - **Finish**: Black anodized aluminum, black PCB
 - **Power Requirements**: 12V DC input, 5V/3A output via onboard regulator
 - **Data Interface**: USB 3.0 (backward compatible with USB 2.0)
-- **Mounting**: M-LOK compatible with 4 mounting points
+- **Mounting**: T-slot compatible with 4 mounting points (M5/M6 twist nuts)
 
 ## Features
 
@@ -62,7 +64,7 @@ Example file structure:
 | 7 | LED | 0805 SMD, bi-color (red/green) | $2.00 |
 | 1 | Upstream Cable | USB-C to internal header | $3.00 |
 | 4 | M3 Screw | 10mm length, countersunk | $1.00 |
-| 4 | M-LOK T-nut | Compatible with rail system | $2.00 |
+| 4 | T-slot T-nut | M5/M6 compatible with rail system | $2.00 |
 | - | Passives | Resistors, capacitors, etc. | $5.00 |
 
 **Total Estimated Cost**: ~$72.00
@@ -131,7 +133,7 @@ Main panel LED:
    - Secure with M3 screws from back
 
 5. **Panel Mounting**
-   - Install M-LOK T-nuts
+   - Install T-slot twist nuts (M5/M6)
    - Position on rail, ensuring clearance for cables
    - Tighten mounting screws
    - Connect power and upstream USB

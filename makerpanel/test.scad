@@ -1,4 +1,6 @@
 // Makerpanel Test - Various sizes of panels and hosts
+// Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved.
+// Licensed under MIT License: https://opensource.org/licenses/MIT
 // This test file generates different configurations of panels and mounting systems
 
 use <panel.scad>
@@ -62,29 +64,29 @@ module test_panel_sizes() {
 }
 
 // ============================================
-// TEST 2: M-LOK Cross-Rail Hosts
+// TEST 2: T-Slot Cross-Rail Hosts
 // ============================================
 
-module test_mlok_crossrails() {
+module test_t_slot_crossrails() {
     /*
-    Displays M-LOK cross-rails of various widths
+    Displays T-slot cross-rails (M5/M6 compatible) of various widths
     */
     
     // 24 HP wide rail (122mm)
     translate([0, 0, 0])
-        mlok_crossrail(hp_to_mm(24), height=15, depth=12);
+        t_slot_crossrail(hp_to_mm(24), height=15, depth=12);
     
     // 36 HP wide rail (183mm)
     translate([0, u_to_mm(1), 0])
-        mlok_crossrail(hp_to_mm(36), height=15, depth=12);
+        t_slot_crossrail(hp_to_mm(36), height=15, depth=12);
     
     // 48 HP wide rail (244mm)
     translate([0, u_to_mm(2), 0])
-        mlok_crossrail(hp_to_mm(48), height=15, depth=12);
+        t_slot_crossrail(hp_to_mm(48), height=15, depth=12);
     
     // Full 19" usable width
     translate([0, u_to_mm(3), 0])
-        mlok_crossrail(RACK_19_USABLE, height=15, depth=12);
+        t_slot_crossrail(RACK_19_USABLE, height=15, depth=12);
 }
 
 // ============================================
@@ -99,7 +101,7 @@ module test_standalone_systems() {
     // System 1: Compact 24 HP setup
     translate([0, 0, 0]) {
         // Cross-rail
-        mlok_crossrail(hp_to_mm(24), height=12, depth=15);
+        t_slot_crossrail(hp_to_mm(24), height=12, depth=15);
         
         // Panels on the rail
         translate([hp_to_mm(2), 20, 15])
@@ -115,7 +117,7 @@ module test_standalone_systems() {
     // System 2: Medium 36 HP setup
     translate([0, u_to_mm(4), 0]) {
         // Cross-rail
-        mlok_crossrail(hp_to_mm(36), height=12, depth=15);
+        t_slot_crossrail(hp_to_mm(36), height=12, depth=15);
         
         // Panels on the rail
         translate([hp_to_mm(2), 20, 15])
@@ -131,7 +133,7 @@ module test_standalone_systems() {
     // System 3: Large 48 HP setup
     translate([0, u_to_mm(8), 0]) {
         // Cross-rail
-        mlok_crossrail(hp_to_mm(48), height=12, depth=15);
+        t_slot_crossrail(hp_to_mm(48), height=12, depth=15);
         
         // Panels on the rail
         translate([hp_to_mm(2), 20, 15])
@@ -157,7 +159,7 @@ module test_19_rack_small() {
     
     // Add a cross-rail
     translate([RACK_RAIL_WIDTH, u_to_mm(1), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     // Add panels
     translate([RACK_RAIL_WIDTH + 30, u_to_mm(1.5), RACK_RAIL_DEPTH])
@@ -175,10 +177,10 @@ module test_19_rack_medium() {
     
     // Add cross-rails at multiple positions
     translate([RACK_RAIL_WIDTH, u_to_mm(1), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     translate([RACK_RAIL_WIDTH, u_to_mm(4), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     // Add panels at different positions
     translate([RACK_RAIL_WIDTH + 30, u_to_mm(1.5), RACK_RAIL_DEPTH])
@@ -205,13 +207,13 @@ module test_19_rack_large() {
     
     // Add multiple cross-rails
     translate([RACK_RAIL_WIDTH, u_to_mm(1.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     translate([RACK_RAIL_WIDTH, u_to_mm(4.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     translate([RACK_RAIL_WIDTH, u_to_mm(7.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_19_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_19_USABLE, height=12, depth=15);
     
     // Add varied panel sizes
     translate([RACK_RAIL_WIDTH + 30, u_to_mm(2), RACK_RAIL_DEPTH])
@@ -242,7 +244,7 @@ module test_10_rack_small() {
     
     // Add a cross-rail
     translate([RACK_RAIL_WIDTH, u_to_mm(1), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_10_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_10_USABLE, height=12, depth=15);
     
     // Add panels
     translate([RACK_RAIL_WIDTH + 15, u_to_mm(1.5), RACK_RAIL_DEPTH])
@@ -260,10 +262,10 @@ module test_10_rack_medium() {
     
     // Add cross-rails
     translate([RACK_RAIL_WIDTH, u_to_mm(1.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_10_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_10_USABLE, height=12, depth=15);
     
     translate([RACK_RAIL_WIDTH, u_to_mm(4.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(RACK_10_USABLE, height=12, depth=15);
+        t_slot_crossrail(RACK_10_USABLE, height=12, depth=15);
     
     // Add panels
     translate([RACK_RAIL_WIDTH + 15, u_to_mm(2), RACK_RAIL_DEPTH])
@@ -290,10 +292,10 @@ module test_custom_rack() {
     
     // Add multiple cross-rails
     translate([RACK_RAIL_WIDTH, u_to_mm(1.5), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(914 - 2*RACK_RAIL_WIDTH, height=12, depth=15);
+        t_slot_crossrail(914 - 2*RACK_RAIL_WIDTH, height=12, depth=15);
     
     translate([RACK_RAIL_WIDTH, u_to_mm(4), RACK_RAIL_DEPTH - 15])
-        mlok_crossrail(914 - 2*RACK_RAIL_WIDTH, height=12, depth=15);
+        t_slot_crossrail(914 - 2*RACK_RAIL_WIDTH, height=12, depth=15);
     
     // Add varied panels
     translate([RACK_RAIL_WIDTH + 40, u_to_mm(2), RACK_RAIL_DEPTH])
@@ -326,7 +328,7 @@ module test_dense_array() {
     
     for (rail = [0 : 2]) {
         translate([0, rail * y_spacing, 0])
-            mlok_crossrail(hp_to_mm(48), height=12, depth=15);
+            t_slot_crossrail(hp_to_mm(48), height=12, depth=15);
     }
     
     // Add panels - filling multiple rows
@@ -358,44 +360,80 @@ module test_dense_array() {
 }
 
 // ============================================
-// RENDER SELECTION
+// RENDER SELECTION WITH TEST SWITCHER
 // ============================================
 
-// All test cases splayed out for viewing
+// Select which test(s) to render:
+// Options: "all"
+//          "1"     - Individual panel sizes
+//          "2"     - T-slot cross-rail hosts
+//          "3"     - Standalone systems
+//          "4a"    - 19" Rack (small)
+//          "4b"    - 19" Rack (medium)
+//          "4c"    - 19" Rack (large)
+//          "5a"    - 10" Rack (small)
+//          "5b"    - 10" Rack (medium)
+//          "6"     - Custom width rack
+//          "7"     - Dense panel array
+TEST_SELECT = "5a";
 
-// Test 1: Individual panel sizes
-translate([0, 0, 0])
-    test_panel_sizes();
+// Render selected tests
+if (TEST_SELECT == "all" || TEST_SELECT == "1") {
+    // Test 1: Individual panel sizes
+    translate([0, 0, 0])
+        test_panel_sizes();
+}
 
-// Test 2: Cross-rail hosts of various widths
-translate([0, u_to_mm(12), 0])
-    test_mlok_crossrails();
+if (TEST_SELECT == "all" || TEST_SELECT == "2") {
+    // Test 2: T-slot cross-rail hosts of various widths
+    translate([0, u_to_mm(12), 0])
+        test_t_slot_crossrails();
+}
 
-// Test 3: Standalone systems
-translate([300, 0, 0])
-    test_standalone_systems();
+if (TEST_SELECT == "all" || TEST_SELECT == "3") {
+    // Test 3: Standalone systems
+    translate([300, 0, 0])
+        test_standalone_systems();
+}
 
-// Test 4: 19" Rack tests
-translate([0, u_to_mm(20), 0])
-    test_19_rack_small();
+if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4a") {
+    // Test 4a: 19" Rack (small)
+    translate([0, u_to_mm(20), 0])
+        test_19_rack_small();
+}
 
-translate([600, u_to_mm(20), 0])
-    test_19_rack_medium();
+if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4b") {
+    // Test 4b: 19" Rack (medium)
+    translate([600, u_to_mm(20), 0])
+        test_19_rack_medium();
+}
 
-translate([1200, u_to_mm(20), 0])
-    test_19_rack_large();
+if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4c") {
+    // Test 4c: 19" Rack (large)
+    translate([1200, u_to_mm(20), 0])
+        test_19_rack_large();
+}
 
-// Test 5: 10" Rack tests
-translate([0, u_to_mm(40), 0])
-    test_10_rack_small();
+if (TEST_SELECT == "all" || TEST_SELECT == "5" || TEST_SELECT == "5a") {
+    // Test 5a: 10" Rack (small)
+    translate([0, u_to_mm(40), 0])
+        test_10_rack_small();
+}
 
-translate([400, u_to_mm(40), 0])
-    test_10_rack_medium();
+if (TEST_SELECT == "all" || TEST_SELECT == "5" || TEST_SELECT == "5b") {
+    // Test 5b: 10" Rack (medium)
+    translate([400, u_to_mm(40), 0])
+        test_10_rack_medium();
+}
 
-// Test 6: Custom width rack
-translate([0, u_to_mm(55), 0])
-    test_custom_rack();
+if (TEST_SELECT == "all" || TEST_SELECT == "6") {
+    // Test 6: Custom width rack
+    translate([0, u_to_mm(55), 0])
+        test_custom_rack();
+}
 
-// Test 7: Dense panel array
-translate([1200, u_to_mm(55), 0])
-    test_dense_array();
+if (TEST_SELECT == "all" || TEST_SELECT == "7") {
+    // Test 7: Dense panel array
+    translate([1200, u_to_mm(55), 0])
+        test_dense_array();
+}

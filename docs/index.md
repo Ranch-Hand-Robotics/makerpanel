@@ -1,14 +1,16 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 # Makerpanel
 
 Welcome to **Makerpanel** - a specification and gallery for modular maker panels!
 
 ## What is Makerpanel?
 
-Makerpanel is an open specification for creating modular control panels for makers, DIY enthusiasts, and electronics projects. Based on the Eurotrack synthesizer standard but adapted with **M-LOK style rails** for universal mounting, Makerpanel provides a flexible system for building custom control interfaces.
+Makerpanel is an open specification for creating modular control panels for makers, DIY enthusiasts, and electronics projects. Based on the Eurotrack synthesizer standard but adapted with **standard T-slot rails** for universal mounting, Makerpanel provides a flexible system for building custom control interfaces.
 
 ## Key Features
 
-- **Universal Mounting System**: Uses M-LOK style rails instead of traditional tracks
+- **Universal Mounting System**: Uses T-slot rails with M5/M6 twist nuts for tool-free mounting
 - **Modular Design**: Mix and match panels for your specific needs
 - **Community Driven**: Open specification allowing anyone to design and share panels
 - **Easy Integration**: Standard dimensions and mounting points ensure compatibility
@@ -21,7 +23,7 @@ Makerpanel is an open specification for creating modular control panels for make
 
 ## About
 
-Makerpanel is inspired by the Eurotrack synthesizer module standard but reimagined for general maker applications. By using M-LOK style rails, panels can be easily mounted, rearranged, and customized without permanent modifications.
+Makerpanel is inspired by the Eurotrack synthesizer module standard but reimagined for general maker applications. By using standard T-slot rails with M5/M6 twist nuts, panels can be easily mounted, rearranged, and customized without permanent modifications.
 
 Whether you're building a control interface for your CNC machine, creating a custom MIDI controller, or designing a home automation panel, Makerpanel provides the framework for modular, professional-looking results.
 

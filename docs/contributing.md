@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 # Contributing to Makerpanel
 
 Thank you for your interest in contributing to the Makerpanel project! This guide will help you add your panel designs to the gallery.
@@ -85,7 +87,7 @@ If available, include links to purchase the panel, kit, or parts and brief purch
 - **Depth**: Z mm
 - **Material**: [Aluminum/PCB/Acrylic/etc.]
 - **Power Requirements**: [if applicable]
-- **Mounting**: M-LOK compatible
+- **Mounting**: T-slot compatible (M5/M6 twist nuts)
 
 ## Features
 

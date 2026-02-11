@@ -1,15 +1,17 @@
 // Makerpanel System OpenSCAD Models
+// Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved.
+// Licensed under MIT License: https://opensource.org/licenses/MIT
 // Modular maker panel system with rack mounting support
 // All dimensions in millimeters
 include <common.scad>
 
 // ============================================
-// Module: Panel with M-LOK Mounting Holes
+// Module: Panel with T-Slot Mounting Holes
 // ============================================
 
 module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
     /*
-    Creates a maker panel with M-LOK mounting holes
+    Creates a maker panel with T-slot mounting holes (M5/M6 compatible)
     Parameters:
       - width_hp: width in HP units
       - height_u: height in U units
@@ -20,8 +22,8 @@ module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
     height_mm = u_to_mm(height_u);
     
     // Calculate mounting hole positions
-    // Holes positioned to align with M-LOK slot centers (13mm spacing)
-    hole_spacing = MLOK_SLOT_SPACING;
+    // Holes positioned to align with T-slot centers (25mm spacing)
+    hole_spacing = T_SLOT_SPACING;
     num_holes_h = floor(width_mm / hole_spacing);
     num_holes_v = max(1, floor(height_mm / hole_spacing));
     
@@ -32,7 +34,7 @@ module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
         // Base panel
         cube([width_mm, height_mm, thickness], center=false);
         
-        // M-LOK mounting holes (vertical holes for T-nuts)
+        // T-slot mounting holes (vertical holes for M5/M6 T-nuts)
         for (i = [0 : num_holes_h - 1]) {
             for (j = [0 : num_holes_v - 1]) {
                 x_pos = hole_start_x + i * hole_spacing;

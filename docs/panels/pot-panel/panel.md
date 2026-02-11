@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
+
 ---
 title: Basic Potentiometer Panel
 category: Analog Control
@@ -22,7 +24,7 @@ A versatile analog control panel featuring four high-quality rotary potentiomete
 - **Material**: Aluminum (2mm thickness)
 - **Finish**: Black anodized
 - **Power Requirements**: None (passive)
-- **Mounting**: M-LOK compatible with 4 mounting points
+- **Mounting**: T-slot compatible with 4 mounting points (M5/M6 twist nuts)
 
 ## Features
 
@@ -50,7 +52,7 @@ Example file structure:
 | 4 | Potentiometer | 10kΩ linear, PCB mount | $8.00 |
 | 4 | Knob | 20mm diameter, aluminum | $12.00 |
 | 4 | M3 Screw | 8mm length, countersunk | $1.00 |
-| 4 | M-LOK T-nut | Compatible with rail system | $2.00 |
+| 4 | T-slot T-nut | M5/M6 compatible with rail system | $2.00 |
 | 1 | Connector | 6-pin JST or screw terminal | $2.00 |
 
 **Total Estimated Cost**: ~$40.00
@@ -73,7 +75,7 @@ Typical +V supply: 3.3V or 5V depending on your ADC
 
 1. **Panel Preparation**
    - Verify all holes are deburred and clean
-   - Check fit with M-LOK rail before proceeding
+   - Check fit with T-slot rail before proceeding
 
 2. **Install Potentiometers**
    - Insert potentiometers from front of panel
@@ -91,7 +93,7 @@ Typical +V supply: 3.3V or 5V depending on your ADC
    - Tighten set screw
 
 5. **Mounting**
-   - Install M-LOK T-nuts in panel mounting slots
+   - Install T-slot twist nuts (M5/M6) in panel mounting slots
    - Position panel on rail
    - Insert and tighten M3 mounting screws
    - Verify panel is secure and aligned

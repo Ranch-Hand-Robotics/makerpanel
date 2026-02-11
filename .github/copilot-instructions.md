@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Makerpanel** is an open specification and gallery for modular maker panels. It's a documentation-driven project (not a code library) that defines technical standards for hardware panel design compatible with M-LOK rails—similar to Eurotrack synthesizer modules but generalized for maker applications.
+**Makerpanel** is an open specification and gallery for modular maker panels. It's a documentation-driven project (not a code library) that defines technical standards for hardware panel design compatible with standard T-slot rails—similar to Eurotrack synthesizer modules but generalized for maker applications.
 
 **Key Architecture**:
 - **MkDocs-based documentation**: All content is Markdown in the `docs/` folder
@@ -49,7 +49,7 @@ The **Makerpanel Specification** defines universal mechanical/electrical standar
 - **Width in HP units**: 1 HP = 5.08 mm (common sizes: 4, 6, 8, 12, 16, 20, 24 HP)
 - **Height**: 3U (128.5 mm) standard or 1U (44.45 mm) compact
 - **Depth limit**: 60 mm max from front surface
-- **Mounting**: M-LOK rail system (6.2 mm slots, 13 mm spacing for M3/M4 screws)
+- **Mounting**: T-slot rail system with M5/M6 twist nuts (25 mm spacing)
 - **Compliance checklist** in spec must be verified for all submissions
 
 ### Gallery Organization
