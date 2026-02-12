@@ -13,7 +13,7 @@
 }
 
 .md-content__inner {
-    max-width: none !important;
+    max-width: 1400px !important;
     margin: 0 auto !important;
     padding: 0 2rem !important;
 }
@@ -24,13 +24,33 @@
     }
 }
 
+/* Modern hero section button hover effects */
+a[style*="background: linear-gradient"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+}
+
+a[style*="border: 2px solid"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    background: #f8f9ff !important;
+}
+
+/* Feature card hover effects */
+div[style*="background: linear-gradient"]:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+    transition: all 0.3s ease;
+}
+
 /* Tabbed extension styles for pymdownx.tabbed alternate style */
 .tabbed-set {
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    margin: 1em 0;
-    border-radius: 0.1rem;
+    margin: 2em 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
 }
 
 .tabbed-set > input {
@@ -41,23 +61,29 @@
 .tabbed-labels {
     display: flex;
     width: 100%;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 3px solid #e5e7eb;
+    background: linear-gradient(to bottom, #f9fafb, #ffffff);
+    padding: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .tabbed-labels label {
-    padding: 0.9375em 1.25em;
-    font-weight: 700;
-    font-size: 0.84em;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9em;
     white-space: nowrap;
     cursor: pointer;
-    transition: background-color 250ms, color 250ms, border-color 250ms;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
+    transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #6b7280;
 }
 
 .tabbed-labels label:hover {
-    color: #2980b9;
-    background-color: #f5f5f5;
+    color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    transform: translateY(-1px);
 }
 
 .tabbed-set input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
@@ -66,74 +92,23 @@
 .tabbed-set input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4),
 .tabbed-set input:nth-child(5):checked ~ .tabbed-labels label:nth-child(5),
 .tabbed-set input:nth-child(6):checked ~ .tabbed-labels label:nth-child(6) {
-    color: #2980b9;
-    border-color: #2980b9;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-weight: 700;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .tabbed-content {
     width: 100%;
-    padding: 2em 1em;
-    background-color: rgba(0, 0, 0, 0.02);
-    border: none;
-}
-
-.tabbed-set {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1em 0;
-    border-radius: 0.1rem;
-}
-
-.tabbed-set > input {
-    position: absolute;
-    opacity: 0;
-}
-
-.tabbed-labels {
-    display: flex;
-    width: 100%;
-    border-bottom: 2px solid #ddd;
-}
-
-.tabbed-labels label {
-    padding: 0.9375em 1.25em;
-    font-weight: 700;
-    font-size: 0.84em;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background-color 250ms, color 250ms, border-color 250ms;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-}
-
-.tabbed-labels label:hover {
-    color: #2980b9;
-    background-color: #f5f5f5;
-}
-
-.tabbed-set input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
-.tabbed-set input:nth-child(2):checked ~ .tabbed-labels label:nth-child(2),
-.tabbed-set input:nth-child(3):checked ~ .tabbed-labels label:nth-child(3),
-.tabbed-set input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4),
-.tabbed-set input:nth-child(5):checked ~ .tabbed-labels label:nth-child(5) {
-    color: #2980b9;
-    border-color: #2980b9;
-    font-weight: 700;
-}
-
-.tabbed-content {
-    width: 100%;
-    padding: 1em;
-    background-color: transparent;
+    padding: 2.5rem 1rem;
+    background: linear-gradient(to bottom, #fafbfc, #ffffff);
     border: none;
 }
 
 .tabbed-block {
     display: none;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2em;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
 }
 
 .tabbed-set input:nth-child(1):checked ~ .tabbed-content .tabbed-block:nth-child(1),
@@ -152,18 +127,19 @@
 /* Panel card container */
 .panel-card {
     position: relative;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     overflow: hidden;
-    transition: all 250ms ease;
-    border: 1px solid #ddd;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e5e7eb;
     background: white;
     height: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .panel-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-4px);
-    border-color: #2196F3;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+    transform: translateY(-8px) scale(1.02);
+    border-color: #667eea;
 }
 
 /* Panel card link */
@@ -176,9 +152,14 @@
 
 .panel-card img {
     width: 100%;
-    height: 220px;
+    height: 240px;
     object-fit: cover;
     display: block;
+    transition: transform 300ms ease;
+}
+
+.panel-card:hover img {
+    transform: scale(1.05);
 }
 
 /* Card title overlay on image */
@@ -188,13 +169,14 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
+    background: linear-gradient(to top, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.7));
     color: white;
     padding: 1.5rem 1rem 1rem;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.3;
     z-index: 10;
+    letter-spacing: 0.02em;
 }
 
 /* Description text - hidden by default, shown on hover */
@@ -204,15 +186,16 @@
     left: 0;
     right: 0;
     margin: 0;
-    padding: 1rem;
-    font-size: 0.8rem;
+    padding: 1.2rem;
+    font-size: 0.85rem;
     color: white;
-    line-height: 1.5;
-    background: rgba(33, 150, 243, 0.95);
+    line-height: 1.6;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     opacity: 0;
     transform: translateY(100%);
-    transition: all 300ms ease;
+    transition: all 350ms cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 20;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
 }
 
 .panel-card:hover p {

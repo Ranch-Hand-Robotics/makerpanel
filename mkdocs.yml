@@ -22,14 +22,40 @@ theme:
         name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: indigo
+      accent: blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: indigo
+      accent: blue
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  logo: https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wrench.svg
+  favicon: https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wrench.svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Ranch-Hand-Robotics/makerpanel
+      name: GitHub Repository
+    - icon: fontawesome/solid/wrench
+      link: https://ranch-hand-robotics.github.io/makerpanel
+      name: Makerpanel Home
 
 extra_css:
   - css/custom.css

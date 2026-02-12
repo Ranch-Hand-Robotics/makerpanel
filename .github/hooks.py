@@ -159,9 +159,24 @@ def on_page_markdown(markdown, page, config, files):
     )
     
     # Update statistics
-    stats = f"""- **Total Panels**: {len(panels)}
-- **Contributors**: {len(set(p['contributor'] for p in panels))}
-- **Categories**: {', '.join(sorted(categories.keys()))}"""
+    stats = f"""<div style="font-size: 1.1rem;">
+      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+        <strong style="font-size: 2rem; display: block;">{len(panels)}</strong>
+        Total Panels
+      </div>
+    </div>
+    <div style="font-size: 1.1rem;">
+      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+        <strong style="font-size: 2rem; display: block;">{len(set(p['contributor'] for p in panels))}</strong>
+        Contributors
+      </div>
+    </div>
+    <div style="font-size: 1.1rem;">
+      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
+        <strong style="font-size: 2rem; display: block;">{len(categories)}</strong>
+        Categories
+      </div>
+    </div>"""
     
     markdown = re.sub(
         r'<!-- STATS_START -->.*?<!-- STATS_END -->',
