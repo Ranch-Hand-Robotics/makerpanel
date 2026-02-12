@@ -23,8 +23,8 @@ module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
     
     // Calculate mounting hole positions
     // Holes positioned to align with T-slot centers (25mm spacing)
-    hole_spacing = T_SLOT_SPACING;
-    num_holes_h = floor(width_mm / hole_spacing);
+    hole_spacing = T_SLOT_WIDTH + RACK_SUPPORT_WIDTH;
+    num_holes_h = max(1, floor(width_mm / hole_spacing));
     num_holes_v = max(1, floor(height_mm / hole_spacing));
     
     hole_start_x = (width_mm - (num_holes_h - 1) * hole_spacing) / 2;

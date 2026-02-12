@@ -16,22 +16,19 @@ U = 44.45;           // Vertical Unit = 44.45mm (1.75")
 
 // T-Slot Specifications
 // Standard T-slot twist nuts (M5/M6 compatible, drop-in style)
-T_SLOT_WIDTH = 6;           // T-slot nut width (M5/M6)
-T_SLOT_LENGTH = 12;         // T-slot nut length (elongated rectangular)
-T_SLOT_SPACING = 25;        // Center-to-center spacing (standard T-slot)
+T_SLOT_HEIGHT = 6.9;           // T-slot nut width (M5/M6)
+T_SLOT_WIDTH = 19.125;         // T-slot nut length (elongated rectangular)
+T_SLOT_CORNER_RADIUS = 1.0;
 
 // Rack Specifications
-RACK_HOLE_SPACING = 25.4;   // Standard EIA-310-D (1" = 25.4mm) = 5 HP
-RACK_HOLE_DIAMETER = 6.5;   // M6 mounting holes (standard 19" rack)
-RACK_RAIL_WIDTH = 19;       // Standard rack rail width
-RACK_RAIL_DEPTH = 35;       // Standard rack rail depth
+RACK_SUPPORT_WIDTH = 3; 
+RACK_HOLE_DIAMETER = 4.5;   // M4 mounting holes
+RACK_RAIL_HEIGHT = 11; 
 RACK_RAIL_THICKNESS = 3;    // Rail material thickness
 
 // Rack Widths
 RACK_19_WIDTH = 465.1;      // 19" rack outer width
-RACK_19_USABLE = 432;       // 19" usable width (between rails)
 RACK_10_WIDTH = 254;        // 10" rack outer width (approx)
-RACK_10_USABLE = 203;       // 10" usable width (between rails)
 
 // Panel Specifications
 PANEL_THICKNESS = 3;        // Aluminum panel thickness
