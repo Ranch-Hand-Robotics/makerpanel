@@ -160,21 +160,21 @@ def on_page_markdown(markdown, page, config, files):
     
     # Update statistics
     stats = f"""<div style="font-size: 1.1rem;">
-      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-        <strong style="font-size: 2rem; display: block;">{len(panels)}</strong>
-        Total Panels
+      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(panels)}</strong>
+        <span style="font-weight: 600;">Total Panels</span>
       </div>
     </div>
     <div style="font-size: 1.1rem;">
-      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-        <strong style="font-size: 2rem; display: block;">{len(set(p['contributor'] for p in panels))}</strong>
-        Contributors
+      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(set(p['contributor'] for p in panels))}</strong>
+        <span style="font-weight: 600;">Contributors</span>
       </div>
     </div>
     <div style="font-size: 1.1rem;">
-      <div style="padding: 0.75rem; background: rgba(255,255,255,0.15); border-radius: 0.5rem; margin-bottom: 0.5rem;">
-        <strong style="font-size: 2rem; display: block;">{len(categories)}</strong>
-        Categories
+      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(categories)}</strong>
+        <span style="font-weight: 600;">Categories</span>
       </div>
     </div>"""
     

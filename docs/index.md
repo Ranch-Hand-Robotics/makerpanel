@@ -1,19 +1,22 @@
 <!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
-<div style="text-align: center; padding: 3rem 0 2rem;">
-  <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-    Makerpanel
-  </h1>
-  <p style="font-size: 1.5rem; color: #666; margin-bottom: 2rem;">
-    Open specification and gallery for modular maker panels
-  </p>
-  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-    <a href="gallery.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 2rem; border-radius: 2rem; text-decoration: none; font-weight: 600; display: inline-block; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
-      Browse Gallery
-    </a>
-    <a href="contributing.html" style="background: white; color: #667eea; padding: 0.75rem 2rem; border-radius: 2rem; text-decoration: none; font-weight: 600; display: inline-block; border: 2px solid #667eea; transition: transform 0.2s, box-shadow 0.2s;">
-      Submit Your Panel
-    </a>
+<div class="hero-section" style="text-align: center; padding: 4rem 0 3rem; position: relative; overflow: hidden; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); border-radius: 2rem; margin: -1rem -2rem 2rem; box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);">
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%); pointer-events: none;"></div>
+  <div style="position: relative; z-index: 1;">
+    <h1 style="font-size: 4rem; font-weight: 900; margin-bottom: 1rem; color: white; text-shadow: 0 4px 20px rgba(0,0,0,0.2); letter-spacing: -0.02em;">
+      ⚙️ Makerpanel
+    </h1>
+    <p style="font-size: 1.6rem; color: rgba(255, 255, 255, 0.95); margin-bottom: 2.5rem; font-weight: 500; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+      Open specification and gallery for modular maker panels
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="gallery.html" class="hero-btn-primary" style="background: white; color: #667eea; padding: 1rem 2.5rem; border-radius: 3rem; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.2); border: 3px solid white;">
+        🎨 Browse Gallery
+      </a>
+      <a href="contributing.html" class="hero-btn-secondary" style="background: rgba(255, 255, 255, 0.2); color: white; padding: 1rem 2.5rem; border-radius: 3rem; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-block; border: 3px solid white; backdrop-filter: blur(10px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        ✨ Submit Your Panel
+      </a>
+    </div>
   </div>
 </div>
 
@@ -23,26 +26,30 @@ Makerpanel is an open specification for creating **modular control panels** for 
 
 ## Key Features
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 2rem 0;">
-  <div style="padding: 1.5rem; border-radius: 0.5rem; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔧</div>
-    <h3 style="margin-top: 0;">Universal Mounting</h3>
-    <p>Uses T-slot rails with M5/M6 twist nuts for tool-free mounting</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0;">
+  <div class="feature-card" style="padding: 2rem; border-radius: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); position: relative; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
+    <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">🔧</div>
+    <h3 style="margin-top: 0; color: white; font-size: 1.4rem; position: relative; z-index: 1;">Universal Mounting</h3>
+    <p style="color: rgba(255,255,255,0.95); position: relative; z-index: 1; font-size: 1.05rem;">Uses T-slot rails with M5/M6 twist nuts for tool-free mounting</p>
   </div>
-  <div style="padding: 1.5rem; border-radius: 0.5rem; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🧩</div>
-    <h3 style="margin-top: 0;">Modular Design</h3>
-    <p>Mix and match panels for your specific needs</p>
+  <div class="feature-card" style="padding: 2rem; border-radius: 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3); position: relative; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
+    <div style="position: absolute; bottom: -50px; left: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">🧩</div>
+    <h3 style="margin-top: 0; color: white; font-size: 1.4rem; position: relative; z-index: 1;">Modular Design</h3>
+    <p style="color: rgba(255,255,255,0.95); position: relative; z-index: 1; font-size: 1.05rem;">Mix and match panels for your specific needs</p>
   </div>
-  <div style="padding: 1.5rem; border-radius: 0.5rem; background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌟</div>
-    <h3 style="margin-top: 0;">Community Driven</h3>
-    <p>Open specification allowing anyone to design and share panels</p>
+  <div class="feature-card" style="padding: 2rem; border-radius: 1.5rem; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3); position: relative; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
+    <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">🌟</div>
+    <h3 style="margin-top: 0; color: white; font-size: 1.4rem; position: relative; z-index: 1;">Community Driven</h3>
+    <p style="color: rgba(255,255,255,0.95); position: relative; z-index: 1; font-size: 1.05rem;">Open specification allowing anyone to design and share panels</p>
   </div>
-  <div style="padding: 1.5rem; border-radius: 0.5rem; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚡</div>
-    <h3 style="margin-top: 0;">Easy Integration</h3>
-    <p>Standard dimensions and mounting points ensure compatibility</p>
+  <div class="feature-card" style="padding: 2rem; border-radius: 1.5rem; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); box-shadow: 0 10px 30px rgba(250, 112, 154, 0.3); position: relative; overflow: hidden; border: 3px solid rgba(255,255,255,0.3);">
+    <div style="position: absolute; bottom: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+    <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); position: relative; z-index: 1;">⚡</div>
+    <h3 style="margin-top: 0; color: white; font-size: 1.4rem; position: relative; z-index: 1;">Easy Integration</h3>
+    <p style="color: rgba(255,255,255,0.95); position: relative; z-index: 1; font-size: 1.05rem;">Standard dimensions and mounting points ensure compatibility</p>
   </div>
 </div>
 
