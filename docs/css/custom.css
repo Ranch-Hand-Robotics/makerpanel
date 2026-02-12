@@ -25,7 +25,8 @@
 }
 
 /* Modern hero section button hover effects */
-a[style*="background: linear-gradient"]:hover {
+a[href*="gallery.html"][style*="background: linear-gradient"]:hover,
+a[href*="contributing.html"][style*="background: linear-gradient"]:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
 }
@@ -36,11 +37,24 @@ a[style*="border: 2px solid"]:hover {
     background: #f8f9ff !important;
 }
 
-/* Feature card hover effects */
-div[style*="background: linear-gradient"]:hover {
+/* Feature card hover effects - only for homepage features */
+article div[style*="display: grid"][style*="grid-template-columns"] > div[style*="background: linear-gradient"]:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
     transition: all 0.3s ease;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    a[href*="gallery.html"][style*="background: linear-gradient"]:hover,
+    a[href*="contributing.html"][style*="background: linear-gradient"]:hover,
+    a[style*="border: 2px solid"]:hover,
+    article div[style*="display: grid"] > div[style*="background: linear-gradient"]:hover,
+    .panel-card:hover,
+    .panel-card:hover img {
+        transform: none;
+        transition: none;
+    }
 }
 
 /* Tabbed extension styles for pymdownx.tabbed alternate style */
@@ -107,8 +121,14 @@ div[style*="background: linear-gradient"]:hover {
 
 .tabbed-block {
     display: none;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
+}
+
+@media screen and (min-width: 600px) {
+    .tabbed-block {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
 }
 
 .tabbed-set input:nth-child(1):checked ~ .tabbed-content .tabbed-block:nth-child(1),
@@ -140,6 +160,13 @@ div[style*="background: linear-gradient"]:hover {
     box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
     transform: translateY(-8px) scale(1.02);
     border-color: #667eea;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .panel-card:hover {
+        transform: none;
+    }
 }
 
 /* Panel card link */
