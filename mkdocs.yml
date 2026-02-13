@@ -31,8 +31,8 @@ theme:
     - content.code.copy
   icon:
     repo: fontawesome/brands/github
-  logo: https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wrench.svg
-  favicon: https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/wrench.svg
+  logo: images/makerpanel.jpg
+  favicon: images/makerpanel.jpg
 
 extra:
   social:
