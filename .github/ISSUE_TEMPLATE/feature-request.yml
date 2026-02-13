@@ -1,0 +1,63 @@
+name: 💡 Feature Request
+description: Suggest an improvement to the Makerpanel specification or website
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for your suggestion!
+        Help us understand your idea by filling out the form below.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the use case or issue this feature would address.
+      placeholder: "I'd like to be able to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like this to work?
+      placeholder: "It would be great if..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: What area does this affect?
+      options:
+        - Specification (mechanical/electrical standards)
+        - Gallery/Website
+        - Contributing process
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative approaches (optional)
+      description: Have you considered other ways to solve this?
+      placeholder: "Another option would be..."
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or references (optional)
+      description: Links to similar features, designs, or implementations that inspired this idea.
+      placeholder: "Similar to..."
+
+  - type: checkboxes
+    id: breaking
+    attributes:
+      label: Impact
+      options:
+        - label: This would require changes to existing panel designs
+        - label: This is backward compatible with existing panels

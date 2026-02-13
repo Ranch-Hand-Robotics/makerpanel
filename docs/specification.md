@@ -1,8 +1,12 @@
+---
+hide:
+  - navigation
+  - toc
+title: " "
+---
 <!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
 # Maker Panel Specification
-
-## Overview
 
 The Maker Panel specification defines a modular panel system for maker projects. Inspired by the Eurotrack synthesizer standard, Maker Panel adapts the concept for general-purpose control panels using **standard T-slot rails** with M5/M6 twist nuts for mounting.
 
@@ -33,10 +37,10 @@ WIDTH (HP Units)
 
 HEIGHT (U Units)
 │
-├─ 1U = 44.45 mm (1.750")    ┌────────┐
-│  (Unit spacing)             │        │
-│                            │ Compact│
-│                            │  Panel │
+├─ 1U = 44.45 mm (1.750")    ┌─────────┐
+│  (Unit spacing)            │         │
+│                            │ Compact │
+│                            │  Panel  │
 │
 ├─ 3U Panel  = 128.5 mm      ┌──────────────┐
 │  (5.059" panel height)     │              │
@@ -58,8 +62,8 @@ FRONT FACE (Bezel)
         ┌─────────────────────────────────┐
         │                                 │  ↑
         │  [Control Elements]             │  │ 60mm MAX
-        │  ◯ ◯ ◯  [Indicators]         │  │ Depth Limit
-        │  ○ ○ ○  [Connectors]            │  ↓
+        │  0 0 0  [Indicators]            │  │ Depth Limit
+        │  o o o  [Connectors]            │  ↓
         │                                 │
         └─────────────────────────────────┘
                         │
@@ -83,7 +87,7 @@ FRONT FACE (Bezel)
             │        ↓          │
         ┌───┴───────────────────┴───┐
         │    PANEL (3mm max)        │
-        │  ◯    [Elements]     ◯  │
+        │  0    [Elements]     0    │
         │                           │
         └───────────────────────────┘
 ```
@@ -99,17 +103,17 @@ SIDE VIEW - PANEL MOUNTED ON RAIL SYSTEM
                   │
     ┌─────┬───────┴──────┬─────┐
     │ T-Nut   T-Nut    T-Nut   │
-    │     ∧        ∧        ∧  │
+    │     ^        ^        ^  │
     │ ┌───┴────────┴────────┴───┐
     │ │      Panel (3U)         │
     │ │   ┌─────────────────┐   │
-    │ │   │ ◯ ◯ ◯ ◯ ◯  │   │  ↑
+    │ │   │ 0 0 0 0 0       │   │  ↑
     │ │   │ [CONTROLS]      │   │  │ 128.5mm
-    │ │   │ ◯ ◯ ◯ ◯ ◯  │   │  │ (3U Panel)
-    │ │   │ ◯ ◯ ◯ ◯ ◯  │   │  ↓
+    │ │   │ 0 0 0 0 0       │   │  │ (3U Panel)
+    │ │   │ 0 0 0 0 0       │   │  ↓
     │ │   └─────────────────┘   │
     │ └───┬────────┬────────┬───┘
-    │     ∨        ∨        ∨  │
+    │     v        v        v  │
     │ T-Nut   T-Nut    T-Nut   │
     └─────┴──────┬───────┴─────┘
                  │
@@ -180,11 +184,11 @@ Rails are used for sides and cross beams, while panels are mounted between cross
               Rail 
              Height                    < Slot width: 19.125mm >
             <  |   >                   
-    ↑       ┌────────────────────────────────────────────────────────────────────┐
-            │      ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │      ↑
-Rail Height │  ◯  │               │  │               │  │               │  ◯   │  Slot Height
-            │      └───────────────┘  └───────────────┘  └───────────────┘       │  6.2mm
-    ↓       └────────────────────────────────────────────────────────────────────┘      ↓
+    ↑       ┌───────────────────────────────────────────────────────────────────┐
+            │      ┌───────────────┐  ┌───────────────┐  ┌───────────────┐      │      ↑
+Rail Height │  0   │               │  │               │  │               │  0   │  Slot Height
+            │      └───────────────┘  └───────────────┘  └───────────────┘      │  6.2mm
+    ↓       └───────────────────────────────────────────────────────────────────┘      ↓
                                    <  >
                                   Support
                                Width: 6.2mm
@@ -205,14 +209,14 @@ Rail Height │  ◯  │               │  │               │  │         
 │ │  │ │     Width     Width)
 │ │  │ │      │          ↓
 │ └──┘ │ ←────┘       ← ─ ─ →
-│ ═══  │ ← Support (6.2mm)
+│      │ ← Support (6.2mm)
 │ ┌──┐ │              ↑ 44.45mm ↓
 │ │  │ │              ↓  (1U)   ↑
 │ │  │ │             ← ─ ─ →
 │ │  │ │
 │ │  │ │
 │ └──┘ │
-│ ═══  │ ← Support (6.2mm)
+│      │ ← Support (6.2mm)
 │ ┌──┐ │              
 │ │  │ │
 │ │  │ │
@@ -238,7 +242,7 @@ Rail Height │  ◯  │               │  │               │  │         
             │        ↓          │
         ┌───┴───────────────────┴───┐
         │    PANEL (3mm max)        │
-        │  ◯  ◯  [Elements]  ◯   │
+        │  0  0  [Elements]  0      │
         │                           │
         └───────────────────────────┘
 ```

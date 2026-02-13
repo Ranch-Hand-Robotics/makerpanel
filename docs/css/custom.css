@@ -13,14 +13,96 @@
 }
 
 .md-content__inner {
-    max-width: none !important;
+    max-width: 1400px !important;
     margin: 0 auto !important;
     padding: 0 2rem !important;
+}
+
+/* Hide auto-generated H1 title on index page */
+article > h1:first-of-type {
+    display: none;
+}
+
+/* Fix code block rendering for ASCII art */
+pre, code {
+    font-family: 'Courier New', 'Monaco', 'Menlo', 'Consolas', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0 !important;
+    white-space: pre !important;
+    tab-size: 4 !important;
+}
+
+pre code {
+    display: block !important;
+    overflow-x: auto !important;
 }
 
 @media screen and (max-width: 768px) {
     .md-content__inner {
         padding: 0 1rem !important;
+    }
+    
+    pre, code {
+        font-size: 11px !important;
+    }
+}
+
+/* Muted green color palette */
+:root {
+    --muted-green: #4a9d5f;
+    --dark-bg: #1a1a1a;
+    --darker-bg: #0d0d0d;
+}
+
+/* Hero section - simple border instead of glow */
+.hero-section, .gallery-hero {
+    animation: none;
+    background-size: 200% 200%;
+}
+
+/* Hero button effects - minimal hover */
+.hero-btn-primary:hover, .gallery-cta:hover {
+    transform: translateY(-2px);
+    background: var(--muted-green);
+    border-color: var(--muted-green);
+}
+
+.hero-btn-secondary:hover {
+    transform: translateY(-2px);
+    background: rgba(74, 157, 95, 0.1);
+    border-color: var(--muted-green);
+}
+
+/* Feature card - simple styling */
+.feature-card {
+    animation: none;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--muted-green);
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .hero-section, .gallery-hero {
+        animation: none;
+    }
+    .feature-card {
+        animation: none;
+    }
+    a[href*="gallery.html"]:hover,
+    a[href*="contributing.html"]:hover,
+    .panel-card:hover,
+    .panel-card:hover img,
+    .hero-btn-primary:hover,
+    .hero-btn-secondary:hover,
+    .gallery-cta:hover,
+    .feature-card:hover {
+        transform: none;
+        transition: none;
     }
 }
 
@@ -29,8 +111,10 @@
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    margin: 1em 0;
-    border-radius: 0.1rem;
+    margin: 2.5em 0;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    border: 1px solid var(--muted-green);
 }
 
 .tabbed-set > input {
@@ -41,23 +125,32 @@
 .tabbed-labels {
     display: flex;
     width: 100%;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 1px solid var(--muted-green);
+    background: var(--dark-bg);
+    padding: 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .tabbed-labels label {
-    padding: 0.9375em 1.25em;
+    padding: 0.75rem 1.5rem;
     font-weight: 700;
-    font-size: 0.84em;
+    font-size: 0.9rem;
     white-space: nowrap;
     cursor: pointer;
-    transition: background-color 250ms, color 250ms, border-color 250ms;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
+    transition: all 0.2s ease;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: #808080;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .tabbed-labels label:hover {
-    color: #2980b9;
-    background-color: #f5f5f5;
+    color: var(--muted-green);
+    background: rgba(74, 157, 95, 0.1);
+    border-color: var(--muted-green);
 }
 
 .tabbed-set input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
@@ -66,74 +159,29 @@
 .tabbed-set input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4),
 .tabbed-set input:nth-child(5):checked ~ .tabbed-labels label:nth-child(5),
 .tabbed-set input:nth-child(6):checked ~ .tabbed-labels label:nth-child(6) {
-    color: #2980b9;
-    border-color: #2980b9;
-    font-weight: 700;
+    color: #ffffff;
+    background: var(--muted-green);
+    font-weight: 900;
+    border-color: var(--muted-green);
 }
 
 .tabbed-content {
     width: 100%;
-    padding: 2em 1em;
-    background-color: rgba(0, 0, 0, 0.02);
-    border: none;
-}
-
-.tabbed-set {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    margin: 1em 0;
-    border-radius: 0.1rem;
-}
-
-.tabbed-set > input {
-    position: absolute;
-    opacity: 0;
-}
-
-.tabbed-labels {
-    display: flex;
-    width: 100%;
-    border-bottom: 2px solid #ddd;
-}
-
-.tabbed-labels label {
-    padding: 0.9375em 1.25em;
-    font-weight: 700;
-    font-size: 0.84em;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background-color 250ms, color 250ms, border-color 250ms;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-}
-
-.tabbed-labels label:hover {
-    color: #2980b9;
-    background-color: #f5f5f5;
-}
-
-.tabbed-set input:nth-child(1):checked ~ .tabbed-labels label:nth-child(1),
-.tabbed-set input:nth-child(2):checked ~ .tabbed-labels label:nth-child(2),
-.tabbed-set input:nth-child(3):checked ~ .tabbed-labels label:nth-child(3),
-.tabbed-set input:nth-child(4):checked ~ .tabbed-labels label:nth-child(4),
-.tabbed-set input:nth-child(5):checked ~ .tabbed-labels label:nth-child(5) {
-    color: #2980b9;
-    border-color: #2980b9;
-    font-weight: 700;
-}
-
-.tabbed-content {
-    width: 100%;
-    padding: 1em;
-    background-color: transparent;
+    padding: 3rem 1.5rem;
+    background: var(--darker-bg);
     border: none;
 }
 
 .tabbed-block {
     display: none;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2em;
+    gap: 2.5rem;
+}
+
+@media screen and (min-width: 600px) {
+    .tabbed-block {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
 }
 
 .tabbed-set input:nth-child(1):checked ~ .tabbed-content .tabbed-block:nth-child(1),
@@ -154,16 +202,23 @@
     position: relative;
     border-radius: 0.5rem;
     overflow: hidden;
-    transition: all 250ms ease;
-    border: 1px solid #ddd;
-    background: white;
+    transition: all 0.3s ease;
+    border: 1px solid var(--muted-green);
+    background: var(--dark-bg);
     height: 100%;
 }
 
 .panel-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     transform: translateY(-4px);
-    border-color: #2196F3;
+    border-color: var(--muted-green);
+    border-width: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .panel-card:hover {
+        transform: none;
+    }
 }
 
 /* Panel card link */
@@ -176,9 +231,15 @@
 
 .panel-card img {
     width: 100%;
-    height: 220px;
+    height: 260px;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.panel-card:hover img {
+    transform: scale(1.03);
+    filter: brightness(1.1);
 }
 
 /* Card title overlay on image */
@@ -188,13 +249,15 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
-    color: white;
-    padding: 1.5rem 1rem 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(74, 157, 95, 0.1) 100%);
+    color: var(--muted-green);
+    padding: 2rem 1.5rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 900;
     line-height: 1.3;
     z-index: 10;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 /* Description text - hidden by default, shown on hover */
@@ -204,15 +267,17 @@
     left: 0;
     right: 0;
     margin: 0;
-    padding: 1rem;
-    font-size: 0.8rem;
-    color: white;
-    line-height: 1.5;
-    background: rgba(33, 150, 243, 0.95);
+    padding: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--muted-green);
+    line-height: 1.7;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.95) 100%);
     opacity: 0;
     transform: translateY(100%);
-    transition: all 300ms ease;
+    transition: all 0.3s ease;
     z-index: 20;
+    font-weight: 500;
+    border-top: 1px solid var(--muted-green);
 }
 
 .panel-card:hover p {

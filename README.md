@@ -23,7 +23,7 @@ Visit our [documentation site](https://ranch-hand-robotics.github.io/makerpanel)
 
 - **[Specification](https://ranch-hand-robotics.github.io/makerpanel/specification/)**: Detailed technical specifications for designing Makerpanel-compatible panels
 - **[Gallery](https://ranch-hand-robotics.github.io/makerpanel/gallery/)**: Browse community-contributed panel designs
-- **[Contributing](https://ranch-hand-robotics.github.io/makerpanel/contributing/)**: Learn how to contribute your own panel designs
+- **[Contributing](https://ranch-hand-robotics.github.io/makerpanel/contributing/)**: Submit your panel design using our easy form
 
 ## Quick Start
 
@@ -48,11 +48,13 @@ Then open http://localhost:8000 in your browser.
 
 ### Contributing
 
-We welcome contributions! See our [Contributing Guide](https://ranch-hand-robotics.github.io/makerpanel/contributing/) for details on how to:
+We welcome contributions!
 
-- Submit panel designs to the gallery
-- Improve the specification
-- Report issues or suggest features
+- **[Submit your panel design](https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new/choose)** — use our easy form, no Git required!
+- Report bugs or suggest features
+- Improve the specification or documentation
+
+See our [Contributing Guide](https://ranch-hand-robotics.github.io/makerpanel/contributing/) for more details.
 
 ## Project Structure
 

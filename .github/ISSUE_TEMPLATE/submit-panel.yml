@@ -1,0 +1,191 @@
+name: 🔧 Submit a Panel Design
+description: Add your maker panel to the Makerpanel gallery!
+title: "[Panel] "
+labels: ["new-panel"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to Makerpanel! 🔧
+        Fill out this form and we'll review your panel design. Once approved, it'll show up in the gallery automatically!
+
+  - type: input
+    id: name
+    attributes:
+      label: Panel Name
+      placeholder: "e.g., Dual Potentiometer Control"
+    validations:
+      required: true
+
+  - type: input
+    id: tagline
+    attributes:
+      label: One-line description
+      description: Keep it brief — this shows on the gallery card.
+      placeholder: "e.g., Two 10kΩ linear potentiometers for analog control"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Panel Category
+      description: Which category best fits your panel? Select "Other" to suggest a new category.
+      options:
+        - Analog Control
+        - Visual Feedback
+        - Connectivity
+        - Digital I/O
+        - Audio
+        - Power
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: custom_category
+    attributes:
+      label: Custom Category (if "Other" selected)
+      description: If you selected "Other" above, suggest a new category name here.
+      placeholder: "e.g., Sensors, Motors, Display Systems"
+
+  - type: input
+    id: size
+    attributes:
+      label: Panel Size
+      description: In HP (width) × U (height) format
+      placeholder: "e.g., 8 HP × 3U"
+    validations:
+      required: true
+
+  - type: input
+    id: depth
+    attributes:
+      label: Panel Depth
+      description: Behind the front surface (in mm)
+      placeholder: "e.g., 25 mm"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Tell us about your panel
+      description: A few sentences about what it does, why you built it, and what makes it useful.
+      placeholder: "What does it do? Why did you build it? What problems does it solve?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: features
+    attributes:
+      label: Key Features
+      description: List the main features of your panel (one per line)
+      placeholder: |
+        - Feature 1
+        - Feature 2
+        - Feature 3
+    validations:
+      required: true
+
+  - type: input
+    id: material
+    attributes:
+      label: Material
+      description: What is the panel made from?
+      placeholder: "e.g., FR4 PCB, Aluminum, Acrylic"
+    validations:
+      required: true
+
+  - type: input
+    id: power
+    attributes:
+      label: Power Requirements (optional)
+      description: Does the panel need power? If so, specify voltage/current.
+      placeholder: "e.g., 5V @ 100mA, or 'Passive (no power required)'"
+
+  - type: input
+    id: github_url
+    attributes:
+      label: GitHub Repository or Design Files URL
+      description: Link to your design files, CAD files, schematics, etc.
+      placeholder: "https://github.com/you/your-panel"
+    validations:
+      required: true
+
+  - type: input
+    id: purchase_url
+    attributes:
+      label: Purchase URL (optional)
+      description: Where can people buy this panel or kit?
+      placeholder: "https://tindie.com/products/you/your-panel"
+
+  - type: textarea
+    id: thumbnail
+    attributes:
+      label: Thumbnail Image
+      description: Upload a square image (400×400px minimum) showing your panel. Drag and drop or paste the image here.
+      placeholder: "Drag and drop your image here..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: images
+    attributes:
+      label: Additional Photos (optional)
+      description: Upload additional photos showing different angles, assembly, or usage. Drag and drop or paste images here.
+      placeholder: "Drag and drop your images here..."
+
+  - type: textarea
+    id: bom
+    attributes:
+      label: Bill of Materials (optional)
+      description: List key components with part numbers and sources
+      placeholder: |
+        | Qty | Part | Description | Source |
+        |-----|------|-------------|--------|
+        | 2 | POT-10K | 10kΩ linear pot | Mouser 123-456 |
+
+  - type: input
+    id: author
+    attributes:
+      label: Your Name
+      placeholder: "e.g., Jane Developer"
+    validations:
+      required: true
+
+  - type: input
+    id: author_github
+    attributes:
+      label: Your GitHub Username
+      placeholder: "e.g., janedev"
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: License
+      description: Your design files license (recommend open source)
+      placeholder: "e.g., MIT, CC-BY-SA-4.0, CERN-OHL-S-2.0"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Specification Compliance Checklist
+      description: Please confirm your panel meets these requirements from the [Makerpanel Specification](https://ranch-hand-robotics.github.io/makerpanel/specification/)
+      options:
+        - label: My panel uses HP-based width (1 HP = 5.08 mm)
+          required: true
+        - label: My panel height is 3U (128.5 mm) or 1U (44.45 mm) standard
+          required: true
+        - label: My panel depth is ≤60 mm from front surface
+          required: true
+        - label: My panel is compatible with T-slot rail mounting (M5/M6 twist nuts)
+          required: true
+        - label: I have tested or prototyped this design
+          required: true
+        - label: I am releasing this design under an open source license
+          required: true
