@@ -159,22 +159,22 @@ def on_page_markdown(markdown, page, config, files):
     )
     
     # Update statistics
-    stats = f"""<div style="font-size: 1.1rem;">
-      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(panels)}</strong>
-        <span style="font-weight: 600;">Total Panels</span>
+    stats = f"""<div style="font-size: 1rem;">
+      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1); text-align: center;">
+        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); font-family: 'Courier New', monospace; font-weight: 900;">{len(panels)}</strong>
+        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Total Panels</span>
       </div>
     </div>
-    <div style="font-size: 1.1rem;">
-      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(set(p['contributor'] for p in panels))}</strong>
-        <span style="font-weight: 600;">Contributors</span>
+    <div style="font-size: 1rem;">
+      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1); text-align: center;">
+        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); font-family: 'Courier New', monospace; font-weight: 900;">{len(set(p['contributor'] for p in panels))}</strong>
+        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Contributors</span>
       </div>
     </div>
-    <div style="font-size: 1.1rem;">
-      <div style="padding: 1.25rem; background: rgba(255,255,255,0.25); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <strong style="font-size: 2.5rem; display: block; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">{len(categories)}</strong>
-        <span style="font-weight: 600;">Categories</span>
+    <div style="font-size: 1rem;">
+      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 15px rgba(0, 255, 0, 0.1); text-align: center;">
+        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 15px rgba(0, 255, 0, 0.8); font-family: 'Courier New', monospace; font-weight: 900;">{len(categories)}</strong>
+        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Categories</span>
       </div>
     </div>"""
     
