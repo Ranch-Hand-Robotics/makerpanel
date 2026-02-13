@@ -19,7 +19,7 @@ title: " "
       <a href="gallery.html" class="hero-btn-primary" style="background: #4a9d5f; color: #ffffff; padding: 1rem 2.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; transition: all 0.3s ease; border: 2px solid #4a9d5f; text-transform: uppercase; letter-spacing: 0.1em;">
         > Browse Gallery
       </a>
-      <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new/choose" class="hero-btn-secondary" style="background: transparent; color: #4a9d5f; padding: 1rem 2.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; border: 2px solid #4a9d5f; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.1em;">
+      <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new?template=submit-panel.yml" class="hero-btn-secondary" style="background: transparent; color: #4a9d5f; padding: 1rem 2.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; border: 2px solid #4a9d5f; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.1em;">
         + Submit Panel
       </a>
     </div>
