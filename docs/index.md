@@ -6,7 +6,7 @@
     linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, 0.05) 25%, rgba(0, 255, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 0, 0.05) 75%, rgba(0, 255, 0, 0.05) 76%, transparent 77%, transparent); 
     background-size: 50px 50px; pointer-events: none; opacity: 0.3;"></div>
   <div style="position: relative; z-index: 1;">
-    <h1 style="font-size: 4rem; font-weight: 900; margin-bottom: 1rem; color: #00ff00; text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.6); letter-spacing: 0.05em; font-family: 'Courier New', monospace;">
+    <h1 style="font-size: 4rem; font-weight: 900; margin-bottom: 1rem; color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 0, 0.3); letter-spacing: 0.05em; font-family: 'Courier New', monospace;">
       ⚙️ MAKERPANEL
     </h1>
     <p style="font-size: 1.6rem; color: #b0b0b0; margin-bottom: 2.5rem; font-weight: 400; text-shadow: 0 0 10px rgba(176, 176, 176, 0.5);">
