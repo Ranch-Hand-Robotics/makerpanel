@@ -11,25 +11,37 @@ nav:
   - Home: index.md
   - Specification: specification.md
   - Gallery: gallery.md
-  - Contributing: contributing.md
+  - About: about.md
 
 theme:
   name: material
   palette:
-    - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Switch to light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
+    # Force dark mode with green accents
+    scheme: slate
+    primary: black
+    accent: green
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  logo: images/makericon.png
+  favicon: images/makericon.png
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Ranch-Hand-Robotics/makerpanel
+      name: GitHub Repository
+    - icon: fontawesome/solid/wrench
+      link: https://ranch-hand-robotics.github.io/makerpanel
+      name: Makerpanel Home
 
 extra_css:
   - css/custom.css
