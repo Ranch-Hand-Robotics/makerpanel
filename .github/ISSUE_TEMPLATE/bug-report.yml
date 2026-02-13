@@ -1,0 +1,61 @@
+name: 🐛 Bug Report
+description: Report a problem with the documentation or website
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for reporting an issue!
+        Please fill out the form below to help us understand and fix the problem.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What's wrong?
+      description: A clear description of the issue.
+      placeholder: "Describe what you expected vs. what actually happened..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the problem?
+      options:
+        - Documentation (specification, contributing guide, etc.)
+        - Website/Gallery
+        - Panel design files
+        - Build/deployment
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Page URL (if applicable)
+      placeholder: "https://ranch-hand-robotics.github.io/makerpanel/..."
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: How can we see this issue?
+      placeholder: |
+        1. Go to...
+        2. Click on...
+        3. See error...
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots (optional)
+      description: If applicable, add screenshots to help explain the problem.
+      placeholder: "Drag and drop your images here..."
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other information that might be helpful.

@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📖 Documentation
+    url: https://ranch-hand-robotics.github.io/makerpanel/
+    about: Read the Makerpanel specification and contributing guide
+  - name: 🎨 Gallery
+    url: https://ranch-hand-robotics.github.io/makerpanel/gallery/
+    about: Browse existing panel designs for inspiration
+  - name: 💬 Discussions
+    url: https://github.com/Ranch-Hand-Robotics/makerpanel/discussions
+    about: Ask questions and share ideas with the community
