@@ -33,10 +33,10 @@ WIDTH (HP Units)
 
 HEIGHT (U Units)
 │
-├─ 1U = 44.45 mm (1.750")    ┌────────┐
-│  (Unit spacing)             │        │
-│                            │ Compact│
-│                            │  Panel │
+├─ 1U = 44.45 mm (1.750")    ┌─────────┐
+│  (Unit spacing)            │         │
+│                            │ Compact │
+│                            │  Panel  │
 │
 ├─ 3U Panel  = 128.5 mm      ┌──────────────┐
 │  (5.059" panel height)     │              │
