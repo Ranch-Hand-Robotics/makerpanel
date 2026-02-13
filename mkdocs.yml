@@ -31,8 +31,8 @@ theme:
     - content.code.copy
   icon:
     repo: fontawesome/brands/github
-  logo: images/makerpanel.jpg
-  favicon: images/makerpanel.jpg
+  logo: images/makerpanel.svg
+  favicon: images/makerpanel.svg
 
 extra:
   social:
