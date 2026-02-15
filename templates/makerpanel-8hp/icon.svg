@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#f0f0f0"/>
+  
+  <!-- 8 HP Panel (standard width) -->
+  <rect x="24" y="8" width="80" height="112" fill="#1976D2" stroke="#0D47A1" stroke-width="2"/>
+  
+  <!-- Mounting holes (8 total) -->
+  <circle cx="32" cy="18" r="3" fill="#333"/>
+  <circle cx="52" cy="18" r="3" fill="#333"/>
+  <circle cx="76" cy="18" r="3" fill="#333"/>
+  <circle cx="96" cy="18" r="3" fill="#333"/>
+  
+  <circle cx="32" cy="110" r="3" fill="#333"/>
+  <circle cx="52" cy="110" r="3" fill="#333"/>
+  <circle cx="76" cy="110" r="3" fill="#333"/>
+  <circle cx="96" cy="110" r="3" fill="#333"/>
+  
+  <!-- Label -->
+  <text x="64" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">8HP</text>
+  
+  <!-- Recommended indicator -->
+  <circle cx="64" cy="38" r="8" fill="none" stroke="#FFD700" stroke-width="2"/>
+  <text x="64" y="43" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#FFD700">✓</text>
+  
+  <!-- Size indicator -->
+  <text x="64" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">40.64mm</text>
+</svg>

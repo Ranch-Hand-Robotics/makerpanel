@@ -1,0 +1,14 @@
+{
+  "name": "Maker Panel 4 HP",
+  "description": "4 HP × 3U PCB panel template (20.32 × 128.5 mm) - Compact single-control panel",
+  "category": "Maker Panel",
+  "width_mm": 20.32,
+  "height_mm": 128.5,
+  "hp_units": 4,
+  "spec_version": "1.0",
+  "compatible_with": ["KiCad 8.0", "KiCad 9.0"],
+  "author": "Maker Panel Community",
+  "license": "MIT",
+  "keywords": ["panel", "modular", "t-slot", "control-panel", "eurorack-style"],
+  "url": "https://github.com/Ranch-Hand-Robotics/makerpanel"
+}

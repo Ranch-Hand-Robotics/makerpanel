@@ -1,0 +1,14 @@
+{
+  "name": "Maker Panel 12 HP",
+  "description": "12 HP × 3U PCB panel template (60.96 × 128.5 mm) - Multi-component panel with multiple controls",
+  "category": "Maker Panel",
+  "width_mm": 60.96,
+  "height_mm": 128.5,
+  "hp_units": 12,
+  "spec_version": "1.0",
+  "compatible_with": ["KiCad 8.0", "KiCad 9.0"],
+  "author": "Maker Panel Community",
+  "license": "MIT",
+  "keywords": ["panel", "modular", "t-slot", "control-panel", "eurorack-style"],
+  "url": "https://github.com/Ranch-Hand-Robotics/makerpanel"
+}

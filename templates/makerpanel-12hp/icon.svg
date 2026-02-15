@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#f0f0f0"/>
+  
+  <!-- 12 HP Panel (wide) -->
+  <rect x="8" y="8" width="112" height="112" fill="#7B1FA2" stroke="#4A148C" stroke-width="2"/>
+  
+  <!-- Mounting holes (10 total) -->
+  <circle cx="16" cy="18" r="3" fill="#333"/>
+  <circle cx="38" cy="18" r="3" fill="#333"/>
+  <circle cx="64" cy="18" r="3" fill="#333"/>
+  <circle cx="90" cy="18" r="3" fill="#333"/>
+  <circle cx="112" cy="18" r="3" fill="#333"/>
+  
+  <circle cx="16" cy="110" r="3" fill="#333"/>
+  <circle cx="38" cy="110" r="3" fill="#333"/>
+  <circle cx="64" cy="110" r="3" fill="#333"/>
+  <circle cx="90" cy="110" r="3" fill="#333"/>
+  <circle cx="112" cy="110" r="3" fill="#333"/>
+  
+  <!-- Label -->
+  <text x="64" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">12HP</text>
+  
+  <!-- Size indicator -->
+  <text x="64" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">60.96mm</text>
+</svg>

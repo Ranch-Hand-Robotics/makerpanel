@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#f0f0f0"/>
+  
+  <!-- 4 HP Panel (narrow) -->
+  <rect x="44" y="8" width="40" height="112" fill="#2E7D32" stroke="#1B5E20" stroke-width="2"/>
+  
+  <!-- Mounting holes -->
+  <circle cx="54" cy="18" r="3" fill="#333"/>
+  <circle cx="74" cy="18" r="3" fill="#333"/>
+  <circle cx="54" cy="110" r="3" fill="#333"/>
+  <circle cx="74" cy="110" r="3" fill="#333"/>
+  
+  <!-- Label -->
+  <text x="64" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">4HP</text>
+  
+  <!-- Size indicator -->
+  <text x="64" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">20.32mm</text>
+</svg>
