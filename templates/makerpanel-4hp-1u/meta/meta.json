@@ -1,0 +1,13 @@
+{
+  "name": "4 HP 1U",
+  "description": "Compact 4 HP × 1U panel (20.32 × 44.45 mm)",
+  "category": "Compact",
+  "height_u": 1,
+  "width_hp": 4,
+  "width_mm": 20.32,
+  "height_mm": 44.45,
+  "max_depth_mm": 60,
+  "mounting_holes": 4,
+  "use_case": "Small display, status indicators, or minimal control panel",
+  "recommended": false
+}

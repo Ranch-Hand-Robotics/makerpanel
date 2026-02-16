@@ -1,0 +1,13 @@
+{
+  "name": "8 HP 2U",
+  "description": "Double-height standard 8 HP × 2U panel (40.64 × 88.9 mm)",
+  "category": "Standard",
+  "height_u": 2,
+  "width_hp": 8,
+  "width_mm": 40.64,
+  "height_mm": 88.9,
+  "max_depth_mm": 60,
+  "mounting_holes": 16,
+  "use_case": "Standard control panel with ample space for interface design",
+  "recommended": false
+}

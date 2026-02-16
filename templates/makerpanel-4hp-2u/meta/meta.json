@@ -1,0 +1,13 @@
+{
+  "name": "4 HP 2U",
+  "description": "Double-height 4 HP × 2U panel (20.32 × 88.9 mm)",
+  "category": "Compact",
+  "height_u": 2,
+  "width_hp": 4,
+  "width_mm": 20.32,
+  "height_mm": 88.9,
+  "max_depth_mm": 60,
+  "mounting_holes": 8,
+  "use_case": "Compact controls with more vertical space for interfaces",
+  "recommended": false
+}

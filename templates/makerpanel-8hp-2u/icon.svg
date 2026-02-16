@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#f0f0f0"/>
+  
+  <!-- 8 HP 2U Panel -->
+  <rect x="24" y="8" width="80" height="112" fill="#EF5350" stroke="#C62828" stroke-width="2"/>
+  
+  <!-- Mounting holes (16 total) -->
+  <circle cx="32" cy="22" r="2.5" fill="#333"/>
+  <circle cx="48" cy="22" r="2.5" fill="#333"/>
+  <circle cx="80" cy="22" r="2.5" fill="#333"/>
+  <circle cx="96" cy="22" r="2.5" fill="#333"/>
+  
+  <circle cx="32" cy="44" r="2.5" fill="#333"/>
+  <circle cx="48" cy="44" r="2.5" fill="#333"/>
+  <circle cx="80" cy="44" r="2.5" fill="#333"/>
+  <circle cx="96" cy="44" r="2.5" fill="#333"/>
+  
+  <circle cx="32" cy="84" r="2.5" fill="#333"/>
+  <circle cx="48" cy="84" r="2.5" fill="#333"/>
+  <circle cx="80" cy="84" r="2.5" fill="#333"/>
+  <circle cx="96" cy="84" r="2.5" fill="#333"/>
+  
+  <circle cx="32" cy="106" r="2.5" fill="#333"/>
+  <circle cx="48" cy="106" r="2.5" fill="#333"/>
+  <circle cx="80" cy="106" r="2.5" fill="#333"/>
+  <circle cx="96" cy="106" r="2.5" fill="#333"/>
+  
+  <!-- Label -->
+  <text x="64" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white">8HP</text>
+  
+  <!-- Size indicator -->
+  <text x="64" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#333">2U</text>
+  <text x="64" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#555">41x89mm</text>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "name": "8 HP 1U",
+  "description": "Compact standard 8 HP × 1U panel (40.64 × 44.45 mm)",
+  "category": "Standard",
+  "height_u": 1,
+  "width_hp": 8,
+  "width_mm": 40.64,
+  "height_mm": 44.45,
+  "max_depth_mm": 60,
+  "mounting_holes": 8,
+  "use_case": "Single-row controls, LED displays, or sensor readouts",
+  "recommended": false
+}
