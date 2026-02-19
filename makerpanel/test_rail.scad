@@ -1,5 +1,10 @@
 use <rails.scad>
+use <panel.scad>
 
-//rack_10(100);
+maker_rail(hp_to_mm(24));
 
-MP_crossrail(300);
+translate([-5,10,0])
+makerpanel(8, 1);
+
+translate([50,10,0])
+makerpanel(12, 1);

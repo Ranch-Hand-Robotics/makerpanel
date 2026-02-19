@@ -17,12 +17,12 @@ U = 44.45;           // Vertical Unit = 44.45mm (1.75")
 // T-Slot Specifications
 // Standard T-slot twist nuts (M5/M6 compatible, drop-in style)
 T_SLOT_HEIGHT = 6.9;           // T-slot nut width (M5/M6)
-T_SLOT_WIDTH = 19.125;         // T-slot nut length (elongated rectangular)
+T_SLOT_WIDTH = 5.75 * HP;      // 5.75 HP (29.06mm) avoids even 4-HP grid alignment
 T_SLOT_CORNER_RADIUS = 1.0;
 
 // Rack Specifications
 RACK_SUPPORT_WIDTH = 3; 
-RACK_HOLE_DIAMETER = 4.5;   // M4 mounting holes
+RACK_HOLE_DIAMETER = 3.5;   // M3 mounting holes
 RACK_RAIL_HEIGHT = 11; 
 RACK_RAIL_THICKNESS = 3;    // Rail material thickness
 

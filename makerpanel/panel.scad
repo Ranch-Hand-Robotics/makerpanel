@@ -9,13 +9,12 @@ include <common.scad>
 // Module: Panel with T-Slot Mounting Holes
 // ============================================
 
-module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
+module makerpanel_2d(width_hp, height_u) {
     /*
-    Creates a maker panel with T-slot mounting holes (M5/M6 compatible)
+        Creates a 2D maker panel profile with T-slot mounting holes (M5/M6 compatible)
     Parameters:
       - width_hp: width in HP units
       - height_u: height in U units
-      - thickness: panel thickness in mm (default 3mm aluminum)
     */
     
     width_mm = hp_to_mm(width_hp);
@@ -28,23 +27,35 @@ module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
     
     difference() {
         // Base panel
-        cube([width_mm, height_mm, thickness], center=false);
+        square([width_mm, height_mm], center=false);
         
         // 4 corner mounting holes (M3 for T-nuts)
         // Bottom-left
-        translate([hole_inset_x, hole_inset_y, -1])
-            cylinder(r=MOUNT_HOLE_DIAMETER/2, h=thickness + 2, $fn=32);
+        translate([hole_inset_x, hole_inset_y])
+            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
         
         // Bottom-right
-        translate([width_mm - hole_inset_x, hole_inset_y, -1])
-            cylinder(r=MOUNT_HOLE_DIAMETER/2, h=thickness + 2, $fn=32);
+        translate([width_mm - hole_inset_x, hole_inset_y])
+            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
         
         // Top-left
-        translate([hole_inset_x, height_mm - hole_inset_y, -1])
-            cylinder(r=MOUNT_HOLE_DIAMETER/2, h=thickness + 2, $fn=32);
+        translate([hole_inset_x, height_mm - hole_inset_y])
+            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
         
         // Top-right
-        translate([width_mm - hole_inset_x, height_mm - hole_inset_y, -1])
-            cylinder(r=MOUNT_HOLE_DIAMETER/2, h=thickness + 2, $fn=32);
+        translate([width_mm - hole_inset_x, height_mm - hole_inset_y])
+            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
     }
+}
+
+module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
+    /*
+    Creates a maker panel with T-slot mounting holes (M5/M6 compatible)
+    Parameters:
+      - width_hp: width in HP units
+      - height_u: height in U units
+      - thickness: panel thickness in mm (default 3mm aluminum)
+    */
+    linear_extrude(height=thickness)
+        makerpanel_2d(width_hp, height_u);
 }
