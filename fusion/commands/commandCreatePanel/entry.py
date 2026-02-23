@@ -33,7 +33,7 @@ CMD_ID          = f'{config.COMPANY_NAME}_{config.ADDIN_NAME}_cmdPanel'
 CMD_NAME        = 'MakerPanel Panel'
 CMD_Description = 'Create a MakerPanel-compliant panel outline as a 2D sketch'
 
-# Toolbar placement — same panel as Gridfinity uses
+# Toolbar placement
 WORKSPACE_ID       = 'FusionSolidEnvironment'
 PANEL_ID           = 'SketchPanel'
 COMMAND_BESIDE_ID  = 'SketchCreate'
