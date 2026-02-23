@@ -165,6 +165,7 @@ Rails are designed to work in both orientations (horizontal cross beams or verti
 - **Support width**: 6.2 mm (0.244 inches) - Structural support between slots
 - **Support spacing**: 44.45 mm (1.750 inches) - 1U intervals, creates two slots per U
 - **Rail material**: Laser Cut Metal or Plastic or 3D Printed
+- **Rail height**: 11mm 
 
 *Design rationale: Slots spaced at 1U intervals (44.45mm) work for both vertical structural support and horizontal panel mounting. For horizontal rails, panels mount across multiple slots. For vertical rails, the 1U spacing provides consistent mounting points.*
 
