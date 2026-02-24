@@ -14,8 +14,12 @@ U_UNIT = 4.445      # 44.45 mm = 1U
 # ---------------------------------------------------------------------------
 # Standard panel heights
 # ---------------------------------------------------------------------------
-PANEL_1U_HEIGHT = 4.445     # 44.45 mm — compact 1U panel
-PANEL_3U_HEIGHT = 12.85     # 128.5 mm — standard 3U panel height
+PANEL_1U_HEIGHT   = 4.445     # 44.45 mm — compact 1U panel
+PANEL_1_5U_HEIGHT = 6.6675   # 66.675 mm — 1.5U panel
+PANEL_2U_HEIGHT   = 8.89      # 88.9 mm — 2U panel
+PANEL_2_5U_HEIGHT = 11.1125  # 111.125 mm — 2.5U panel
+PANEL_3U_HEIGHT   = 12.85     # 128.5 mm — standard 3U panel height
+PANEL_3_5U_HEIGHT = 15.5575  # 155.575 mm — 3.5U panel
 
 # Rail mounting-centre spacing
 RAIL_3U_SPACING = 13.335    # 133.35 mm — 3U rail mounting centres (3 × 1U)

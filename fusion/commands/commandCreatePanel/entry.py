@@ -65,7 +65,11 @@ INPUT_CHANGES_RESET_TO_FACTORY  = 'input_changes_factory'
 
 # Height preset option strings
 HEIGHT_PRESET_1U     = '1U (44.45 mm)'
+HEIGHT_PRESET_1_5U   = '1.5U (66.675 mm)'
+HEIGHT_PRESET_2U     = '2U (88.9 mm)'
+HEIGHT_PRESET_2_5U   = '2.5U (111.125 mm)'
 HEIGHT_PRESET_3U     = '3U Panel (128.5 mm)'
+HEIGHT_PRESET_3_5U   = '3.5U (155.575 mm)'
 HEIGHT_PRESET_CUSTOM = 'Custom'
 
 # Slot style option strings
@@ -187,7 +191,11 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
         adsk.core.DropDownStyles.TextListDropDownStyle)
     current_preset = uiState.getState(PANEL_HEIGHT_PRESET_INPUT)
     heightPreset.listItems.add(HEIGHT_PRESET_1U,     current_preset == HEIGHT_PRESET_1U)
+    heightPreset.listItems.add(HEIGHT_PRESET_1_5U,   current_preset == HEIGHT_PRESET_1_5U)
+    heightPreset.listItems.add(HEIGHT_PRESET_2U,     current_preset == HEIGHT_PRESET_2U)
+    heightPreset.listItems.add(HEIGHT_PRESET_2_5U,   current_preset == HEIGHT_PRESET_2_5U)
     heightPreset.listItems.add(HEIGHT_PRESET_3U,     current_preset == HEIGHT_PRESET_3U)
+    heightPreset.listItems.add(HEIGHT_PRESET_3_5U,   current_preset == HEIGHT_PRESET_3_5U)
     heightPreset.listItems.add(HEIGHT_PRESET_CUSTOM, current_preset == HEIGHT_PRESET_CUSTOM)
     uiState.registerCommandInput(heightPreset)
 
@@ -386,8 +394,16 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
 def _height_cm(preset: str, custom_cm: float) -> float:
     if preset == HEIGHT_PRESET_1U:
         return const.PANEL_1U_HEIGHT
+    if preset == HEIGHT_PRESET_1_5U:
+        return const.PANEL_1_5U_HEIGHT
+    if preset == HEIGHT_PRESET_2U:
+        return const.PANEL_2U_HEIGHT
+    if preset == HEIGHT_PRESET_2_5U:
+        return const.PANEL_2_5U_HEIGHT
     if preset == HEIGHT_PRESET_3U:
         return const.PANEL_3U_HEIGHT
+    if preset == HEIGHT_PRESET_3_5U:
+        return const.PANEL_3_5U_HEIGHT
     return custom_cm
 
 

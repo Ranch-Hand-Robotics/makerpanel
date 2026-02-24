@@ -5,16 +5,16 @@ Creates a parametric Fusion 360 sketch of a MakerPanel outline on the XY
 plane of the supplied component.  All coordinates are in centimetres (Fusion
 360 internal length unit).
 
-Panel layout (origin at bottom-left):
+Panel layout (origin at centre):
 
-    ┌──────── panel_width ────────┐  ← y = panel_height
-    │  ●══════●        ●══════●  │  ← top mounting slots
+    ┌──────── panel_width ────────┐  ← y = +panel_height/2
+    │  ●══════●        ●══════●   │  ← top mounting slots
     │                             │
     │       (empty face)          │
     │                             │
-    │  ●══════●        ●══════●  │  ← bottom mounting slots
-    └─────────────────────────────┘  ← y = 0
-   x=0                          x=panel_width
+    │  ●══════●        ●══════●   │  ← bottom mounting slots
+    └─────────────────────────────┘  ← y = -panel_height/2
+   x=-panel_width/2          x=+panel_width/2
 
 ● = semicircular arc cap, ═══ = straight slot edge.
 """
@@ -53,17 +53,21 @@ def createMakerPanelSketch(
     panel_width  = widthHp * const.HP_UNIT  # cm
     panel_height = heightMm / 10.0           # mm → cm
 
+    # Centre the panel at the world origin
+    ox = -panel_width  / 2.0
+    oy = -panel_height / 2.0
+
     sketch = component.sketches.add(component.xYConstructionPlane)
     sketch.name = f'MakerPanel {widthHp}HP x {heightMm:.1f}mm'
 
     # Outer panel boundary
     sketch.sketchCurves.sketchLines.addTwoPointRectangle(
-        adsk.core.Point3D.create(0, 0, 0),
-        adsk.core.Point3D.create(panel_width, panel_height, 0),
+        adsk.core.Point3D.create(ox,                  oy,                   0),
+        adsk.core.Point3D.create(ox + panel_width,    oy + panel_height,    0),
     )
 
     if addMountingSlots:
-        _add_mounting_features(sketch, panel_width, panel_height, slotStyle)
+        _add_mounting_features(sketch, panel_width, panel_height, slotStyle, ox, oy)
 
     return sketch
 
@@ -72,22 +76,22 @@ def createMakerPanelSketch(
 # Private helpers
 # ---------------------------------------------------------------------------
 
-def _add_mounting_features(sketch, panel_width, panel_height, style):
+def _add_mounting_features(sketch, panel_width, panel_height, style, ox, oy):
     """Add mounting holes or oblong slots at the top and bottom of the panel."""
     hole_radius = const.PANEL_MOUNTING_HOLE_DIAMETER / 2.0
     half_extent = hole_radius + const.PANEL_MOUNTING_SLOT_EXTRA  # cm
 
     # Vertical position of the slot/hole centre measured from each edge
     y_from_edge = const.PANEL_MIN_EDGE_CLEARANCE + hole_radius
-    y_bottom = y_from_edge
-    y_top    = panel_height - y_from_edge
+    y_bottom = oy + y_from_edge
+    y_top    = oy + panel_height - y_from_edge
 
     # If the panel is too short, collapse both rows to the vertical centre
     if y_top <= y_bottom:
-        y_bottom = panel_height / 2.0
+        y_bottom = oy + panel_height / 2.0
         y_top    = None
 
-    x_positions = _mounting_x_positions(panel_width, half_extent)
+    x_positions = _mounting_x_positions(panel_width, half_extent, ox)
     circles = sketch.sketchCurves.sketchCircles
 
     for x in x_positions:
@@ -103,37 +107,26 @@ def _add_mounting_features(sketch, panel_width, panel_height, style):
                     adsk.core.Point3D.create(x, y_top, 0), hole_radius)
 
 
-def _mounting_x_positions(panel_width, half_extent):
+def _mounting_x_positions(panel_width, half_extent, ox):
     """Return a list of X centre positions (cm) for mounting features.
 
-    The leftmost and rightmost holes are always at the same fixed offset
-    from their respective edges (edge_clearance + slot half-length),
-    regardless of panel width.  Interior holes are added at
-    PANEL_MOUNTING_HOLE_SPACING intervals stepping inward from the left
-    anchor, provided they stay at least half a pitch away from the right
-    anchor (so holes never crowd together).
+    Corner holes are placed at a fixed offset from each edge.  Any
+    interior holes are distributed evenly in the span between the two
+    corner holes, with the number of gaps chosen to be the closest whole
+    number to (span / PANEL_MOUNTING_HOLE_SPACING).
     """
-    spacing    = const.PANEL_MOUNTING_HOLE_SPACING
     edge_offset = const.PANEL_MIN_EDGE_CLEARANCE + half_extent
 
-    left_x  = edge_offset
-    right_x = panel_width - edge_offset
+    left_x  = ox + edge_offset
+    right_x = ox + panel_width - edge_offset
 
     if right_x <= left_x:
-        return [panel_width / 2.0]
+        return [ox + panel_width / 2.0]
 
-    positions = [left_x]
+    span    = right_x - left_x
+    n_gaps  = max(1, round(span / const.PANEL_MOUNTING_HOLE_SPACING))
 
-    # Walk right from the left anchor; stop before we crowd the right anchor
-    x = left_x + spacing
-    while x < right_x - spacing / 2.0:
-        positions.append(x)
-        x += spacing
-
-    if abs(right_x - positions[-1]) > 0.01:   # avoid duplicate when they coincide
-        positions.append(right_x)
-
-    return positions
+    return [left_x + i * span / n_gaps for i in range(n_gaps + 1)]
 
 
 def _draw_oblong_slot(sketch, cx, cy, half_extent, radius):
