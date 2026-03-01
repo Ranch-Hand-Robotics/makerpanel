@@ -20,6 +20,9 @@ PANEL_2U_HEIGHT   = 8.89      # 88.9 mm — 2U panel
 PANEL_2_5U_HEIGHT = 11.1125  # 111.125 mm — 2.5U panel
 PANEL_3U_HEIGHT   = 12.85     # 128.5 mm — standard 3U panel height
 PANEL_3_5U_HEIGHT = 15.5575  # 155.575 mm — 3.5U panel
+PANEL_4U_HEIGHT   = 17.78     # 177.8 mm — 4U panel
+PANEL_4_5U_HEIGHT = 20.0025  # 200.025 mm — 4.5U panel
+PANEL_5U_HEIGHT   = 22.225   # 222.25 mm — 5U panel
 
 # Rail mounting-centre spacing
 RAIL_3U_SPACING = 13.335    # 133.35 mm — 3U rail mounting centres (3 × 1U)

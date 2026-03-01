@@ -2,7 +2,7 @@
 hide:
   - navigation
   - toc
-title: " "
+title: Gallery
 ---
 <!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
@@ -14,7 +14,7 @@ title: " "
     <p style="font-size: 1.4rem; color: #b0b0b0; margin-bottom: 2rem; font-weight: 400;">
       Browse community-contributed panel designs, download files, and get inspired for your next project
     </p>
-    <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new/choose" class="gallery-cta" style="background: #4a9d5f; color: #ffffff; padding: 1rem 2.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; transition: all 0.3s ease; border: 2px solid #4a9d5f; text-transform: uppercase; letter-spacing: 0.1em;">
+    <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new?template=submit-panel.yml" class="gallery-cta" style="background: #4a9d5f; color: #ffffff; padding: 1rem 2.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 900; font-size: 1.1rem; display: inline-block; transition: all 0.3s ease; border: 2px solid #4a9d5f; text-transform: uppercase; letter-spacing: 0.1em;">
       + Submit Panel
     </a>
   </div>
@@ -26,12 +26,9 @@ title: " "
 
 <!-- CATEGORY_TABS_END -->
 
-<div style="background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%); border-radius: 0.5rem; padding: 2.5rem; margin: 3rem 0; color: white; position: relative; overflow: hidden; border: 1px solid #4a9d5f;">
-  <h3 style="color: #4a9d5f; margin-top: 0; font-size: 2rem; margin-bottom: 1.5rem; position: relative; z-index: 1; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;">// GALLERY STATISTICS</h3>
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; position: relative; z-index: 1;">
-    <!-- STATS_START -->
-    <!-- STATS_END -->
-  </div>
+<div style="margin: 2rem 0 0.5rem; color: #606060; font-size: 0.8rem;">
+  <!-- STATS_START -->
+  <!-- STATS_END -->
 </div>
 
 **Questions?** 

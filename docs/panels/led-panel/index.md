@@ -1,5 +1,3 @@
-<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
-
 ---
 title: LED Indicator Panel
 category: Visual Feedback
@@ -8,6 +6,8 @@ contributor: Ranch Hand Robotics
 thumbnail: images/thumb.svg
 description: Eight LED indicators arranged in a vertical array. Perfect for status monitoring, VU meters, or sequential displays.
 ---
+
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
 # LED Indicator Panel
 

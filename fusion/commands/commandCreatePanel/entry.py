@@ -70,11 +70,19 @@ HEIGHT_PRESET_2U     = '2U (88.9 mm)'
 HEIGHT_PRESET_2_5U   = '2.5U (111.125 mm)'
 HEIGHT_PRESET_3U     = '3U Panel (128.5 mm)'
 HEIGHT_PRESET_3_5U   = '3.5U (155.575 mm)'
+HEIGHT_PRESET_4U     = '4U (177.8 mm)'
+HEIGHT_PRESET_4_5U   = '4.5U (200.025 mm)'
+HEIGHT_PRESET_5U     = '5U (222.25 mm)'
 HEIGHT_PRESET_CUSTOM = 'Custom'
 
 # Slot style option strings
 SLOT_STYLE_OBLONG = 'Oblong (adjustment slots)'
 SLOT_STYLE_CIRCLE = 'Circular (fixed holes)'
+
+# Mounting density option strings
+PANEL_MOUNTING_DENSITY_INPUT   = 'panel_mounting_density'
+MOUNTING_DENSITY_FULL    = 'Full (every 25 mm)'
+MOUNTING_DENSITY_MINIMAL = 'Minimal (edges + centre only)'
 
 # ---------------------------------------------------------------------------
 # Module-level state (survives between dialog opens)
@@ -139,10 +147,11 @@ def initUiState():
     uiState.initValue(PREVIEW_GROUP,       True, adsk.core.GroupCommandInput.classType())
     # Inputs
     uiState.initValue(PANEL_WIDTH_HP_INPUT,          8,                        adsk.core.IntegerSpinnerCommandInput.classType())
-    uiState.initValue(PANEL_HEIGHT_PRESET_INPUT,     HEIGHT_PRESET_3U,         adsk.core.DropDownCommandInput.classType())
+    uiState.initValue(PANEL_HEIGHT_PRESET_INPUT,     HEIGHT_PRESET_3U,          adsk.core.DropDownCommandInput.classType())
     uiState.initValue(PANEL_HEIGHT_CUSTOM_INPUT,     const.PANEL_3U_HEIGHT,    adsk.core.ValueCommandInput.classType())
-    uiState.initValue(PANEL_ADD_MOUNTING_SLOTS_INPUT, True,                    adsk.core.BoolValueCommandInput.classType())
-    uiState.initValue(PANEL_SLOT_STYLE_INPUT,         SLOT_STYLE_OBLONG,       adsk.core.DropDownCommandInput.classType())
+    uiState.initValue(PANEL_ADD_MOUNTING_SLOTS_INPUT,  True,                     adsk.core.BoolValueCommandInput.classType())
+    uiState.initValue(PANEL_SLOT_STYLE_INPUT,          SLOT_STYLE_OBLONG,        adsk.core.DropDownCommandInput.classType())
+    uiState.initValue(PANEL_MOUNTING_DENSITY_INPUT,    MOUNTING_DENSITY_FULL,    adsk.core.DropDownCommandInput.classType())
     uiState.initValue(SHOW_PREVIEW_INPUT,             True,                    adsk.core.BoolValueCommandInput.classType())
 
     # Restore previously saved defaults if available
@@ -196,6 +205,9 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     heightPreset.listItems.add(HEIGHT_PRESET_2_5U,   current_preset == HEIGHT_PRESET_2_5U)
     heightPreset.listItems.add(HEIGHT_PRESET_3U,     current_preset == HEIGHT_PRESET_3U)
     heightPreset.listItems.add(HEIGHT_PRESET_3_5U,   current_preset == HEIGHT_PRESET_3_5U)
+    heightPreset.listItems.add(HEIGHT_PRESET_4U,     current_preset == HEIGHT_PRESET_4U)
+    heightPreset.listItems.add(HEIGHT_PRESET_4_5U,   current_preset == HEIGHT_PRESET_4_5U)
+    heightPreset.listItems.add(HEIGHT_PRESET_5U,     current_preset == HEIGHT_PRESET_5U)
     heightPreset.listItems.add(HEIGHT_PRESET_CUSTOM, current_preset == HEIGHT_PRESET_CUSTOM)
     uiState.registerCommandInput(heightPreset)
 
@@ -234,6 +246,15 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     slotStyleInput.listItems.add(SLOT_STYLE_CIRCLE, current_style == SLOT_STYLE_CIRCLE)
     slotStyleInput.isEnabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
     uiState.registerCommandInput(slotStyleInput)
+
+    densityInput = mountGroup.children.addDropDownCommandInput(
+        PANEL_MOUNTING_DENSITY_INPUT, 'Hole Density',
+        adsk.core.DropDownStyles.TextListDropDownStyle)
+    current_density = uiState.getState(PANEL_MOUNTING_DENSITY_INPUT)
+    densityInput.listItems.add(MOUNTING_DENSITY_FULL,    current_density == MOUNTING_DENSITY_FULL)
+    densityInput.listItems.add(MOUNTING_DENSITY_MINIMAL, current_density == MOUNTING_DENSITY_MINIMAL)
+    densityInput.isEnabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
+    uiState.registerCommandInput(densityInput)
 
     # --- Save / reset buttons ---
     changesGroup = inputs.addGroupCommandInput(INPUT_CHANGES_GROUP, 'Settings')
@@ -322,11 +343,15 @@ def command_input_changed(args: adsk.core.InputChangedEventArgs):
         if custom:
             custom.isVisible = (uiState.getState(PANEL_HEIGHT_PRESET_INPUT) == HEIGHT_PRESET_CUSTOM)
 
-    # Enable / disable slot style
+    # Enable / disable slot style and density
     if changed.id == PANEL_ADD_MOUNTING_SLOTS_INPUT:
+        enabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
         style = inputs.itemById(PANEL_SLOT_STYLE_INPUT)
         if style:
-            style.isEnabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
+            style.isEnabled = enabled
+        density = inputs.itemById(PANEL_MOUNTING_DENSITY_INPUT)
+        if density:
+            density.isEnabled = enabled
 
     # Refresh the read-only dimensions text
     dims_box = inputs.itemById(PANEL_ACTUAL_DIMS_INPUT)
@@ -371,8 +396,14 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
         custom_cm  = uiState.getState(PANEL_HEIGHT_CUSTOM_INPUT)
         height_mm  = _height_cm(preset, custom_cm) * 10.0
         add_slots  = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
-        style_name = uiState.getState(PANEL_SLOT_STYLE_INPUT)
-        style      = 'oblong' if style_name == SLOT_STYLE_OBLONG else 'circle'
+        style_name   = uiState.getState(PANEL_SLOT_STYLE_INPUT)
+        style        = 'oblong' if style_name == SLOT_STYLE_OBLONG else 'circle'
+        density_name = uiState.getState(PANEL_MOUNTING_DENSITY_INPUT)
+        minimal      = (density_name == MOUNTING_DENSITY_MINIMAL)
+
+        # If the user is currently editing a sketch, draw into it instead of
+        # creating a new one.
+        active_sketch = adsk.fusion.Sketch.cast(app.activeEditObject)
 
         createMakerPanelSketch(
             component,
@@ -380,6 +411,8 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
             heightMm=height_mm,
             addMountingSlots=add_slots,
             slotStyle=style,
+            minimalMounting=minimal,
+            existing_sketch=active_sketch,
         )
     except Exception as err:
         args.executeFailed = True
@@ -404,6 +437,12 @@ def _height_cm(preset: str, custom_cm: float) -> float:
         return const.PANEL_3U_HEIGHT
     if preset == HEIGHT_PRESET_3_5U:
         return const.PANEL_3_5U_HEIGHT
+    if preset == HEIGHT_PRESET_4U:
+        return const.PANEL_4U_HEIGHT
+    if preset == HEIGHT_PRESET_4_5U:
+        return const.PANEL_4_5U_HEIGHT
+    if preset == HEIGHT_PRESET_5U:
+        return const.PANEL_5U_HEIGHT
     return custom_cm
 
 

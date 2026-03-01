@@ -48,12 +48,12 @@ def generate_gallery_categories(panels_dir):
     """Generate gallery content organized by categories."""
     panels = []
     
-    # Read all panel.md files from panel subdirectories
+    # Read all index.md files from panel subdirectories
     for panel_subdir in Path(panels_dir).iterdir():
         if not panel_subdir.is_dir():
             continue
         
-        panel_file = panel_subdir / 'panel.md'
+        panel_file = panel_subdir / 'index.md'
         if not panel_file.exists():
             continue
         
@@ -91,7 +91,8 @@ def generate_gallery_categories(panels_dir):
             'size': metadata.get('size', 'Unknown'),
             'contributor': metadata.get('contributor', metadata.get('author', 'Community')),
             'description': metadata.get('description', ''),
-            'thumbnail': thumbnail
+            'thumbnail': thumbnail,
+            'buy_url': metadata.get('buy_url', metadata.get('purchase_url', ''))
         })
     
     # Group by category
@@ -132,8 +133,10 @@ def on_page_markdown(markdown, page, config, files):
     # Add "All" tab content
     tabs_html += '<div class="tabbed-block">\n'
     for p in sorted(panels, key=lambda x: x['title']):
+        buy_badge = f'<a class="panel-card__buy" href="{p["buy_url"]}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n' if p.get('buy_url') else ''
         tabs_html += '<div class="panel-card">\n'
-        tabs_html += f'<a href="panels/{p["filename"]}/" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+        tabs_html += f'<a href="panels/{p["filename"]}/index.html" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+        tabs_html += buy_badge
         tabs_html += f'<p>{p["description"]}</p>\n'
         tabs_html += '</div>\n'
     tabs_html += '</div>\n'
@@ -142,8 +145,10 @@ def on_page_markdown(markdown, page, config, files):
     for category in sorted(categories.keys()):
         tabs_html += '<div class="tabbed-block">\n'
         for p in categories[category]:
+            buy_badge = f'<a class="panel-card__buy" href="{p["buy_url"]}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n' if p.get('buy_url') else ''
             tabs_html += '<div class="panel-card">\n'
-            tabs_html += f'<a href="panels/{p["filename"]}/" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+            tabs_html += f'<a href="panels/{p["filename"]}/index.html" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
+            tabs_html += buy_badge
             tabs_html += f'<p>{p["description"]}</p>\n'
             tabs_html += '</div>\n'
         tabs_html += '</div>\n'
@@ -159,24 +164,7 @@ def on_page_markdown(markdown, page, config, files):
     )
     
     # Update statistics
-    stats = f"""<div style="font-size: 1rem;">
-      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2), inset 0 0 8px rgba(0, 255, 0, 0.05); text-align: center;">
-        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 8px rgba(0, 255, 0, 0.5); font-family: 'Courier New', monospace; font-weight: 900;">{len(panels)}</strong>
-        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Total Panels</span>
-      </div>
-    </div>
-    <div style="font-size: 1rem;">
-      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2), inset 0 0 8px rgba(0, 255, 0, 0.05); text-align: center;">
-        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 8px rgba(0, 255, 0, 0.5); font-family: 'Courier New', monospace; font-weight: 900;">{len(set(p['contributor'] for p in panels))}</strong>
-        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Contributors</span>
-      </div>
-    </div>
-    <div style="font-size: 1rem;">
-      <div style="padding: 1.25rem; background: rgba(0, 255, 0, 0.1); border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2), inset 0 0 8px rgba(0, 255, 0, 0.05); text-align: center;">
-        <strong style="font-size: 2.5rem; display: block; color: #00ff00; text-shadow: 0 0 8px rgba(0, 255, 0, 0.5); font-family: 'Courier New', monospace; font-weight: 900;">{len(categories)}</strong>
-        <span style="font-weight: 700; color: #808080; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem;">Categories</span>
-      </div>
-    </div>"""
+    stats = f"{len(panels)} panels &middot; {len(set(p['contributor'] for p in panels))} contributors &middot; {len(categories)} categories"
     
     markdown = re.sub(
         r'<!-- STATS_START -->.*?<!-- STATS_END -->',

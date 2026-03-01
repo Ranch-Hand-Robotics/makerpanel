@@ -1,6 +1,6 @@
 import os
 
-DEBUG = True
+DEBUG = False
 
 ADDIN_NAME = 'MakerPanel'
 COMPANY_NAME = 'RanchHandRobotics'

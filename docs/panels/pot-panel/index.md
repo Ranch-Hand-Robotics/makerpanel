@@ -1,5 +1,3 @@
-<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
-
 ---
 title: Basic Potentiometer Panel
 category: Analog Control
@@ -8,6 +6,8 @@ contributor: Ranch Hand Robotics
 thumbnail: images/thumb.svg
 description: A simple panel featuring four potentiometers for analog control applications. Ideal for audio mixing, motor control, or general parameter adjustment.
 ---
+
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
 # Basic Potentiometer Panel
 
