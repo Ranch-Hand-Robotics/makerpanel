@@ -9,12 +9,13 @@ include <common.scad>
 // Module: Panel with T-Slot Mounting Holes
 // ============================================
 
-module makerpanel_2d(width_hp, height_u) {
+module makerpanel_2d(width_hp, height_u, mount_hole_diameter=MOUNT_HOLE_DIAMETER) {
     /*
         Creates a 2D maker panel profile with T-slot mounting holes (M5/M6 compatible)
     Parameters:
       - width_hp: width in HP units
       - height_u: height in U units
+            - mount_hole_diameter: mounting hole diameter in mm (default from common.scad)
     */
     
     width_mm = hp_to_mm(width_hp);
@@ -32,30 +33,31 @@ module makerpanel_2d(width_hp, height_u) {
         // 4 corner mounting holes (M3 for T-nuts)
         // Bottom-left
         translate([hole_inset_x, hole_inset_y])
-            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
+            circle(r=mount_hole_diameter/2, $fn=32);
         
         // Bottom-right
         translate([width_mm - hole_inset_x, hole_inset_y])
-            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
+            circle(r=mount_hole_diameter/2, $fn=32);
         
         // Top-left
         translate([hole_inset_x, height_mm - hole_inset_y])
-            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
+            circle(r=mount_hole_diameter/2, $fn=32);
         
         // Top-right
         translate([width_mm - hole_inset_x, height_mm - hole_inset_y])
-            circle(r=MOUNT_HOLE_DIAMETER/2, $fn=32);
+            circle(r=mount_hole_diameter/2, $fn=32);
     }
 }
 
-module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS) {
+module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS, mount_hole_diameter=MOUNT_HOLE_DIAMETER) {
     /*
     Creates a maker panel with T-slot mounting holes (M5/M6 compatible)
     Parameters:
       - width_hp: width in HP units
       - height_u: height in U units
       - thickness: panel thickness in mm (default 3mm aluminum)
+            - mount_hole_diameter: mounting hole diameter in mm (default from common.scad)
     */
     linear_extrude(height=thickness)
-        makerpanel_2d(width_hp, height_u);
+                makerpanel_2d(width_hp, height_u, mount_hole_diameter=mount_hole_diameter);
 }
