@@ -1,0 +1,11 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "addin",
+    "id": "5c3a9d2e-b4f1-4a87-9c5e-12d4a6b3f890",
+    "author": "RanchHandRobotics",
+    "description": { "": "MakerPanel - Generate MakerPanel-compliant panel and rail 2D sketches" },
+    "version": "1.0.0.0",
+    "runOnStartup": true,
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}

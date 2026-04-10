@@ -1,5 +1,3 @@
-<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
-
 ---
 title: USB Hub Panel
 category: Connectivity
@@ -8,6 +6,8 @@ contributor: Ranch Hand Robotics
 thumbnail: images/thumb.svg
 description: Front-panel USB hub with four USB-A ports and two USB-C ports. Integrated power management and status LEDs.
 ---
+
+<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
 # USB Hub Panel
 

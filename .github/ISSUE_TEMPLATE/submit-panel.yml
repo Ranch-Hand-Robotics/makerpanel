@@ -9,6 +9,8 @@ body:
         ## Welcome to Makerpanel! 🔧
         Fill out this form and we'll review your panel design. Once approved, it'll show up in the gallery automatically!
 
+        **Commercial panels are welcome.** If you sell your panel, include a Buy Now link below — the gallery happily lists both free/open designs and commercial products.
+
   - type: input
     id: name
     attributes:
@@ -116,8 +118,10 @@ body:
   - type: input
     id: purchase_url
     attributes:
-      label: Purchase URL (optional)
-      description: Where can people buy this panel or kit?
+      label: Buy Now URL (optional)
+      description: |
+        Link to where people can purchase this panel or kit. Commercial listings are fully allowed —
+        Tindie, your own shop, Etsy, eBay, or anywhere else you sell.
       placeholder: "https://tindie.com/products/you/your-panel"
 
   - type: textarea
@@ -186,6 +190,4 @@ body:
         - label: My panel is compatible with T-slot rail mounting (M5/M6 twist nuts)
           required: true
         - label: I have tested or prototyped this design
-          required: true
-        - label: I am releasing this design under an open source license
           required: true

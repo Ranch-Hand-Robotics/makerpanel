@@ -1,4 +1,4 @@
-site_name: Makerpanel
+site_name: Maker Panel
 site_description: Specification and Gallery of Maker Panels
 site_author: Ranch Hand Robotics
 site_url: https://ranch-hand-robotics.github.io/makerpanel
@@ -11,37 +11,12 @@ nav:
   - Home: index.md
   - Specification: specification.md
   - Gallery: gallery.md
+  - Fusion 360 Add-in: fusion360.md
   - About: about.md
 
 theme:
-  name: material
-  palette:
-    # Force dark mode with green accents
-    scheme: slate
-    primary: black
-    accent: green
-  features:
-    - navigation.instant
-    - navigation.tracking
-    - navigation.tabs
-    - navigation.sections
-    - navigation.top
-    - search.suggest
-    - search.highlight
-    - content.code.copy
-  icon:
-    repo: fontawesome/brands/github
-  logo: images/makericon.png
-  favicon: images/makericon.png
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/Ranch-Hand-Robotics/makerpanel
-      name: GitHub Repository
-    - icon: fontawesome/solid/wrench
-      link: https://ranch-hand-robotics.github.io/makerpanel
-      name: Makerpanel Home
+  name: mkdocs
+  custom_dir: theme
 
 extra_css:
   - css/custom.css
@@ -59,6 +34,7 @@ markdown_extensions:
 
 use_directory_urls: false
 strict: true
+not_in_nav: panels/**/index.md
 
 hooks:
   - .github/hooks.py

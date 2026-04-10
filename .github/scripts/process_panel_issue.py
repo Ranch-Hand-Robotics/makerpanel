@@ -98,12 +98,12 @@ def generate_panel_markdown(data, panel_slug):
     
     # Build purchase section
     purchase_section = ""
-    if 'Purchase URL (optional)' in data and data['Purchase URL (optional)'].strip():
-        purchase_url = data['Purchase URL (optional)'].strip()
+    buy_url = (data.get('Buy Now URL (optional)', '') or data.get('Purchase URL (optional)', '')).strip()
+    if buy_url:
         purchase_section = f"""
-## Purchase
+## Where to Buy
 
-- **Available at**: [Purchase here]({purchase_url})
+- **Buy Now**: [Purchase here]({buy_url})
 """
     
     # Build BOM section
@@ -129,9 +129,7 @@ def generate_panel_markdown(data, panel_slug):
     if not power:
         power = 'Passive (no power required)'
     
-    markdown = f"""<!-- Copyright (c) {datetime.now().year} Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
-
----
+    markdown = f"""---
 title: {data.get('Panel Name', 'Untitled Panel')}
 category: {category}
 size: {data.get('Panel Size', 'Unknown')}
@@ -139,6 +137,8 @@ contributor: {data.get('Your Name', 'Unknown')}
 thumbnail: images/thumb.png
 description: {data.get('One-line description', '')}
 ---
+
+<!-- Copyright (c) {datetime.now().year} Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
 # {data.get('Panel Name', 'Untitled Panel')}
 
@@ -176,7 +176,7 @@ Date: {datetime.now().strftime('%B %Y')}
 
 ---
 
-[← Back to Gallery](../../gallery.md)
+[← Back to Gallery](../../gallery.html)
 """
     
     return markdown
@@ -328,7 +328,7 @@ def main():
         ext = os.path.splitext(urlparse(thumbnail_urls[0]).path)[1] or '.png'
         panel_markdown = panel_markdown.replace('thumb.png', f'thumb{ext}')
     
-    panel_md_path = panel_dir / 'panel.md'
+    panel_md_path = panel_dir / 'index.md'
     with open(panel_md_path, 'w') as f:
         f.write(panel_markdown)
     
