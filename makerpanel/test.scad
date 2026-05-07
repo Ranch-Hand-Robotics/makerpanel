@@ -3,12 +3,14 @@
 // Licensed under MIT License: https://opensource.org/licenses/MIT
 // This test file generates different configurations of panels and mounting systems
 
-include <common.scad>
-use <panel.scad>
-use <rails.scad>
+include <panel.scad>
+include <rails.scad>
+
+/* [Part Selection] */
+part = "panel_sizes";// [all,panel_sizes,cross_rail_hosts, rack_19_all,rack_19_small,rack_19_medium,rack_19_large,  rack_10_all,rack_10_small,rack_10_medium,custom_rack,dense_array]
 
 // ============================================
-// TEST 1: Panel Size Variations
+// TEST: Panel Size Variations
 // ============================================
 
 module test_panel_sizes() {
@@ -65,7 +67,7 @@ module test_panel_sizes() {
 }
 
 // ============================================
-// TEST 2: T-Slot Cross-Rail Hosts
+// TEST: T-Slot Cross-Rail Hosts
 // ============================================
 
 module test_maker_rails() {
@@ -91,7 +93,7 @@ module test_maker_rails() {
 }
 
 // ============================================
-// TEST 3: Standalone Cross-Rail Systems
+// TEST: Standalone Cross-Rail Systems
 // ============================================
 
 module test_standalone_systems() {
@@ -149,7 +151,7 @@ module test_standalone_systems() {
 }
 
 // ============================================
-// TEST 4: 19" Rack with Various Configurations
+// TEST: 19" Rack with Various Configurations
 // ============================================
 
 module test_19_rack_small() {
@@ -234,7 +236,7 @@ module test_19_rack_large() {
 }
 
 // ============================================
-// TEST 5: 10" Rack with Various Configurations
+// TEST: 10" Rack with Various Configurations
 // ============================================
 
 module test_10_rack_small() {
@@ -280,7 +282,7 @@ module test_10_rack_medium() {
 }
 
 // ============================================
-// TEST 6: Custom Width Rack with Panels
+// TEST: Custom Width Rack with Panels
 // ============================================
 
 module test_custom_rack() {
@@ -316,7 +318,7 @@ module test_custom_rack() {
 }
 
 // ============================================
-// TEST 7: Dense Panel Arrays
+// TEST: Dense Panel Arrays
 // ============================================
 
 module test_dense_array() {
@@ -363,78 +365,56 @@ module test_dense_array() {
 // RENDER SELECTION WITH TEST SWITCHER
 // ============================================
 
-// Select which test(s) to render:
-// Options: "all"
-//          "1"     - Individual panel sizes
-//          "2"     - T-slot cross-rail hosts
-//          "3"     - Standalone systems
-//          "4a"    - 19" Rack (small)
-//          "4b"    - 19" Rack (medium)
-//          "4c"    - 19" Rack (large)
-//          "5a"    - 10" Rack (small)
-//          "5b"    - 10" Rack (medium)
-//          "6"     - Custom width rack
-//          "7"     - Dense panel array
-TEST_SELECT = "1";
+// Select which test(s) to render in OpenSCAD Customizer.
 
 // Render selected tests
-if (TEST_SELECT == "all" || TEST_SELECT == "1") {
-    // Test 1: Individual panel sizes
-    translate([0, 0, 0])
-        test_panel_sizes();
+if (part == "all" || part == "panel_sizes") {
+    // Panel size variations
+    test_panel_sizes();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "2") {
-    // Test 2: T-slot cross-rail hosts of various widths
-    translate([0, u_to_mm(12), 0])
-        test_maker_rails();
+if (part == "all" || part == "cross_rail_hosts") {
+    // T-slot cross-rail hosts of various widths
+    test_maker_rails();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "3") {
-    // Test 3: Standalone systems
-    translate([300, 0, 0])
-        test_standalone_systems();
+if (part == "all" || part == "standalone_systems") {
+    // Standalone systems
+    test_standalone_systems();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4a") {
-    // Test 4a: 19" Rack (small)
-    translate([0, u_to_mm(20), 0])
-        test_19_rack_small();
+if (part == "all" || part == "rack_19_all" || part == "rack_19_small") {
+    // 19" rack (small)
+    test_19_rack_small();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4b") {
-    // Test 4b: 19" Rack (medium)
-    translate([600, u_to_mm(20), 0])
-        test_19_rack_medium();
+if (part == "all" || part == "rack_19_all" || part == "rack_19_medium") {
+    // 19" rack (medium)
+    test_19_rack_medium();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "4" || TEST_SELECT == "4c") {
-    // Test 4c: 19" Rack (large)
-    translate([1200, u_to_mm(20), 0])
-        test_19_rack_large();
+if (part == "all" || part == "rack_19_all" || part == "rack_19_large") {
+    // 19" rack (large)
+    test_19_rack_large();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "5" || TEST_SELECT == "5a") {
-    // Test 5a: 10" Rack (small)
-    translate([0, u_to_mm(40), 0])
-        test_10_rack_small();
+if (part == "all" || part == "rack_10_all" || part == "rack_10_small") {
+    // 10" rack (small)
+    test_10_rack_small();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "5" || TEST_SELECT == "5b") {
-    // Test 5b: 10" Rack (medium)
-    translate([400, u_to_mm(40), 0])
-        test_10_rack_medium();
+if (part == "all" || part == "rack_10_all" || part == "rack_10_medium") {
+    // 10" rack (medium)
+    test_10_rack_medium();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "6") {
-    // Test 6: Custom width rack
-    translate([0, u_to_mm(55), 0])
-        test_custom_rack();
+if (part == "all" || part == "custom_rack") {
+    // Custom width rack
+    test_custom_rack();
 }
 
-if (TEST_SELECT == "all" || TEST_SELECT == "7") {
-    // Test 7: Dense panel array
-    translate([1200, u_to_mm(55), 0])
-        test_dense_array();
+if (part == "all" || part == "dense_array") {
+    // Dense panel array
+    test_dense_array();
 }
 

@@ -20,6 +20,8 @@ module makerpanel_2d(width_hp, height_u, mount_hole_diameter=MOUNT_HOLE_DIAMETER
     
     width_mm = hp_to_mm(width_hp);
     height_mm = u_to_mm(height_u);
+    half_w = width_mm / 2;
+    half_h = height_mm / 2;
     
     // Calculate mounting hole positions - 4 holes at corners
     // Centered within RACK_RAIL_HEIGHT from each edge
@@ -28,23 +30,23 @@ module makerpanel_2d(width_hp, height_u, mount_hole_diameter=MOUNT_HOLE_DIAMETER
     
     difference() {
         // Base panel
-        square([width_mm, height_mm], center=false);
+        square([width_mm, height_mm], center=true);
         
         // 4 corner mounting holes (M3 for T-nuts)
         // Bottom-left
-        translate([hole_inset_x, hole_inset_y])
+        translate([-(half_w - hole_inset_x), -(half_h - hole_inset_y)])
             circle(r=mount_hole_diameter/2, $fn=32);
         
         // Bottom-right
-        translate([width_mm - hole_inset_x, hole_inset_y])
+        translate([(half_w - hole_inset_x), -(half_h - hole_inset_y)])
             circle(r=mount_hole_diameter/2, $fn=32);
         
         // Top-left
-        translate([hole_inset_x, height_mm - hole_inset_y])
+        translate([-(half_w - hole_inset_x), (half_h - hole_inset_y)])
             circle(r=mount_hole_diameter/2, $fn=32);
         
         // Top-right
-        translate([width_mm - hole_inset_x, height_mm - hole_inset_y])
+        translate([(half_w - hole_inset_x), (half_h - hole_inset_y)])
             circle(r=mount_hole_diameter/2, $fn=32);
     }
 }
@@ -59,5 +61,5 @@ module makerpanel(width_hp, height_u, thickness=PANEL_THICKNESS, mount_hole_diam
             - mount_hole_diameter: mounting hole diameter in mm (default from common.scad)
     */
     linear_extrude(height=thickness)
-                makerpanel_2d(width_hp, height_u, mount_hole_diameter=mount_hole_diameter);
+        makerpanel_2d(width_hp, height_u, mount_hole_diameter=mount_hole_diameter);
 }

@@ -1,10 +1,16 @@
 use <rails.scad>
 use <panel.scad>
 
-maker_rail(hp_to_mm(24));
+/* [Part Selection] */
+part = "rail"; // [rail,panel]
 
-translate([-5,10,0])
-makerpanel(8, 1);
+/* [Parameters] */
+hp = 35; // Horizontal pitch for the rail or Panel(in HP units)
+u = 1; // Height for the Panel (in U units)
+holes = true; // Include mounting holes in the rail
 
-translate([50,10,0])
-makerpanel(12, 1);
+if (part == "rail") {
+	maker_rail(hp, mounting_holes=holes);
+} else {
+	makerpanel(hp, u);
+}

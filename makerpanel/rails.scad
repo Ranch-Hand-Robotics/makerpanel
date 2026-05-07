@@ -34,7 +34,7 @@ module rounded_square(size, r=1) {
 // - Extruded to create 3D rails
 // - Exported as SVG/DXF for laser cutting
 
-module maker_rail_2d(rail_width, height, mounting_holes=true) {
+module maker_rail_2d(rail_width, height, mounting_holes=true, base=true) {
     /*
     Creates a 2D cross-section profile of the rail (X-Y plane)
     Parameters:
@@ -69,8 +69,10 @@ module maker_rail_2d(rail_width, height, mounting_holes=true) {
     difference() 
     {
         // Base rectangle (X-Y plane profile)
-        translate([rail_offset, -height/2])
-            square([width, height], center=false);
+        if (base) {
+            translate([rail_offset, -height/2])
+                square([width, height], center=false);
+        }
         
         // Cut T-slot compatible slots (rectangular cutouts with rounded corners)
         for (i = [0 : num_slots - 1]) {
@@ -113,38 +115,10 @@ module maker_rail(rail_width, height=RACK_RAIL_HEIGHT, depth=RACK_RAIL_THICKNESS
 }
 
 // ============================================
-// Module: 19" Rack Assembly
+// Module: Custom Width Maker Rack
 // ============================================
 
-module rack_19(height) {
-    /*
-    Creates a complete 19" rack frame
-    Parameters:
-      - height: total height in mm (typically multiple of U)
-    */
-    
-    rack_custom(RACK_19_WIDTH, height);
-}
-
-// ============================================
-// Module: 10" Rack Assembly
-// ============================================
-
-module rack_10(height) {
-    /*
-    Creates a complete 10" rack frame
-    Parameters:
-      - height: total height in mm (typically multiple of U)
-    */
-    
-    rack_custom(RACK_10_WIDTH, height);
-}
-
-// ============================================
-// Module: Custom Width Rack
-// ============================================
-
-module rack_custom(width, height) {
+module makerrack_custom(width, height) {
     /*
     Creates a rack with custom width
     Parameters:
