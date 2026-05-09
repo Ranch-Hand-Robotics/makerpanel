@@ -12,7 +12,7 @@
 
 // Panel Units
 HP = 5.08;           // Horizontal Pitch = 5.08mm (0.200")
-U = 44.45;           // Vertical Unit = 44.45mm (1.75")
+U = 44.45;           // Vertical Unit outer span = 44.45mm (1.75")
 
 // T-Slot Specifications
 // Standard T-slot twist nuts (M5/M6 compatible, drop-in style)
@@ -45,3 +45,7 @@ function hp_to_mm(hp) = hp * HP;
 
 // Convert U to millimeters
 function u_to_mm(u) = u * U;
+
+// Convert U to clear opening between adjacent T-slots.
+// For 1U this is: U - (2 * T_SLOT_HEIGHT).
+function u_clear_to_mm(u) = u * U - 2 * T_SLOT_HEIGHT;
