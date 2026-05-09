@@ -88,7 +88,7 @@ body:
         - Feature 2
         - Feature 3
     validations:
-      required: true
+      required: false
 
   - type: input
     id: material
@@ -97,7 +97,7 @@ body:
       description: What is the panel made from?
       placeholder: "e.g., FR4 PCB, Aluminum, Acrylic"
     validations:
-      required: true
+      required: false
 
   - type: input
     id: power
@@ -113,7 +113,7 @@ body:
       description: Link to your design files, CAD files, schematics, etc.
       placeholder: "https://github.com/you/your-panel"
     validations:
-      required: true
+      required: false
 
   - type: input
     id: purchase_url
@@ -154,7 +154,7 @@ body:
     id: author
     attributes:
       label: Your Name
-      placeholder: "e.g., Jane Developer"
+      placeholder: "e.g., Lou Polyhobbyist"
     validations:
       required: true
 
@@ -162,7 +162,7 @@ body:
     id: author_github
     attributes:
       label: Your GitHub Username
-      placeholder: "e.g., janedev"
+      placeholder: "e.g., Polyhobbyist"
     validations:
       required: true
 
