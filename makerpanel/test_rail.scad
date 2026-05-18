@@ -10,7 +10,7 @@ u = 1; // Height for the Panel (in U units)
 holes = true; // Include mounting holes in the rail
 
 if (part == "rail") {
-	maker_rail(hp, mounting_holes=holes);
+	maker_rail(hp_to_mm(hp), mounting_holes=holes);
 } else {
 	makerpanel(hp, u);
 }
