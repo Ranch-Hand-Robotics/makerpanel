@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-07-04T13:52:50Z",
+  "updated_at": "2026-07-04T14:23:03Z",
   "panels": [
     {
       "slug": "iris_keyboard",
@@ -14,8 +14,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/iris_keyboard",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/iris_keyboard/IrisMakerPanel.scad",
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
       "scadAssets": [
         "IrisCutout.svg"
       ]
@@ -32,8 +32,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/joystick",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/joystick/design/joystick.scad"
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/joystick/design/joystick.scad"
     },
     {
       "slug": "lilygo_screen_4_7_s3",
@@ -47,8 +47,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_screen_4_7_s3",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/lilygo_screen_4_7_s3/lilygo_screen.scad"
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad"
     },
     {
       "slug": "lilygo_t-encoder-pro",
@@ -62,8 +62,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad"
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad"
     },
     {
       "slug": "measure",
@@ -77,8 +77,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/measure",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/measure/measure.scad"
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/measure/measure.scad"
     },
     {
       "slug": "mouse_panel",
@@ -92,8 +92,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/mouse_panel",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T13:52:50Z",
-      "scadFile": "generated/scad/examples/mouse_panel/MousePadPanel.scad"
+      "updated_at": "2026-07-04T14:23:03Z",
+      "scadFile": "examples/mouse_panel/MousePadPanel.scad"
     }
   ]
 }

@@ -3,16 +3,13 @@
 import json
 import os
 import re
-import shutil
 from pathlib import Path
 from collections import defaultdict
 from datetime import datetime
 
 
 EXAMPLES_DIR = Path('examples')
-MAKERPANEL_SCAD_DIR = Path('makerpanel')
 GALLERY_JSON_PATH = Path('docs/gallery.json')
-GENERATED_SCAD_DIR = Path('docs/generated/scad')
 EXAMPLE_PANEL_URL_PREFIX = 'https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/'
 DEFAULT_EXAMPLE_THUMBNAIL = 'images/makerpanel.png'
 
@@ -23,7 +20,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Digital I/O',
         'horizontalPitch': 17,
         'verticalUnits': 2,
-        'scadFile': 'generated/scad/examples/joystick/design/joystick.scad',
+        'scadFile': 'examples/joystick/design/joystick.scad',
         'description': 'Panel with a circular cutout for a SaiDian 4-axis mini joystick module. Laser-cuttable or 3D printable, with four M3 mounting holes.'
     },
     'lilygo_screen_4_7_s3': {
@@ -31,7 +28,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Visual Feedback',
         'horizontalPitch': 26,
         'verticalUnits': 2,
-        'scadFile': 'generated/scad/examples/lilygo_screen_4_7_s3/lilygo_screen.scad',
+        'scadFile': 'examples/lilygo_screen_4_7_s3/lilygo_screen.scad',
         'description': 'Panel for the LilyGo 4.7" S3 screen with a ribbon cable cutout for rear PCB/battery routing.'
     },
     'lilygo_t-encoder-pro': {
@@ -39,7 +36,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Analog Control',
         'horizontalPitch': 9,
         'verticalUnits': 1,
-        'scadFile': 'generated/scad/examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad',
+        'scadFile': 'examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad',
         'description': 'Compact panel with a circular cutout for the LilyGo T-Encoder Pro rotary encoder.'
     },
     'iris_keyboard': {
@@ -47,7 +44,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Digital I/O',
         'horizontalPitch': 35,
         'verticalUnits': 4,
-        'scadFile': 'generated/scad/examples/iris_keyboard/IrisMakerPanel.scad',
+        'scadFile': 'examples/iris_keyboard/IrisMakerPanel.scad',
         'description': 'Panel for mounting an Iris split keyboard, with an SVG-based keyboard cutout and MakerPanel-compatible mounting.'
     },
     'measure': {
@@ -55,7 +52,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Tools',
         'horizontalPitch': 35,
         'verticalUnits': 4,
-        'scadFile': 'generated/scad/examples/measure/measure.scad',
+        'scadFile': 'examples/measure/measure.scad',
         'description': '3D-printable gauge for verifying MakerPanel dimensions, HP spacing, and rack measurements.'
     },
     'mouse_panel': {
@@ -63,7 +60,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Tools',
         'horizontalPitch': 35,
         'verticalUnits': 5,
-        'scadFile': 'generated/scad/examples/mouse_panel/MousePadPanel.scad',
+        'scadFile': 'examples/mouse_panel/MousePadPanel.scad',
         'description': 'Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.'
     }
 }
@@ -87,7 +84,7 @@ def _find_scad_url(slug):
         return ''
 
     relative_scad = scad_files[0].relative_to(example_dir).as_posix()
-    return f'generated/scad/examples/{slug}/{relative_scad}'
+    return f'examples/{slug}/{relative_scad}'
 
 
 def _find_scad_assets(slug):
@@ -107,45 +104,13 @@ def _find_scad_assets(slug):
     return assets
 
 
-def _copy_tree_by_suffixes(src_root, dst_root, suffixes):
-    if not src_root.exists():
-        return 0
-
-    count = 0
-    for path in src_root.rglob('*'):
-        if not path.is_file() or path.suffix.lower() not in suffixes:
-            continue
-
-        relative = path.relative_to(src_root)
-        destination = dst_root / relative
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, destination)
-        count += 1
-
-    return count
-
-
-def sync_scad_assets_for_gallery():
-    """Publish SCAD assets into docs/ so they are available to client-side WASM rendering."""
-    if GENERATED_SCAD_DIR.exists():
-        shutil.rmtree(GENERATED_SCAD_DIR)
-
-    examples_dst = GENERATED_SCAD_DIR / 'examples'
-    makerpanel_dst = GENERATED_SCAD_DIR / 'makerpanel'
-
-    suffixes = {'.scad', '.svg'}
-    copied_examples = _copy_tree_by_suffixes(EXAMPLES_DIR, examples_dst, suffixes)
-    copied_support = _copy_tree_by_suffixes(MAKERPANEL_SCAD_DIR, makerpanel_dst, suffixes)
-
-    print(
-        f'MkDocs hook: synced SCAD assets to {GENERATED_SCAD_DIR} '
-        f'({copied_examples} example files, {copied_support} support files).'
-    )
-
-
-def _build_example_entry(slug):
+def _build_example_entry(slug, existing_entry=None):
     override = EXAMPLE_OVERRIDES.get(slug, {})
     scad_file = override.get('scadFile') or _find_scad_url(slug)
+    existing_entry = existing_entry if isinstance(existing_entry, dict) else {}
+
+    existing_thumbnail = str(existing_entry.get('thumbnail', '')).strip()
+    thumbnail = existing_thumbnail or DEFAULT_EXAMPLE_THUMBNAIL
 
     entry = {
         'slug': slug,
@@ -155,7 +120,7 @@ def _build_example_entry(slug):
         'verticalUnits': override.get('verticalUnits'),
         'contributor': 'Ranch Hand Robotics',
         'description': override.get('description', 'Makerpanel example design.'),
-        'thumbnail': DEFAULT_EXAMPLE_THUMBNAIL,
+        'thumbnail': thumbnail,
         'panel_url': f'{EXAMPLE_PANEL_URL_PREFIX}{slug}',
         'buy_url': '',
         'issue_number': 0,
@@ -202,7 +167,8 @@ def sync_examples_into_gallery_json():
     entry_by_slug = {entry.get('slug'): entry for entry in panels if isinstance(entry, dict) and entry.get('slug')}
 
     for slug in example_slugs:
-        entry_by_slug[slug] = _build_example_entry(slug)
+        existing_entry = entry_by_slug.get(slug)
+        entry_by_slug[slug] = _build_example_entry(slug, existing_entry)
 
     # Remove stale auto-managed example entries for directories that no longer exist.
     for slug, entry in list(entry_by_slug.items()):
@@ -332,6 +298,5 @@ def on_page_markdown(markdown, page, config, files):
 
 def on_config(config):
     """MkDocs lifecycle hook: sync example panels before build."""
-    sync_scad_assets_for_gallery()
     sync_examples_into_gallery_json()
     return config

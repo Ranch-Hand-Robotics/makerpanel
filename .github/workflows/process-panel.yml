@@ -32,6 +32,11 @@ jobs:
         run: |
           pip install requests
 
+      - name: Install OpenSCAD for thumbnail generation
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
       - name: Process panel issue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,6 +44,10 @@ jobs:
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: |
           python .github/scripts/process_panel_issue.py ${{ inputs.issue_number }}
+
+      - name: Generate SCAD thumbnails
+        run: |
+          python .github/scripts/generate_scad_thumbnails.py
 
       - name: Configure Git
         run: |
@@ -48,6 +57,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add docs/panels/
+          git add docs/images/panels/generated/ || true
           git add docs/gallery.json || true
           
           if git diff --staged --quiet; then
