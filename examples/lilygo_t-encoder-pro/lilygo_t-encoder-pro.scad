@@ -6,8 +6,8 @@
 include <panel.scad>
 
 /* [Parameters] */
-panel_u = 1; //[1:1:4] MakerPanel units high for the bay height
-panel_hp = 9; // [9:1:35] MakerPanel horizontal pitch for the bay width
+verticalUnits = 1; //[1:1:8] MakerPanel vertical units (U) for panel height
+horizontalPitch = 9; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 panel_depth = 3; // mm.
 
 module hidden() {}
@@ -17,7 +17,7 @@ lilygo_radius = 35.5/2; // mm, radius of the circular area for the encoder
 module lilygo_panel() {
     // 3D printable panel (same XY geometry as laser version, extruded in Z)
     difference() {
-        makerpanel(panel_hp, panel_u, thickness=panel_depth);
+        makerpanel(horizontalPitch, verticalUnits, thickness=panel_depth);
 
         // Cutout for the encoder
         translate([0, 0, -1])

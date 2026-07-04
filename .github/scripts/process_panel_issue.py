@@ -44,6 +44,24 @@ def parse_issue_body(body):
     return data
 
 
+def get_field(data, *names, default=''):
+    """Return the first non-empty field value from a list of possible names."""
+    for name in names:
+        value = data.get(name)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return default
+
+
+def determine_category(data):
+    """Resolve panel category, including custom category override."""
+    category = get_field(data, 'Panel Category', default='Other')
+    custom_category = get_field(data, 'Custom Category (if "Other" selected)', 'Custom Category')
+    if custom_category:
+        return custom_category
+    return category or 'Other'
+
+
 def extract_checkboxes(text):
     """Extract checked checkbox values."""
     checked = []
@@ -83,29 +101,105 @@ def sanitize_filename(name):
     return name.strip('-')
 
 
+def _parse_int(value):
+    """Parse an integer from a value that may include units/text."""
+    if value is None:
+        return None
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    match = re.search(r'\d+', text)
+    if not match:
+        return None
+
+    return int(match.group(0))
+
+
+def resolve_dimensions(data):
+    """Resolve horizontal pitch (HP) and vertical units (U), with legacy size fallback."""
+    horizontal_pitch = _parse_int(get_field(
+        data,
+        'Horizontal Pitch (HP)',
+        'Horizontal Pitch',
+        'Panel Horizontal Pitch',
+        'horizontalPitch',
+        default=''
+    ))
+    vertical_units = _parse_int(get_field(
+        data,
+        'Vertical Units (U)',
+        'Vertical Units',
+        'Panel Vertical Units',
+        'verticalUnits',
+        default=''
+    ))
+
+    if horizontal_pitch is not None and vertical_units is not None:
+        return horizontal_pitch, vertical_units
+
+    # Backward compatibility for old single size field, e.g. "8 HP x 3U"
+    panel_size = get_field(data, 'Panel Size', default='')
+    if panel_size:
+        match = re.search(r'(\d+)\s*HP\s*[x×]\s*(\d+)\s*U', panel_size, re.IGNORECASE)
+        if match:
+            return int(match.group(1)), int(match.group(2))
+
+    return horizontal_pitch, vertical_units
+
+
+def format_panel_size(horizontal_pitch, vertical_units):
+    """Format dimensions as a user-friendly size string."""
+    if horizontal_pitch is None or vertical_units is None:
+        return 'Unknown'
+    return f'{horizontal_pitch} HP × {vertical_units}U'
+
+
+def resolve_scad_file_url(data):
+    """Resolve optional SCAD file pointer for manifest entries."""
+    explicit_scad_url = get_field(data, 'SCAD File URL (optional)', 'SCAD File URL', default='')
+    if explicit_scad_url:
+        return explicit_scad_url
+
+    design_url = get_field(data, 'GitHub Repository or Design Files URL', default='')
+    if design_url and '.scad' in design_url.lower():
+        return design_url
+
+    return ''
+
+
 def generate_panel_markdown(data, panel_slug):
     """Generate the panel detail page markdown."""
-    
-    features = data.get('Key Features', '').strip()
-    if not features.startswith('-'):
+
+    panel_name = get_field(data, 'Panel Name', default='Untitled Panel')
+    description = get_field(data, 'Tell us about your panel', default='No description provided.')
+    short_description = get_field(data, 'One-line description')
+    horizontal_pitch, vertical_units = resolve_dimensions(data)
+    panel_size = format_panel_size(horizontal_pitch, vertical_units)
+    contributor = get_field(data, 'Submitted By', 'Your Name', default='Community')
+    github_user = get_field(data, 'Your GitHub Username', default=contributor if contributor != 'Community' else 'unknown')
+    github_url = get_field(data, 'GitHub Repository or Design Files URL', default='')
+    license_name = get_field(data, 'License', default='Unknown')
+    category = determine_category(data)
+
+    features = get_field(data, 'Key Features')
+    if features and not features.startswith('-'):
         # Convert to bullet list if not already
         features = '\n'.join(f"- {line.strip()}" for line in features.split('\n') if line.strip())
-    
-    # Determine category
-    category = data.get('Panel Category', 'Other')
-    if 'Custom Category' in data and data['Custom Category'].strip():
-        category = data['Custom Category'].strip()
+    if not features:
+        features = '- Details coming soon.'
     
     # Build purchase section
     purchase_section = ""
-    buy_url = (data.get('Buy Now URL (optional)', '') or data.get('Purchase URL (optional)', '')).strip()
+    buy_url = get_field(data, 'Buy Now URL (optional)', 'Purchase URL (optional)')
     if buy_url:
         purchase_section = f"""
 ## Where to Buy
 
 - **Buy Now**: [Purchase here]({buy_url})
 """
-    
+
     # Build BOM section
     bom_section = ""
     if 'Bill of Materials (optional)' in data and data['Bill of Materials (optional)'].strip():
@@ -125,34 +219,41 @@ def generate_panel_markdown(data, panel_slug):
 """
     
     # Power requirements
-    power = data.get('Power Requirements (optional)', 'Passive (no power required)').strip()
+    power = get_field(data, 'Power Requirements (optional)', default='Passive (no power required)')
     if not power:
         power = 'Passive (no power required)'
+
+    design_files_section = "- Design files link not provided."
+    if github_url:
+        design_files_section = f"- [GitHub Repository/Files]({github_url})"
     
     markdown = f"""---
-title: {data.get('Panel Name', 'Untitled Panel')}
+title: {panel_name}
 category: {category}
-size: {data.get('Panel Size', 'Unknown')}
-contributor: {data.get('Your Name', 'Unknown')}
+horizontalPitch: {horizontal_pitch if horizontal_pitch is not None else 'Unknown'}
+verticalUnits: {vertical_units if vertical_units is not None else 'Unknown'}
+size: {panel_size}
+contributor: {contributor}
 thumbnail: images/thumb.png
-description: {data.get('One-line description', '')}
+description: {short_description}
 ---
 
 <!-- Copyright (c) {datetime.now().year} Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
-# {data.get('Panel Name', 'Untitled Panel')}
+# {panel_name}
 
-![{data.get('Panel Name', 'Panel')}](images/thumb.png)
+![{panel_name}](images/thumb.png)
 
 ## Overview
 
-{data.get('Tell us about your panel', '')}
+{description}
 {purchase_section}
 ## Specifications
 
-- **Size**: {data.get('Panel Size', 'Unknown')}
-- **Depth**: {data.get('Panel Depth', 'Unknown')}
-- **Material**: {data.get('Material', 'Unknown')}
+- **Horizontal Pitch**: {horizontal_pitch if horizontal_pitch is not None else 'Unknown'} HP
+- **Vertical Units**: {vertical_units if vertical_units is not None else 'Unknown'}U
+- **Depth**: {get_field(data, 'Panel Depth', default='Unknown')}
+- **Material**: {get_field(data, 'Material', default='Unknown')}
 - **Power Requirements**: {power}
 - **Mounting**: T-slot compatible (M5/M6 twist nuts)
 
@@ -162,16 +263,16 @@ description: {data.get('One-line description', '')}
 
 ## Design Files
 
-- [GitHub Repository/Files]({data.get('GitHub Repository or Design Files URL', '#')})
+{design_files_section}
 {bom_section}
 ## License
 
-This design is released under the **{data.get('License', 'Unknown')}** license.
+This design is released under the **{license_name}** license.
 
 ## Author
 
-**{data.get('Your Name', 'Unknown')}**  
-GitHub: [@{data.get('Your GitHub Username', 'unknown')}](https://github.com/{data.get('Your GitHub Username', 'unknown')})  
+**{contributor}**  
+GitHub: [@{github_user}](https://github.com/{github_user})  
 Date: {datetime.now().strftime('%B %Y')}
 
 ---
@@ -182,67 +283,76 @@ Date: {datetime.now().strftime('%B %Y')}
     return markdown
 
 
-def update_gallery(panel_data, panel_slug):
-    """Update the gallery.md file with the new panel."""
-    gallery_path = Path('docs/gallery.md')
-    
-    if not gallery_path.exists():
-        print(f"Warning: {gallery_path} not found")
-        return
-    
-    with open(gallery_path, 'r') as f:
-        content = f.read()
-    
-    # Create panel card HTML
-    category = panel_data.get('Panel Category', 'Other')
-    if 'Custom Category' in panel_data and panel_data['Custom Category'].strip():
-        category = panel_data['Custom Category'].strip()
-    
-    panel_card = f"""
-<div class="panel-card" data-category="{category}" style="background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%); border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); border: 1px solid #00ff00;">
-  <a href="panels/{panel_slug}/panel.html" style="text-decoration: none; color: inherit;">
-    <div style="display: flex; gap: 1.5rem; align-items: start;">
-      <img src="panels/{panel_slug}/images/thumb.png" alt="{panel_data.get('Panel Name', 'Panel')}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 0.25rem; border: 2px solid #00ff00; box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);">
-      <div style="flex: 1;">
-        <h3 style="margin-top: 0; color: #00ff00; font-size: 1.5rem; text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);">{panel_data.get('Panel Name', 'Untitled Panel')}</h3>
-        <p style="color: #b0b0b0; margin: 0.5rem 0;">{panel_data.get('One-line description', '')}</p>
-        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
-          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 0.25rem 0.75rem; border-radius: 0.25rem; font-size: 0.9rem; border: 1px solid rgba(0, 255, 0, 0.3);">{panel_data.get('Panel Size', 'Unknown')}</span>
-          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 0.25rem 0.75rem; border-radius: 0.25rem; font-size: 0.9rem; border: 1px solid rgba(0, 255, 0, 0.3);">{category}</span>
-          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 0.25rem 0.75rem; border-radius: 0.25rem; font-size: 0.9rem; border: 1px solid rgba(0, 255, 0, 0.3);">by {panel_data.get('Your Name', 'Unknown')}</span>
-        </div>
-      </div>
-    </div>
-  </a>
-</div>
-"""
-    
-    # Insert before CATEGORY_TABS_END marker (or at a suitable location)
-    # For now, we'll add it to a panels section. The actual gallery update
-    # logic would depend on how the gallery is structured.
-    
-    # Update statistics
-    stats_match = re.search(r'<!-- STATS_START -->.*?<!-- STATS_END -->', content, re.DOTALL)
-    if stats_match:
-        # Count panels by parsing existing content or incrementing
-        # This is simplified - you'd want to actually count panels
-        print("Gallery statistics update needed - implement panel counting logic")
-    
-    # For now, just log that we'd update the gallery
-    print(f"Panel card generated for {panel_slug}")
-    print(f"Category: {category}")
-    print(f"Manual gallery update may be required")
-    
-    # TODO: Implement actual gallery.md update logic based on your gallery structure
+def update_gallery(panel_data, panel_slug, issue_number, thumbnail_path):
+    """Upsert a panel record in docs/gallery.json for client-side rendering."""
+    gallery_json_path = Path('docs/gallery.json')
+
+    payload = {'panels': []}
+    if gallery_json_path.exists():
+        with open(gallery_json_path, 'r', encoding='utf-8') as f:
+            existing = json.load(f)
+            if isinstance(existing, dict):
+                payload = existing
+
+    payload.setdefault('panels', [])
+
+    panel_name = get_field(panel_data, 'Panel Name', default='Untitled Panel')
+    horizontal_pitch, vertical_units = resolve_dimensions(panel_data)
+    description = get_field(panel_data, 'One-line description', default='')
+    category = determine_category(panel_data)
+    buy_url = get_field(panel_data, 'Buy Now URL (optional)', 'Purchase URL (optional)')
+    contributor = get_field(panel_data, 'Submitted By', 'Your Name', default='Community')
+    scad_file_url = resolve_scad_file_url(panel_data)
+
+    entry = {
+        'slug': panel_slug,
+        'title': panel_name,
+        'category': category,
+        'horizontalPitch': horizontal_pitch,
+        'verticalUnits': vertical_units,
+        'contributor': contributor,
+        'description': description,
+        'thumbnail': thumbnail_path,
+        'panel_url': f'panels/{panel_slug}/index.html',
+        'buy_url': buy_url,
+        'issue_number': int(issue_number),
+        'updated_at': datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+    }
+
+    if scad_file_url:
+        entry['scadFile'] = scad_file_url
+
+    panels = payload['panels']
+    existing_index = next((i for i, item in enumerate(panels) if item.get('slug') == panel_slug), None)
+
+    if existing_index is None:
+        panels.append(entry)
+        print(f"Added panel to gallery.json: {panel_slug}")
+    else:
+        panels[existing_index] = entry
+        print(f"Updated panel in gallery.json: {panel_slug}")
+
+    panels.sort(key=lambda x: x.get('title', '').lower())
+    payload['version'] = 1
+    payload['updated_at'] = datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+
+    with open(gallery_json_path, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2)
+        f.write('\n')
+
+    print(f"gallery.json updated: {gallery_json_path}")
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python process_panel_issue.py <issue_number> <github_token>")
+    if len(sys.argv) < 2:
+        print("Usage: python process_panel_issue.py <issue_number>")
         sys.exit(1)
     
     issue_number = sys.argv[1]
-    github_token = sys.argv[2]
+    github_token = os.environ.get('GITHUB_TOKEN')
+    if not github_token:
+        print("Error: GITHUB_TOKEN environment variable is required")
+        sys.exit(1)
     
     # Get repository info from environment or default
     repo_owner = os.environ.get('GITHUB_REPOSITORY_OWNER', 'Ranch-Hand-Robotics')
@@ -270,14 +380,18 @@ def main():
     print(f"Processing issue: {issue['title']}")
     
     # Parse issue body
-    panel_data = parse_issue_body(issue['body'])
+    panel_data = parse_issue_body(issue.get('body') or '')
+    panel_data['Submitted By'] = issue.get('user', {}).get('login', 'Community')
+    panel_data['Issue Number'] = str(issue_number)
     
     print("\nExtracted panel data:")
     for key, value in panel_data.items():
         print(f"  {key}: {value[:100]}..." if len(str(value)) > 100 else f"  {key}: {value}")
     
     # Generate panel slug
-    panel_name = panel_data.get('Panel Name', 'untitled-panel')
+    panel_name = get_field(panel_data, 'Panel Name', default='').strip()
+    if not panel_name:
+        panel_name = issue.get('title', 'untitled-panel').replace('[Panel]', '').strip() or 'untitled-panel'
     panel_slug = sanitize_filename(panel_name)
     
     print(f"\nPanel slug: {panel_slug}")
@@ -300,12 +414,10 @@ def main():
         download_image(thumbnail_url, thumbnail_path)
         print(f"  Saved to: {thumbnail_path}")
         
-        # Update reference in generated markdown if not .png
-        if ext != '.png':
-            # We'll need to update the markdown generation
-            pass
+        thumbnail_web_path = f'panels/{panel_slug}/images/thumb{ext}'
     else:
         print("\nWarning: No thumbnail image found in issue")
+        thumbnail_web_path = f'panels/{panel_slug}/images/thumb.png'
     
     # Download additional images
     additional_images_text = panel_data.get('Additional Photos (optional)', '')
@@ -336,7 +448,7 @@ def main():
     
     # Update gallery
     print(f"\nUpdating gallery...")
-    update_gallery(panel_data, panel_slug)
+    update_gallery(panel_data, panel_slug, issue_number, thumbnail_web_path)
     
     # Comment on the issue
     comment_url = f"{api_url}/comments"
@@ -361,7 +473,7 @@ A maintainer will review and merge the changes soon. Thank you for your contribu
     print("\n✅ Panel processing complete!")
     print(f"\nNext steps:")
     print(f"  1. Review generated files in docs/panels/{panel_slug}/")
-    print(f"  2. Update docs/gallery.md with the panel card")
+    print(f"  2. Verify docs/gallery.json entry for this panel")
     print(f"  3. Commit and push changes")
     print(f"  4. Deploy will run automatically")
 

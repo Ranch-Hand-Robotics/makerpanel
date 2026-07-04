@@ -9,8 +9,8 @@
 include <panel.scad>
 
 /* [Parameters] */
-joystick_u = 2; //[2:1:8] MakerPanel units high for the joystick bay height
-joystick_hp = 17; // [17:1:35] MakerPanel horizontal pitch for the joystick bay width (17HP is 89.25mm, which is slightly larger than the 51mm square base of the joystick, allowing for some tolerance and space for mounting holes)
+verticalUnits = 2; //[1:1:8] MakerPanel vertical units (U) for panel height
+horizontalPitch = 17; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width (17HP is 89.25mm, which is slightly larger than the 51mm square base of the joystick, allowing for tolerance and mounting holes)
 joystick_panel_depth = 3; // mm.
 
 module hidden() {}
@@ -22,7 +22,7 @@ joystick_mounting_hole_placement_radius = 22; // mm, radius at which the mountin
 module joystick_panel() {
     // 3D printable panel (same XY geometry as laser version, extruded in Z)
     difference() {
-        makerpanel(joystick_hp, joystick_u, thickness=joystick_panel_depth);
+        makerpanel(horizontalPitch, verticalUnits, thickness=joystick_panel_depth);
 
         // Cutout for the joystick
         translate([0, 0, -1])

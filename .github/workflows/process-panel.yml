@@ -38,7 +38,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: |
-          python .github/scripts/process_panel_issue.py ${{ inputs.issue_number }} ${{ secrets.GITHUB_TOKEN }}
+          python .github/scripts/process_panel_issue.py ${{ inputs.issue_number }}
 
       - name: Configure Git
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add docs/panels/
-          git add docs/gallery.md || true
+          git add docs/gallery.json || true
           
           if git diff --staged --quiet; then
             echo "No changes to commit"

@@ -38,6 +38,8 @@ body:
         - Visual Feedback
         - Connectivity
         - Digital I/O
+        - Sensor
+        - Actuator
         - Audio
         - Power
         - Other
@@ -52,20 +54,20 @@ body:
       placeholder: "e.g., Sensors, Motors, Display Systems"
 
   - type: input
-    id: size
+    id: horizontal_pitch
     attributes:
-      label: Panel Size
-      description: In HP (width) × U (height) format
-      placeholder: "e.g., 8 HP × 3U"
+      label: Horizontal Pitch (HP)
+      description: Panel width in HP units.
+      placeholder: "e.g., 8"
     validations:
       required: true
 
   - type: input
-    id: depth
+    id: vertical_units
     attributes:
-      label: Panel Depth
-      description: Behind the front surface (in mm)
-      placeholder: "e.g., 25 mm"
+      label: Vertical Units (U)
+      description: Panel height in U units.
+      placeholder: "e.g., 3"
     validations:
       required: true
 
@@ -77,34 +79,6 @@ body:
       placeholder: "What does it do? Why did you build it? What problems does it solve?"
     validations:
       required: true
-
-  - type: textarea
-    id: features
-    attributes:
-      label: Key Features
-      description: List the main features of your panel (one per line)
-      placeholder: |
-        - Feature 1
-        - Feature 2
-        - Feature 3
-    validations:
-      required: false
-
-  - type: input
-    id: material
-    attributes:
-      label: Material
-      description: What is the panel made from?
-      placeholder: "e.g., FR4 PCB, Aluminum, Acrylic"
-    validations:
-      required: false
-
-  - type: input
-    id: power
-    attributes:
-      label: Power Requirements (optional)
-      description: Does the panel need power? If so, specify voltage/current.
-      placeholder: "e.g., 5V @ 100mA, or 'Passive (no power required)'"
 
   - type: input
     id: github_url
@@ -131,7 +105,7 @@ body:
       description: Upload a square image (400×400px minimum) showing your panel. Drag and drop or paste the image here.
       placeholder: "Drag and drop your image here..."
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: images
@@ -139,32 +113,6 @@ body:
       label: Additional Photos (optional)
       description: Upload additional photos showing different angles, assembly, or usage. Drag and drop or paste images here.
       placeholder: "Drag and drop your images here..."
-
-  - type: textarea
-    id: bom
-    attributes:
-      label: Bill of Materials (optional)
-      description: List key components with part numbers and sources
-      placeholder: |
-        | Qty | Part | Description | Source |
-        |-----|------|-------------|--------|
-        | 2 | POT-10K | 10kΩ linear pot | Mouser 123-456 |
-
-  - type: input
-    id: author
-    attributes:
-      label: Your Name
-      placeholder: "e.g., Lou Polyhobbyist"
-    validations:
-      required: true
-
-  - type: input
-    id: author_github
-    attributes:
-      label: Your GitHub Username
-      placeholder: "e.g., Polyhobbyist"
-    validations:
-      required: true
 
   - type: input
     id: license
@@ -174,20 +122,3 @@ body:
       placeholder: "e.g., MIT, CC-BY-SA-4.0, CERN-OHL-S-2.0"
     validations:
       required: true
-
-  - type: checkboxes
-    id: confirm
-    attributes:
-      label: Specification Compliance Checklist
-      description: Please confirm your panel meets these requirements from the [Makerpanel Specification](https://ranch-hand-robotics.github.io/makerpanel/specification/)
-      options:
-        - label: My panel uses HP-based width (1 HP = 5.08 mm)
-          required: true
-        - label: My panel height is 3U (128.5 mm) or 1U (44.45 mm) standard
-          required: true
-        - label: My panel depth is ≤60 mm from front surface
-          required: true
-        - label: My panel is compatible with T-slot rail mounting (M5/M6 twist nuts)
-          required: true
-        - label: I have tested or prototyped this design
-          required: true

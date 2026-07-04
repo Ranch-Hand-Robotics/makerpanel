@@ -12,6 +12,7 @@ nav:
   - Specification: specification.md
   - Gallery: gallery.md
   - Fusion 360 Add-in: fusion360.md
+  - FreeCAD Workbench: freecad.md
   - About: about.md
 
 theme:

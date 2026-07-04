@@ -17,8 +17,8 @@ part = "assembly"; // [assembly, lilygo_screen, lilygo_pcb, lilygo_panel]
 
 /* [Parameters] */
 
-screen_bay_u = 2; // MakerPanel units high for the screen bay height
-screen_bay_hp = 26; // MakerPanel horizontal pitch for the screen half.
+verticalUnits = 2; // [1:1:8] MakerPanel vertical units (U) for panel height
+horizontalPitch = 26; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 screen_panel_depth = 3; // mm.
 
 ribbon_cutout_w = 10; // mm width of the cutout for the ribbon cable
@@ -29,9 +29,9 @@ ribbon_cutout_offset_y = 0; // mm vertical offset of the ribbon cutout from the 
 module lilygo_makerpanel() {
     // 3D printable panel (same XY geometry as laser version, extruded in Z)
     difference() {
-        makerpanel(screen_bay_hp, screen_bay_u, thickness=screen_panel_depth);
+        makerpanel(horizontalPitch, verticalUnits, thickness=screen_panel_depth);
 
-        offset_x_effective = hp_to_mm(screen_bay_hp)/2 - ribbon_cutout_w/2 - ribbon_cutout_offset_x;
+        offset_x_effective = hp_to_mm(horizontalPitch)/2 - ribbon_cutout_w/2 - ribbon_cutout_offset_x;
         // Cutout for the ribbon cable
         translate([offset_x_effective, ribbon_cutout_offset_y, 0])
             cube([ribbon_cutout_w, ribbon_cutout_h, 2 * screen_panel_depth], center=true);

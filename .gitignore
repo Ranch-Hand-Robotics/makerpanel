@@ -1,6 +1,9 @@
 # MkDocs build output
 site/
 
+# Generated docs assets (OpenSCAD thumbnail pipeline)
+docs/generated/
+
 # Python
 __pycache__/
 *.py[cod]

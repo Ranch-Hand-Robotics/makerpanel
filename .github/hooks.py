@@ -1,9 +1,228 @@
 """MkDocs hooks for dynamic gallery generation."""
 
+import json
 import os
 import re
+import shutil
 from pathlib import Path
 from collections import defaultdict
+from datetime import datetime
+
+
+EXAMPLES_DIR = Path('examples')
+MAKERPANEL_SCAD_DIR = Path('makerpanel')
+GALLERY_JSON_PATH = Path('docs/gallery.json')
+GENERATED_SCAD_DIR = Path('docs/generated/scad')
+EXAMPLE_PANEL_URL_PREFIX = 'https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/'
+DEFAULT_EXAMPLE_THUMBNAIL = 'images/makerpanel.png'
+
+# Metadata for built-in examples that live under /examples.
+EXAMPLE_OVERRIDES = {
+    'joystick': {
+        'title': 'Joystick Panel',
+        'category': 'Digital I/O',
+        'horizontalPitch': 17,
+        'verticalUnits': 2,
+        'scadFile': 'generated/scad/examples/joystick/design/joystick.scad',
+        'description': 'Panel with a circular cutout for a SaiDian 4-axis mini joystick module. Laser-cuttable or 3D printable, with four M3 mounting holes.'
+    },
+    'lilygo_screen_4_7_s3': {
+        'title': 'LilyGo Screen 4.7" S3 Panel',
+        'category': 'Visual Feedback',
+        'horizontalPitch': 26,
+        'verticalUnits': 2,
+        'scadFile': 'generated/scad/examples/lilygo_screen_4_7_s3/lilygo_screen.scad',
+        'description': 'Panel for the LilyGo 4.7" S3 screen with a ribbon cable cutout for rear PCB/battery routing.'
+    },
+    'lilygo_t-encoder-pro': {
+        'title': 'LilyGo T-Encoder Pro Panel',
+        'category': 'Analog Control',
+        'horizontalPitch': 9,
+        'verticalUnits': 1,
+        'scadFile': 'generated/scad/examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad',
+        'description': 'Compact panel with a circular cutout for the LilyGo T-Encoder Pro rotary encoder.'
+    },
+    'iris_keyboard': {
+        'title': 'Iris Keyboard Panel',
+        'category': 'Digital I/O',
+        'horizontalPitch': 35,
+        'verticalUnits': 4,
+        'scadFile': 'generated/scad/examples/iris_keyboard/IrisMakerPanel.scad',
+        'description': 'Panel for mounting an Iris split keyboard, with an SVG-based keyboard cutout and MakerPanel-compatible mounting.'
+    },
+    'measure': {
+        'title': 'Measurement Gauge',
+        'category': 'Tools',
+        'horizontalPitch': 35,
+        'verticalUnits': 4,
+        'scadFile': 'generated/scad/examples/measure/measure.scad',
+        'description': '3D-printable gauge for verifying MakerPanel dimensions, HP spacing, and rack measurements.'
+    },
+    'mouse_panel': {
+        'title': 'Mouse Pad Panel',
+        'category': 'Tools',
+        'horizontalPitch': 35,
+        'verticalUnits': 5,
+        'scadFile': 'generated/scad/examples/mouse_panel/MousePadPanel.scad',
+        'description': 'Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.'
+    }
+}
+
+
+def _iso_now():
+    return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+
+
+def _title_from_slug(slug):
+    return slug.replace('_', ' ').replace('-', ' ').title()
+
+
+def _find_scad_url(slug):
+    example_dir = EXAMPLES_DIR / slug
+    if not example_dir.exists():
+        return ''
+
+    scad_files = sorted(example_dir.rglob('*.scad'))
+    if not scad_files:
+        return ''
+
+    relative_scad = scad_files[0].relative_to(example_dir).as_posix()
+    return f'generated/scad/examples/{slug}/{relative_scad}'
+
+
+def _find_scad_assets(slug):
+    """Find auxiliary files (e.g., SVG imports) for SCAD rendering."""
+    example_dir = EXAMPLES_DIR / slug
+    if not example_dir.exists():
+        return []
+
+    assets = []
+    for path in sorted(example_dir.rglob('*')):
+        if not path.is_file():
+            continue
+        if path.suffix.lower() not in {'.svg'}:
+            continue
+        assets.append(path.relative_to(example_dir).as_posix())
+
+    return assets
+
+
+def _copy_tree_by_suffixes(src_root, dst_root, suffixes):
+    if not src_root.exists():
+        return 0
+
+    count = 0
+    for path in src_root.rglob('*'):
+        if not path.is_file() or path.suffix.lower() not in suffixes:
+            continue
+
+        relative = path.relative_to(src_root)
+        destination = dst_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, destination)
+        count += 1
+
+    return count
+
+
+def sync_scad_assets_for_gallery():
+    """Publish SCAD assets into docs/ so they are available to client-side WASM rendering."""
+    if GENERATED_SCAD_DIR.exists():
+        shutil.rmtree(GENERATED_SCAD_DIR)
+
+    examples_dst = GENERATED_SCAD_DIR / 'examples'
+    makerpanel_dst = GENERATED_SCAD_DIR / 'makerpanel'
+
+    suffixes = {'.scad', '.svg'}
+    copied_examples = _copy_tree_by_suffixes(EXAMPLES_DIR, examples_dst, suffixes)
+    copied_support = _copy_tree_by_suffixes(MAKERPANEL_SCAD_DIR, makerpanel_dst, suffixes)
+
+    print(
+        f'MkDocs hook: synced SCAD assets to {GENERATED_SCAD_DIR} '
+        f'({copied_examples} example files, {copied_support} support files).'
+    )
+
+
+def _build_example_entry(slug):
+    override = EXAMPLE_OVERRIDES.get(slug, {})
+    scad_file = override.get('scadFile') or _find_scad_url(slug)
+
+    entry = {
+        'slug': slug,
+        'title': override.get('title', _title_from_slug(slug)),
+        'category': override.get('category', 'Other'),
+        'horizontalPitch': override.get('horizontalPitch'),
+        'verticalUnits': override.get('verticalUnits'),
+        'contributor': 'Ranch Hand Robotics',
+        'description': override.get('description', 'Makerpanel example design.'),
+        'thumbnail': DEFAULT_EXAMPLE_THUMBNAIL,
+        'panel_url': f'{EXAMPLE_PANEL_URL_PREFIX}{slug}',
+        'buy_url': '',
+        'issue_number': 0,
+        'updated_at': _iso_now()
+    }
+
+    if scad_file:
+        entry['scadFile'] = scad_file
+
+    scad_assets = _find_scad_assets(slug)
+    if scad_assets:
+        entry['scadAssets'] = scad_assets
+
+    return entry
+
+
+def sync_examples_into_gallery_json():
+    """Upsert local /examples entries into docs/gallery.json before build."""
+    if not EXAMPLES_DIR.exists() or not EXAMPLES_DIR.is_dir():
+        print('MkDocs hook: examples directory not found, skipping gallery.json example sync.')
+        return
+
+    payload = {'version': 1, 'updated_at': _iso_now(), 'panels': []}
+    if GALLERY_JSON_PATH.exists():
+        with open(GALLERY_JSON_PATH, 'r', encoding='utf-8') as f:
+            existing = json.load(f)
+            if isinstance(existing, dict):
+                payload = existing
+
+    panels = payload.get('panels', [])
+    if not isinstance(panels, list):
+        panels = []
+
+    example_slugs = sorted(
+        item.name
+        for item in EXAMPLES_DIR.iterdir()
+        if item.is_dir() and not item.name.startswith('.')
+    )
+
+    if not example_slugs:
+        print('MkDocs hook: no example directories found, skipping gallery.json example sync.')
+        return
+
+    entry_by_slug = {entry.get('slug'): entry for entry in panels if isinstance(entry, dict) and entry.get('slug')}
+
+    for slug in example_slugs:
+        entry_by_slug[slug] = _build_example_entry(slug)
+
+    # Remove stale auto-managed example entries for directories that no longer exist.
+    for slug, entry in list(entry_by_slug.items()):
+        if not isinstance(entry, dict):
+            continue
+        panel_url = str(entry.get('panel_url', ''))
+        is_example_entry = panel_url.startswith(EXAMPLE_PANEL_URL_PREFIX)
+        if is_example_entry and slug not in example_slugs:
+            del entry_by_slug[slug]
+
+    updated_panels = sorted(entry_by_slug.values(), key=lambda panel: str(panel.get('title', '')).lower())
+    payload['panels'] = updated_panels
+    payload['version'] = 1
+    payload['updated_at'] = _iso_now()
+
+    with open(GALLERY_JSON_PATH, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2)
+        f.write('\n')
+
+    print(f'MkDocs hook: synced {len(example_slugs)} examples into {GALLERY_JSON_PATH}.')
 
 
 def parse_panel_metadata(filepath):
@@ -107,70 +326,12 @@ def generate_gallery_categories(panels_dir):
 
 
 def on_page_markdown(markdown, page, config, files):
-    """Process gallery.md to inject dynamic content."""
-    if page.file.src_path != 'gallery.md':
-        return markdown
-    
-    panels_dir = os.path.join(config['docs_dir'], 'panels')
-    categories, category_order, panels = generate_gallery_categories(panels_dir)
-    
-    # Generate category tabs as raw HTML to bypass markdown parsing
-    tabs_html = '<div class="tabbed-set tabbed-alternate">\n'
-    
-    # Add radio buttons and labels
-    tab_names = ['All'] + sorted(categories.keys())
-    for i, tab_name in enumerate(tab_names, 1):
-        checked = 'checked="checked" ' if i == 1 else ''
-        tabs_html += f'<input {checked}id="tab_{i}" name="tabs" type="radio" />'
-    
-    tabs_html += '<div class="tabbed-labels">\n'
-    for i, tab_name in enumerate(tab_names, 1):
-        tabs_html += f'<label for="tab_{i}">{tab_name}</label>\n'
-    tabs_html += '</div>\n'
-    
-    tabs_html += '<div class="tabbed-content">\n'
-    
-    # Add "All" tab content
-    tabs_html += '<div class="tabbed-block">\n'
-    for p in sorted(panels, key=lambda x: x['title']):
-        buy_badge = f'<a class="panel-card__buy" href="{p["buy_url"]}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n' if p.get('buy_url') else ''
-        tabs_html += '<div class="panel-card">\n'
-        tabs_html += f'<a href="panels/{p["filename"]}/index.html" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
-        tabs_html += buy_badge
-        tabs_html += f'<p>{p["description"]}</p>\n'
-        tabs_html += '</div>\n'
-    tabs_html += '</div>\n'
-    
-    # Add category tab content
-    for category in sorted(categories.keys()):
-        tabs_html += '<div class="tabbed-block">\n'
-        for p in categories[category]:
-            buy_badge = f'<a class="panel-card__buy" href="{p["buy_url"]}" target="_blank" rel="noopener noreferrer">Buy Now</a>\n' if p.get('buy_url') else ''
-            tabs_html += '<div class="panel-card">\n'
-            tabs_html += f'<a href="panels/{p["filename"]}/index.html" data-title="{p["title"]}"><img src="{p["thumbnail"]}" alt="{p["title"]}" /></a>\n'
-            tabs_html += buy_badge
-            tabs_html += f'<p>{p["description"]}</p>\n'
-            tabs_html += '</div>\n'
-        tabs_html += '</div>\n'
-    
-    tabs_html += '</div>\n</div>\n'
-    
-    # Replace the marker with HTML
-    markdown = re.sub(
-        r'<!-- CATEGORY_TABS_START -->.*?<!-- CATEGORY_TABS_END -->',
-        f'<!-- CATEGORY_TABS_START -->\n{tabs_html}\n<!-- CATEGORY_TABS_END -->',
-        markdown,
-        flags=re.DOTALL
-    )
-    
-    # Update statistics
-    stats = f"{len(panels)} panels &middot; {len(set(p['contributor'] for p in panels))} contributors &middot; {len(categories)} categories"
-    
-    markdown = re.sub(
-        r'<!-- STATS_START -->.*?<!-- STATS_END -->',
-        f'<!-- STATS_START -->\n{stats}\n<!-- STATS_END -->',
-        markdown,
-        flags=re.DOTALL
-    )
-    
+    """Keep markdown unchanged; gallery content is now rendered client-side from gallery.json."""
     return markdown
+
+
+def on_config(config):
+    """MkDocs lifecycle hook: sync example panels before build."""
+    sync_scad_assets_for_gallery()
+    sync_examples_into_gallery_json()
+    return config

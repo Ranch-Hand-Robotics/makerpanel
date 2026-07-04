@@ -24,8 +24,8 @@ part = "panel"; // [panel, rail, rack]
 /* [Parameters] */
 panel_thickness = 3; // mm
 
-measurement_u = 4; // MakerPanel units high for the panel height
-measurement_hp = 35; // MakerPanel horizontal pitch for the panel half.
+verticalUnits = 4; // [1:1:8] MakerPanel vertical units (U) for panel/ruler height
+horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel/ruler width
 rack_type = "10"; // ["10", "19"] for 10" or 19" rack
 
 module rail_ruler() {
@@ -34,10 +34,10 @@ module rail_ruler() {
     
     union() {
         // Base rectangle for the rail
-        cube([hp_to_mm(measurement_hp), 10, panel_thickness], center=false);
+        cube([hp_to_mm(horizontalPitch), 10, panel_thickness], center=false);
         
         // Ticks and labels for measurements
-        for (i = [1:measurement_hp-1]) {
+        for (i = [1:horizontalPitch-1]) {
             if (i % 9 == 0) {
                 // Major measurement tick
                 translate([hp_to_mm(i), 5, panel_thickness])
@@ -58,11 +58,11 @@ module panel_ruler() {
     
     union() {
         // Base rectangle for the panel
-        cube([hp_to_mm(measurement_hp), u_to_mm(measurement_u), panel_thickness], center=false);
+        cube([hp_to_mm(horizontalPitch), u_to_mm(verticalUnits), panel_thickness], center=false);
         
         // Bottom and right bars for each U section (top and left are open to panel edges)
-        for (i = [1:measurement_u]) {
-            y_pos = u_to_mm(measurement_u) - u_to_mm(i); // Y from bottom: bottom of section i from the top
+        for (i = [1:verticalUnits]) {
+            y_pos = u_to_mm(verticalUnits) - u_to_mm(i); // Y from bottom: bottom of section i from the top
 
             // Bottom bar: full width at the bottom of this U section
             translate([0, u_to_mm(i)-1, panel_thickness])

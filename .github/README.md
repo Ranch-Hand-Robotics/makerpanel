@@ -32,8 +32,9 @@ Automates the process of adding a panel to the gallery from a GitHub issue creat
    - ✅ Parse all form fields
    - ✅ Download thumbnail and additional images
    - ✅ Create panel directory: `docs/panels/{panel-slug}/`
-   - ✅ Generate panel markdown file: `docs/panels/{panel-slug}/panel.md`
+   - ✅ Generate panel markdown file: `docs/panels/{panel-slug}/index.md`
    - ✅ Save images to: `docs/panels/{panel-slug}/images/`
+   - ✅ Upsert panel metadata in `docs/gallery.json`
    - ✅ Commit and push changes
    - ✅ Trigger the deployment workflow
    - ✅ Comment on the issue with success message
@@ -45,7 +46,7 @@ For a panel named "Dual Potentiometer Control", the workflow creates:
 
 ```
 docs/panels/dual-potentiometer-control/
-├── panel.md              # Panel detail page
+├── index.md              # Panel detail page
 └── images/
     ├── thumb.png         # Thumbnail from issue
     ├── image-1.png       # Additional photos
@@ -58,12 +59,12 @@ docs/panels/dual-potentiometer-control/
 The workflow handles most tasks automatically, but you may want to:
 
 1. **Review generated files** before they go live
-   - Check `docs/panels/{panel-slug}/panel.md` for formatting
+   - Check `docs/panels/{panel-slug}/index.md` for formatting
    - Verify images downloaded correctly
 
-2. **Update gallery.md** (partially automated)
-   - The script generates the panel card HTML
-   - Manual integration into category tabs may be needed
+2. **Review gallery.json update**
+   - Confirm `docs/gallery.json` has the expected panel metadata
+   - Verify category, thumbnail path, and panel URL are correct
 
 3. **Handle edge cases**
    - Custom categories not in the standard list
@@ -85,7 +86,7 @@ The Python script that does the heavy lifting:
 
 **Usage** (manual):
 ```bash
-python .github/scripts/process_panel_issue.py <issue_number> <github_token>
+python .github/scripts/process_panel_issue.py <issue_number>
 ```
 
 ### Environment Variables
@@ -108,8 +109,8 @@ The script uses these environment variables:
 - Check image URLs are in markdown format: `![alt](url)`
 
 **Gallery not updating**
-- Manual gallery.md update may be required
-- Check the generated panel card HTML in workflow logs
+- Verify `docs/gallery.json` was updated
+- Check gallery browser console for JSON loading errors
 
 **Deployment not triggered**
 - Verify the deploy workflow has `workflow_dispatch` enabled
@@ -129,12 +130,12 @@ export GITHUB_REPOSITORY="Ranch-Hand-Robotics/makerpanel"
 export GITHUB_REPOSITORY_OWNER="Ranch-Hand-Robotics"
 
 # Run the script
-python .github/scripts/process_panel_issue.py <issue_number> $GITHUB_TOKEN
+python .github/scripts/process_panel_issue.py <issue_number>
 ```
 
 ### Future Enhancements
 
-- [ ] Fully automate gallery.md category tabs update
+- [x] Move gallery rendering to `gallery.json` + client-side UI generation
 - [ ] Add image optimization (compress/resize)
 - [ ] Validate specification compliance automatically
 - [ ] Generate preview comment with rendered panel page
