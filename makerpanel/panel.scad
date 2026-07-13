@@ -23,8 +23,9 @@ module makerpanel_2d(width_hp, height_u, mount_hole_diameter=MOUNT_HOLE_DIAMETER
     half_w = width_mm / 2;
     half_h = height_mm / 2;
     
-    // Calculate mounting hole positions - 4 holes at corners
-    // Centered within RACK_RAIL_HEIGHT from each edge
+    // Calculate mounting hole positions
+    // For panels <1U: one centered hole per side (left/right)
+    // For panels >=1U: four corner holes
     hole_inset_x = RACK_RAIL_HEIGHT / 2;
     hole_inset_y = RACK_RAIL_HEIGHT / 2;
     
@@ -32,22 +33,31 @@ module makerpanel_2d(width_hp, height_u, mount_hole_diameter=MOUNT_HOLE_DIAMETER
         // Base panel
         square([width_mm, height_mm], center=true);
         
-        // 4 corner mounting holes (M3 for T-nuts)
-        // Bottom-left
-        translate([-(half_w - hole_inset_x), -(half_h - hole_inset_y)])
-            circle(r=mount_hole_diameter/2, $fn=32);
-        
-        // Bottom-right
-        translate([(half_w - hole_inset_x), -(half_h - hole_inset_y)])
-            circle(r=mount_hole_diameter/2, $fn=32);
-        
-        // Top-left
-        translate([-(half_w - hole_inset_x), (half_h - hole_inset_y)])
-            circle(r=mount_hole_diameter/2, $fn=32);
-        
-        // Top-right
-        translate([(half_w - hole_inset_x), (half_h - hole_inset_y)])
-            circle(r=mount_hole_diameter/2, $fn=32);
+        if (height_u < 1) {
+            // Sub-1U: one centered mounting hole on each side
+            translate([-(half_w - hole_inset_x), 0])
+                circle(r=mount_hole_diameter/2, $fn=32);
+
+            translate([(half_w - hole_inset_x), 0])
+                circle(r=mount_hole_diameter/2, $fn=32);
+        } else {
+            // 1U and larger: 4 corner mounting holes (M3 for T-nuts)
+            // Bottom-left
+            translate([-(half_w - hole_inset_x), -(half_h - hole_inset_y)])
+                circle(r=mount_hole_diameter/2, $fn=32);
+
+            // Bottom-right
+            translate([(half_w - hole_inset_x), -(half_h - hole_inset_y)])
+                circle(r=mount_hole_diameter/2, $fn=32);
+
+            // Top-left
+            translate([-(half_w - hole_inset_x), (half_h - hole_inset_y)])
+                circle(r=mount_hole_diameter/2, $fn=32);
+
+            // Top-right
+            translate([(half_w - hole_inset_x), (half_h - hole_inset_y)])
+                circle(r=mount_hole_diameter/2, $fn=32);
+        }
     }
 }
 

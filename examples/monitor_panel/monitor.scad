@@ -21,6 +21,9 @@ verticalUnits = 1; // [1:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 
 arm_length = 100; // mm - length of the arm connecting the panel to the VESA mount
+arm_bend_length = 20; // mm - distance from the panel-side end of the arm to the bend center
+arm_bend_angle = 30; // degrees - first bend angle
+arm_second_bend_length = 20; // mm - length of the segment between first and second bend centers
 arm_width = 20; // mm - width of the arm connecting the panel to the VESA mount
 arm_thickness = 3; // mm - thickness of the arm connecting the panel to the VESA mount
 
@@ -38,6 +41,13 @@ pivot_nut_height = 8; // mm - height of the nut hole in the pivot cylinder
 panel_pivot_spacing = 20; // mm - spacing between the pivots on the panel
 
 function pivot_height() = pivot_blade_thickness * (pivot_blade_count * 2); // mm - height of the pivot cylinder, based on the number of blades and their thickness
+function arm_second_bend_angle() = 90 - arm_bend_angle; // degrees - constrained so bend1 + bend2 = 90
+function arm_joint1_x() = 0; // mm - first bend center X
+function arm_joint1_y() = arm_bend_length; // mm - first bend center Y
+function arm_joint2_x() = arm_joint1_x() + arm_second_bend_length * sin(arm_bend_angle); // mm - second bend center X
+function arm_joint2_y() = arm_joint1_y() + arm_second_bend_length * cos(arm_bend_angle); // mm - second bend center Y
+function arm_end_x() = arm_joint2_x() + arm_length * sin(arm_bend_angle + arm_second_bend_angle()); // mm - arm end X
+function arm_end_y() = arm_joint2_y() + arm_length * cos(arm_bend_angle + arm_second_bend_angle()); // mm - arm end Y
 
 // Pivot for the MakerPanel and VESA mount
 // The pivot is a cylinder with a hole for a thumbscrew, allowing for adjustment of the monitor angle.
@@ -147,19 +157,38 @@ module monitor_arm() {
         for (i = [0:0]) {
             blade_pos = i * pivot_blade_thickness * 2 + pivot_blade_thickness; 
             translate([0, 0, blade_pos])
-                hull() {
-                    translate([0, -(arm_length/2 - pivot_radius), 0])
-                        cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
-                    translate([0,  (arm_length/2 - pivot_radius), 0])
-                        cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                union() {
+                    // Segment from panel-side end to first bend center
+                    hull() {
+                        translate([0, 0, 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                        translate([arm_joint1_x(), arm_joint1_y(), 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                    }
+
+                    // Segment from first bend center to second bend center
+                    hull() {
+                        translate([arm_joint1_x(), arm_joint1_y(), 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                        translate([arm_joint2_x(), arm_joint2_y(), 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                    }
+
+                    // Segment from second bend center to VESA-side end
+                    hull() {
+                        translate([arm_joint2_x(), arm_joint2_y(), 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                        translate([arm_end_x(), arm_end_y(), 0])
+                            cylinder(r=pivot_radius, h=arm_blade_thickness, center=true, $fn=48);
+                    }
                 }
         }
 
         // This is the bolt clearance hole.
-        translate([0, -(arm_length/2 - pivot_radius), 0])
+        translate([0, 0, 0])
         cylinder(r=pivot_bolt_radius, h=arm_blade_thickness * pivot_blade_count * 2, $fn=32, center=false);
 
-        translate([0,  (arm_length/2 - pivot_radius), 0])
+        translate([arm_end_x(), arm_end_y(), 0])
         cylinder(r=pivot_bolt_radius, h=arm_blade_thickness * pivot_blade_count * 2, $fn=32, center=false);
     }
 }
@@ -169,12 +198,12 @@ if (part == "assembly") {
     pivot_height = pivot_height();
     monitor_maker_panel();
 
-    translate([0, pivot_height, arm_length])
+    translate([0, pivot_height + arm_end_x(), arm_end_y()])
     rotate([90, 0, 0])
     vesa_panel();
 
     rotate([90, 0, 0])
-    translate([0, arm_length/2 + pivot_height/2, 0])
+    translate([0, pivot_height/2, 0])
     monitor_arm();
 } else if (part == "maker_panel") {
     monitor_maker_panel();
