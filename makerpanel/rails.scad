@@ -34,7 +34,13 @@ module rounded_square(size, r=1) {
 // - Extruded to create 3D rails
 // - Exported as SVG/DXF for laser cutting
 
-module maker_rail_2d(rail_width, height, mounting_holes=true, base=true) {
+module maker_rail_2d(
+    rail_width,
+    height,
+    mounting_holes=true,
+    base=true,
+    slot_y_offset=0
+) {
     /*
     Creates a 2D cross-section profile of the rail (X-Y plane)
     Parameters:
@@ -77,7 +83,7 @@ module maker_rail_2d(rail_width, height, mounting_holes=true, base=true) {
         // Cut T-slot compatible slots (rectangular cutouts with rounded corners)
         for (i = [0 : num_slots - 1]) {
             x_pos = first_slot_pos + i * actual_spacing;
-            translate([x_pos + rail_offset, -T_SLOT_HEIGHT/2])
+            translate([x_pos + rail_offset, -T_SLOT_HEIGHT/2 + slot_y_offset])
                 rounded_square([actual_slot_width, T_SLOT_HEIGHT], r=T_SLOT_CORNER_RADIUS);
         }
         
