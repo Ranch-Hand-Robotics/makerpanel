@@ -1,5 +1,10 @@
 # Fusion 360 Add-in
 
+<div class="tool-availability-notice">
+  <strong>Coming Soon</strong>
+  <span>The Fusion 360 add-in is under development. This guide describes the planned installation and workflow.</span>
+</div>
+
 The MakerPanel Fusion 360 add-in generates spec-compliant 2D sketches for panels and rails directly inside Autodesk Fusion 360. Each command produces a parametric sketch on the XY plane of the active component, ready for extrusion, DXF export, or further detailing.
 
 ## Requirements

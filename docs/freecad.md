@@ -1,5 +1,10 @@
 # FreeCAD Workbench
 
+<div class="tool-availability-notice">
+  <strong>Coming Soon</strong>
+  <span>The FreeCAD workbench is under development. This guide describes the planned installation and workflow.</span>
+</div>
+
 The MakerPanel FreeCAD workbench generates spec-compliant 2D sketches for panels and rails directly inside FreeCAD. Each command produces a Sketcher sketch on the XY plane of the active document, ready for padding (extrusion), DXF export, or further detailing.
 
 ## Requirements

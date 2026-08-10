@@ -24,13 +24,15 @@
     </div>
   </header>
 
-  <main class="page-main" id="content" style="display:flex; align-items:center; justify-content:center; min-height:60vh;">
-    <div style="text-align:center; padding: 3rem 1rem;">
-      <div style="font-family:'Courier New',monospace; font-size:5rem; font-weight:900; color:#4a9d5f; line-height:1;">404</div>
-      <h1 style="color:#e0e0e0; margin:1rem 0 0.5rem;">Panel Not Found</h1>
-      <p style="color:#808080; margin-bottom:2rem;">The page you're looking for doesn't exist or has been moved.</p>
-      <a href="{{ 'index.html' | url }}" style="background:#4a9d5f; color:#fff; padding:0.75rem 2rem; border-radius:0.25rem; font-weight:900; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.1em; text-decoration:none; border:2px solid #4a9d5f; margin-right:0.75rem;">← Home</a>
-      <a href="{{ 'gallery.html' | url }}" style="background:transparent; color:#4a9d5f; padding:0.75rem 2rem; border-radius:0.25rem; font-weight:900; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.1em; text-decoration:none; border:2px solid #4a9d5f;">Browse Gallery</a>
+  <main class="page-main error-page" id="content">
+    <div class="error-page__content">
+      <div class="error-page__code">404</div>
+      <h1>Panel Not Found</h1>
+      <p>The page you're looking for doesn't exist or has been moved.</p>
+      <div class="error-page__actions">
+        <a class="error-page__button error-page__button--primary" href="{{ 'index.html' | url }}">← Home</a>
+        <a class="error-page__button" href="{{ 'gallery.html' | url }}">Browse Gallery</a>
+      </div>
     </div>
   </main>
 

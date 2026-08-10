@@ -1,7 +1,25 @@
 {
   "version": 1,
-  "updated_at": "2026-07-04T14:23:03Z",
+  "updated_at": "2026-08-10T14:40:34Z",
   "panels": [
+    {
+      "slug": "Antenna",
+      "title": "Antenna",
+      "category": "Other",
+      "horizontalPitch": null,
+      "verticalUnits": null,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/Antenna",
+      "buy_url": "",
+      "issue_number": 0,
+      "updated_at": "2026-08-10T14:40:34Z",
+      "scadFile": "examples/Antenna/antenna.scad",
+      "scadAssets": [
+        "antenna.panel_2d.svg"
+      ]
+    },
     {
       "slug": "iris_keyboard",
       "title": "Iris Keyboard Panel",
@@ -14,7 +32,7 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/iris_keyboard",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
+      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
       "scadAssets": [
         "IrisCutout.svg"
@@ -32,8 +50,26 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/joystick",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
-      "scadFile": "examples/joystick/design/joystick.scad"
+      "updated_at": "2026-08-10T14:40:34Z",
+      "scadFile": "examples/joystick/design/joystick.scad",
+      "scadAssets": [
+        "design/joystick.panel_2d.svg"
+      ]
+    },
+    {
+      "slug": "keyboard",
+      "title": "Keyboard",
+      "category": "Other",
+      "horizontalPitch": null,
+      "verticalUnits": null,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/keyboard",
+      "buy_url": "",
+      "issue_number": 0,
+      "updated_at": "2026-08-10T14:40:34Z",
+      "scadFile": "examples/keyboard/cmx.scad"
     },
     {
       "slug": "lilygo_screen_4_7_s3",
@@ -47,7 +83,7 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_screen_4_7_s3",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
+      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad"
     },
     {
@@ -62,7 +98,7 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
+      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad"
     },
     {
@@ -77,8 +113,23 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/measure",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
+      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/measure/measure.scad"
+    },
+    {
+      "slug": "monitor_panel",
+      "title": "Monitor Panel",
+      "category": "Other",
+      "horizontalPitch": null,
+      "verticalUnits": null,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/monitor_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "updated_at": "2026-08-10T14:40:34Z",
+      "scadFile": "examples/monitor_panel/monitor.scad"
     },
     {
       "slug": "mouse_panel",
@@ -92,7 +143,7 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/mouse_panel",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-07-04T14:23:03Z",
+      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/mouse_panel/MousePadPanel.scad"
     }
   ]

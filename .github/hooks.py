@@ -5,7 +5,7 @@ import os
 import re
 from pathlib import Path
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 EXAMPLES_DIR = Path('examples')
@@ -67,7 +67,7 @@ EXAMPLE_OVERRIDES = {
 
 
 def _iso_now():
-    return datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
 
 
 def _title_from_slug(slug):
@@ -123,8 +123,7 @@ def _build_example_entry(slug, existing_entry=None):
         'thumbnail': thumbnail,
         'panel_url': f'{EXAMPLE_PANEL_URL_PREFIX}{slug}',
         'buy_url': '',
-        'issue_number': 0,
-        'updated_at': _iso_now()
+        'issue_number': 0
     }
 
     if scad_file:
@@ -133,6 +132,16 @@ def _build_example_entry(slug, existing_entry=None):
     scad_assets = _find_scad_assets(slug)
     if scad_assets:
         entry['scadAssets'] = scad_assets
+
+    existing_content = {
+        key: value
+        for key, value in existing_entry.items()
+        if key != 'updated_at'
+    }
+    if existing_content == entry and existing_entry.get('updated_at'):
+        entry['updated_at'] = existing_entry['updated_at']
+    else:
+        entry['updated_at'] = _iso_now()
 
     return entry
 
@@ -149,6 +158,9 @@ def sync_examples_into_gallery_json():
             existing = json.load(f)
             if isinstance(existing, dict):
                 payload = existing
+
+    original_version = payload.get('version')
+    original_panels = payload.get('panels')
 
     panels = payload.get('panels', [])
     if not isinstance(panels, list):
@@ -180,6 +192,11 @@ def sync_examples_into_gallery_json():
             del entry_by_slug[slug]
 
     updated_panels = sorted(entry_by_slug.values(), key=lambda panel: str(panel.get('title', '')).lower())
+
+    if original_version == 1 and original_panels == updated_panels:
+        print(f'MkDocs hook: {GALLERY_JSON_PATH} is already current.')
+        return
+
     payload['panels'] = updated_panels
     payload['version'] = 1
     payload['updated_at'] = _iso_now()

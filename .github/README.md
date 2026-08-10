@@ -118,14 +118,15 @@ The script uses these environment variables:
 
 ### Testing Locally
 
-To test the script locally:
+To test the script locally, enter the token at the prompt so it is not stored in
+your shell history:
 
 ```bash
 # Install dependencies
 pip install requests
 
 # Set environment variables
-export GITHUB_TOKEN="your_personal_access_token"
+read -rsp "GitHub token: " GITHUB_TOKEN && export GITHUB_TOKEN && echo
 export GITHUB_REPOSITORY="Ranch-Hand-Robotics/makerpanel"
 export GITHUB_REPOSITORY_OWNER="Ranch-Hand-Robotics"
 

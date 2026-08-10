@@ -11,8 +11,7 @@ nav:
   - Home: index.md
   - Specification: specification.md
   - Gallery: gallery.md
-  - Fusion 360 Add-in: fusion360.md
-  - FreeCAD Workbench: freecad.md
+  - Create Panel: create-panel.md
   - About: about.md
 
 theme:
@@ -35,7 +34,11 @@ markdown_extensions:
 
 use_directory_urls: false
 strict: true
-not_in_nav: panels/**/index.md
+not_in_nav: |
+  panels/**/index.md
+  openscad.md
+  freecad.md
+  fusion360.md
 
 hooks:
   - .github/hooks.py

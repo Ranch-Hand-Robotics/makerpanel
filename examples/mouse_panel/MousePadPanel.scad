@@ -1,5 +1,5 @@
 // MousePadPanel
-// This file builds an independent MakePanel for a flat mouse pad. yep. That's it..
+// This file builds an independent MakerPanel for a flat mouse pad.
 // The panel is a flat laser cuttable or 3d printable plate where the mouse pad can be mounted
 // while the panel can be installed in a MakerRail compatible case or cyberdeck.
 
