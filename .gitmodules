@@ -1,0 +1,3 @@
+[submodule "examples/vent_panel/IsoGridScad"]
+	path = examples/vent_panel/IsoGridScad
+	url = https://github.com/Ranch-Hand-Robotics/IsoGridScad.git

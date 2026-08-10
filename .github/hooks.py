@@ -62,6 +62,14 @@ EXAMPLE_OVERRIDES = {
         'verticalUnits': 5,
         'scadFile': 'examples/mouse_panel/MousePadPanel.scad',
         'description': 'Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.'
+    },
+    'vent_panel': {
+        'title': 'Vent Panel',
+        'category': 'Other',
+        'horizontalPitch': 35,
+        'verticalUnits': 5,
+        'scadFile': 'examples/vent_panel/VentPanel.scad',
+        'description': 'Configurable ventilation panel with circular, honeycomb, and isogrid patterns.'
     }
 }
 
