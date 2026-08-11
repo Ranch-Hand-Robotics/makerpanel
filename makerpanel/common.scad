@@ -25,6 +25,9 @@ RACK_SUPPORT_WIDTH = 3;
 RACK_HOLE_DIAMETER = 3.5;   // M3 mounting holes
 RACK_RAIL_HEIGHT = 11; 
 RACK_RAIL_THICKNESS = 3;    // Rail material thickness
+RACK_MOUNT_SLOT_LEN = 8;
+CENTER_CUTOUT_SIDE_MARGIN = 2.5;
+CENTER_CUTOUT_SLOT_MARGIN = 2;
 
 // Rack Widths
 RACK_19_WIDTH = 465.1;      // 19" rack outer width

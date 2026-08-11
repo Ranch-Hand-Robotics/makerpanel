@@ -20,11 +20,6 @@ RACK_10_OUTER_WIDTH = 254;        // 10.000"
 RACK_10_MOUNT_C2C = 236.525;      // 9.312" center-to-center between left/right rack rails
 RACK_10_CENTER_CLEARANCE = 220;   // Practical center opening for adapter body
 
-// Center cutout safety clearances
-RACK_MOUNT_SLOT_LEN = 8;                  // Horizontal length of rack ear obround mounting slot
-CENTER_CUTOUT_SIDE_MARGIN = 2.5;          // Min material between center cutout and inner edge of rack ear slots
-CENTER_CUTOUT_SLOT_MARGIN = 2.0;          // Min material between center cutout and MakerRail slot cutouts
-
 // 10" Rack Dimensions:
 // Height Unit (1U): 44.45mm (1.75") - identical to standard 19" racks
 // Width between 10" mounting holes: 236.525mm (9.312")
@@ -120,16 +115,28 @@ module rack_mount_holes_2d(rack_u, hole_c2c, slot_len=8, hole_d=6.5) {
 // Helper: Generic rack faceplate (2D)
 // ============================================
 
-module rack_faceplate_2d(rack_u, outer_width, hole_c2c, center_clearance) {
+module rack_faceplate_2d(
+    rack_u,
+    outer_width,
+    hole_c2c,
+    center_clearance,
+    rack_mounting_holes=true,
+    rail_edge_margin=RACK_SUPPORT_WIDTH
+) {
     height = u_to_mm(rack_u);
     rail_row_center_offset = height/2 - RACK_RAIL_HEIGHT/2; // align to MakerPanel hole centerlines (half rail-height inset from each edge)
 
     // Expand center opening as much as safely possible.
     // Width limit: keep margin from inner edge of rack mounting slots.
-    max_center_width_from_holes = hole_c2c - RACK_MOUNT_SLOT_LEN - 2 * CENTER_CUTOUT_SIDE_MARGIN;
+    max_center_width_from_holes = rack_mounting_holes
+        ? hole_c2c - RACK_MOUNT_SLOT_LEN
+            - 2 * CENTER_CUTOUT_SIDE_MARGIN
+        : outer_width - 2 * RACK_SUPPORT_WIDTH;
     center_open_width = min(
         outer_width - 2 * RACK_SUPPORT_WIDTH,
-        max(center_clearance, max_center_width_from_holes)
+        rack_mounting_holes
+            ? max(center_clearance, max_center_width_from_holes)
+            : min(center_clearance, max_center_width_from_holes)
     );
 
     // Height limit: keep margin from nearest MakerRail slot cutout edge.
@@ -144,15 +151,28 @@ module rack_faceplate_2d(rack_u, outer_width, hole_c2c, center_clearance) {
 
         // Top and bottom MakerRail slot rows
         translate([-center_open_width/2, rail_row_center_offset])
-            maker_rail_2d(center_open_width, RACK_RAIL_HEIGHT, mounting_holes=false, base=false);
+            maker_rail_2d(
+                center_open_width,
+                RACK_RAIL_HEIGHT,
+                mounting_holes=false,
+                base=false,
+                edge_support_width=rail_edge_margin
+            );
         translate([-center_open_width/2, -rail_row_center_offset])
-            maker_rail_2d(center_open_width, RACK_RAIL_HEIGHT, mounting_holes=false, base=false);
+            maker_rail_2d(
+                center_open_width,
+                RACK_RAIL_HEIGHT,
+                mounting_holes=false,
+                base=false,
+                edge_support_width=rail_edge_margin
+            );
 
         // Main center opening
         square([center_open_width, center_open_height], center=true);
 
-        // Side mounting holes for rack rails
-        rack_mount_holes_2d(rack_u, hole_c2c);
+        if (rack_mounting_holes) {
+            rack_mount_holes_2d(rack_u, hole_c2c);
+        }
     }
 }
 
@@ -170,6 +190,15 @@ module rack_19(rack_u) {
         );
 }
 
+module rack_19_2d(rack_u) {
+    rack_faceplate_2d(
+        rack_u=rack_u,
+        outer_width=RACK_19_OUTER_WIDTH,
+        hole_c2c=RACK_19_MOUNT_C2C,
+        center_clearance=RACK_19_CENTER_CLEARANCE
+    );
+}
+
 // ============================================
 // Module: 10" Rack Assembly
 // ============================================
@@ -182,6 +211,15 @@ module rack_10(rack_u) {
             hole_c2c=RACK_10_MOUNT_C2C,
             center_clearance=RACK_10_CENTER_CLEARANCE
         );
+}
+
+module rack_10_2d(rack_u) {
+    rack_faceplate_2d(
+        rack_u=rack_u,
+        outer_width=RACK_10_OUTER_WIDTH,
+        hole_c2c=RACK_10_MOUNT_C2C,
+        center_clearance=RACK_10_CENTER_CLEARANCE
+    );
 }
 
 if (part == "rack_19") {

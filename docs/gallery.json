@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-08-10T14:40:34Z",
+  "updated_at": "2026-08-11T01:01:08Z",
   "panels": [
     {
       "slug": "Antenna",
@@ -14,11 +14,11 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/Antenna",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/Antenna/antenna.scad",
       "scadAssets": [
         "antenna.panel_2d.svg"
-      ]
+      ],
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "iris_keyboard",
@@ -32,11 +32,11 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/iris_keyboard",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
       "scadAssets": [
         "IrisCutout.svg"
-      ]
+      ],
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "joystick",
@@ -50,11 +50,11 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/joystick",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
       "scadFile": "examples/joystick/design/joystick.scad",
       "scadAssets": [
         "design/joystick.panel_2d.svg"
-      ]
+      ],
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "keyboard",
@@ -68,8 +68,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/keyboard",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/keyboard/cmx.scad"
+      "scadFile": "examples/keyboard/cmx.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "lilygo_screen_4_7_s3",
@@ -83,8 +83,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_screen_4_7_s3",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad"
+      "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "lilygo_t-encoder-pro",
@@ -98,8 +98,23 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad"
+      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
+    },
+    {
+      "slug": "rail_panel",
+      "title": "MakerRail Panel",
+      "category": "Other",
+      "horizontalPitch": 35,
+      "verticalUnits": 0.25,
+      "contributor": "Ranch Hand Robotics",
+      "description": "A configurable MakerPanel-sized T-slot rail for mounting panels and accessories.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/rail_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/rail_panel/RailPanel.scad",
+      "updated_at": "2026-08-11T01:01:08Z"
     },
     {
       "slug": "measure",
@@ -113,8 +128,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/measure",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/measure/measure.scad"
+      "scadFile": "examples/measure/measure.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "monitor_panel",
@@ -128,8 +143,8 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/monitor_panel",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/monitor_panel/monitor.scad"
+      "scadFile": "examples/monitor_panel/monitor.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
     },
     {
       "slug": "mouse_panel",
@@ -143,8 +158,23 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/mouse_panel",
       "buy_url": "",
       "issue_number": 0,
-      "updated_at": "2026-08-10T14:40:34Z",
-      "scadFile": "examples/mouse_panel/MousePadPanel.scad"
+      "scadFile": "examples/mouse_panel/MousePadPanel.scad",
+      "updated_at": "2026-08-10T14:40:34Z"
+    },
+    {
+      "slug": "vent_panel",
+      "title": "Vent Panel",
+      "category": "Other",
+      "horizontalPitch": 35,
+      "verticalUnits": 5,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Configurable ventilation panel with circular, honeycomb, and isogrid patterns.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/vent_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/vent_panel/VentPanel.scad",
+      "updated_at": "2026-08-11T00:25:01Z"
     }
   ]
 }

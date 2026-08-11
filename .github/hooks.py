@@ -63,6 +63,17 @@ EXAMPLE_OVERRIDES = {
         'scadFile': 'examples/mouse_panel/MousePadPanel.scad',
         'description': 'Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.'
     },
+    'rail_panel': {
+        'title': 'MakerRail Panel',
+        'category': 'Other',
+        'horizontalPitch': 35,
+        'verticalUnits': 2,
+        'scadFile': 'examples/rail_panel/RailPanel.scad',
+        'description': (
+            'A full HP-by-U rack faceplate with integrated MakerRail '
+            'slot rows and standard MakerPanel corner mounting holes.'
+        )
+    },
     'vent_panel': {
         'title': 'Vent Panel',
         'category': 'Other',

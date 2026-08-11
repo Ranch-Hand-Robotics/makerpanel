@@ -39,7 +39,8 @@ module maker_rail_2d(
     height,
     mounting_holes=true,
     base=true,
-    slot_y_offset=0
+    slot_y_offset=0,
+    edge_support_width=RACK_SUPPORT_WIDTH
 ) {
     /*
     Creates a 2D cross-section profile of the rail (X-Y plane)
@@ -53,7 +54,9 @@ module maker_rail_2d(
     width = mounting_holes ? rail_width + height : rail_width;
     
     // Available space between mounting holes (equal spacing on both sides)
-    available_space = mounting_holes ? (width - 2 * height) : (width - 2 * RACK_SUPPORT_WIDTH);
+    available_space = mounting_holes
+        ? width - 2 * height
+        : width - 2 * edge_support_width;
     
     // Calculate number of slots that fit with minimum spacing
     min_spacing = T_SLOT_WIDTH + RACK_SUPPORT_WIDTH;
@@ -67,36 +70,42 @@ module maker_rail_2d(
     actual_slot_width = T_SLOT_WIDTH + (extra_space / num_slots);
     
     // First slot starts at height (equal distance from mounting hole to slot and hole to wall)
-    first_slot_pos = mounting_holes ? height : RACK_SUPPORT_WIDTH;
+    first_slot_pos = mounting_holes ? height : edge_support_width;
     
     // Spacing between slots (center to center)
     actual_spacing = actual_slot_width + RACK_SUPPORT_WIDTH;
    
-    difference() 
-    {
-        // Base rectangle (X-Y plane profile)
-        if (base) {
-            translate([rail_offset, -height/2])
-                square([width, height], center=false);
-        }
-        
-        // Cut T-slot compatible slots (rectangular cutouts with rounded corners)
+    module rail_slots_2d() {
         for (i = [0 : num_slots - 1]) {
             x_pos = first_slot_pos + i * actual_spacing;
-            translate([x_pos + rail_offset, -T_SLOT_HEIGHT/2 + slot_y_offset])
-                rounded_square([actual_slot_width, T_SLOT_HEIGHT], r=T_SLOT_CORNER_RADIUS);
+            translate([
+                x_pos + rail_offset,
+                -T_SLOT_HEIGHT / 2 + slot_y_offset
+            ])
+                rounded_square(
+                    [actual_slot_width, T_SLOT_HEIGHT],
+                    r=T_SLOT_CORNER_RADIUS
+                );
         }
-        
-        // Mounting holes on either side
-        if (mounting_holes) {
-            // Left mounting hole
-            translate([height/2 + rail_offset, 0])
-                circle(r=RACK_HOLE_DIAMETER/2, $fn=32);
-            
-            // Right mounting hole
-            translate([width - height/2 + rail_offset, 0])
-                circle(r=RACK_HOLE_DIAMETER/2, $fn=32);
+    }
+
+    if (base) {
+        difference() {
+            translate([rail_offset, -height/2])
+                square([width, height], center=false);
+
+            rail_slots_2d();
+
+            if (mounting_holes) {
+                translate([height / 2 + rail_offset, 0])
+                    circle(r=RACK_HOLE_DIAMETER / 2, $fn=32);
+
+                translate([width - height / 2 + rail_offset, 0])
+                    circle(r=RACK_HOLE_DIAMETER / 2, $fn=32);
+            }
         }
+    } else {
+        rail_slots_2d();
     }
 }
 
