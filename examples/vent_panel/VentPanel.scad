@@ -24,6 +24,7 @@ isogridBaseHoleSize = 5;
 basePassthrough = 0.5;
 fanMountHoleDiameter = 5;
 fanMountPadDiameter = 8;
+circleSegments = 32;
 epsilon = 0.01;
 
 function panel_width() = hp_to_mm(horizontalPitch);
@@ -32,8 +33,11 @@ function vent_width() = panel_width() - 2 * inset;
 function vent_height() = panel_height() - 2 * inset;
 function target_passthrough() =
     min(0.72, basePassthrough * pow(gridScale, 2));
+function circle_area_factor() =
+    circleSegments * sin(360 / circleSegments) / (2 * PI);
 function round_hole_diameter() =
-    2 * holeSpacing * sqrt(target_passthrough() / PI);
+    2 * holeSpacing
+        * sqrt(target_passthrough() / (PI * circle_area_factor()));
 function honeycomb_center_spacing() = holeSpacing;
 function honeycomb_diameter() =
     2 * honeycomb_center_spacing()
@@ -77,13 +81,15 @@ function iso_open_ratio(thickness) =
         cellArea = side * side * sqrt(3) / 2,
         openingSide = side - sqrt(3) * thickness,
         triangleArea = sqrt(3) * openingSide * openingSide / 2,
-        reinforcedArea = 6 * iso_corner_area(thickness, radius),
+        reinforcedArea = 6 * circle_area_factor()
+            * iso_corner_area(thickness, radius),
         overlapArea = 6 * iso_pair_overlap(
             thickness,
             radius,
             side
-        ),
+        ) * circle_area_factor(),
         holeArea = PI * holeRadius * holeRadius
+            * circle_area_factor()
     )
     (
         triangleArea - reinforcedArea + overlapArea + holeArea
@@ -195,7 +201,7 @@ module round_hole_pattern() {
             x = (column - (columns - 1) / 2) * holeSpacing;
             y = (row - (rows - 1) / 2) * holeSpacing;
             translate([x, y])
-                circle(d=round_hole_diameter(), $fn=32);
+                    circle(d=round_hole_diameter(), $fn=circleSegments);
         }
     }
 }
