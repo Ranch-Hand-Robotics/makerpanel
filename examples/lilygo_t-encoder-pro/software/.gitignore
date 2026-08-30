@@ -1,0 +1,8 @@
+# PlatformIO
+firmware/.pio/
+firmware/.vscode/
+
+# Python
+plugins/davinci/.venv/
+plugins/davinci/__pycache__/
+*.pyc

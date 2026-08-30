@@ -59,7 +59,7 @@ Creates a 2D sketch of a panel outline with optional T-slot mounting features.
 
 | Option | Description |
 |--------|-------------|
-| **Width (HP)** | Panel width in Horizontal Pitch units. 1 HP = 5.08 mm. |
+| **Width (HP)** | Panel width in whole Horizontal Pitch units. 1 HP = 5.08 mm. No upper limit is imposed by the plugin. |
 | **Height Preset** | Choose **1U** (44.45 mm), **3U Panel** (128.5 mm), or **Custom**. |
 | **Custom Height** | Visible only when *Custom* is selected. Enter any height in your active document units. |
 | **Add Mounting Slots** | Adds oblong or circular mounting features for T-slot rail attachment. |

@@ -146,7 +146,7 @@ def initUiState():
     uiState.initValue(INPUT_CHANGES_GROUP, True, adsk.core.GroupCommandInput.classType())
     uiState.initValue(PREVIEW_GROUP,       True, adsk.core.GroupCommandInput.classType())
     # Inputs
-    uiState.initValue(PANEL_WIDTH_HP_INPUT,          8,                        adsk.core.IntegerSpinnerCommandInput.classType())
+    uiState.initValue(PANEL_WIDTH_HP_INPUT,          '8',                      adsk.core.StringValueCommandInput.classType())
     uiState.initValue(PANEL_HEIGHT_PRESET_INPUT,     HEIGHT_PRESET_3U,          adsk.core.DropDownCommandInput.classType())
     uiState.initValue(PANEL_HEIGHT_CUSTOM_INPUT,     const.PANEL_3U_HEIGHT,    adsk.core.ValueCommandInput.classType())
     uiState.initValue(PANEL_ADD_MOUNTING_SLOTS_INPUT,  True,                     adsk.core.BoolValueCommandInput.classType())
@@ -190,9 +190,10 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     dimsGroup.isExpanded = uiState.getState(DIMENSIONS_GROUP)
     uiState.registerCommandInput(dimsGroup)
 
-    widthInput = dimsGroup.children.addIntegerSpinnerCommandInput(
-        PANEL_WIDTH_HP_INPUT, 'Width (HP)', 1, 64, 1,
-        uiState.getState(PANEL_WIDTH_HP_INPUT))
+    widthInput = dimsGroup.children.addStringValueInput(
+        PANEL_WIDTH_HP_INPUT, 'Width (HP)',
+        str(uiState.getState(PANEL_WIDTH_HP_INPUT)))
+    widthInput.tooltip = 'Positive whole number of Horizontal Pitch units'
     uiState.registerCommandInput(widthInput)
 
     heightPreset = dimsGroup.children.addDropDownCommandInput(
@@ -366,7 +367,7 @@ def command_input_changed(args: adsk.core.InputChangedEventArgs):
 
 def command_validate(args: adsk.core.ValidateInputsEventArgs):
     global INPUTS_VALID
-    hp = uiState.getState(PANEL_WIDTH_HP_INPUT)
+    hp = _width_hp(uiState.getState(PANEL_WIDTH_HP_INPUT))
     h  = _height_cm(uiState.getState(PANEL_HEIGHT_PRESET_INPUT),
                     uiState.getState(PANEL_HEIGHT_CUSTOM_INPUT))
     INPUTS_VALID = hp >= 1 and h > 0
@@ -391,7 +392,7 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
             return
         component = des.activeComponent
 
-        hp         = uiState.getState(PANEL_WIDTH_HP_INPUT)
+        hp         = _width_hp(uiState.getState(PANEL_WIDTH_HP_INPUT))
         preset     = uiState.getState(PANEL_HEIGHT_PRESET_INPUT)
         custom_cm  = uiState.getState(PANEL_HEIGHT_CUSTOM_INPUT)
         height_mm  = _height_cm(preset, custom_cm) * 10.0
@@ -447,6 +448,18 @@ def _height_cm(preset: str, custom_cm: float) -> float:
 
 
 def _dims_text(hp: int, preset: str, custom_cm: float) -> str:
+    hp = _width_hp(hp)
     w_mm = hp * const.HP_UNIT * 10.0
     h_mm = _height_cm(preset, custom_cm) * 10.0
     return f'Width: {w_mm:.2f} mm ({hp} HP)     Height: {h_mm:.2f} mm'
+
+
+def _width_hp(value) -> int:
+    """Parse the unbounded HP text field, returning 0 when invalid."""
+    try:
+        text = str(value).strip()
+        if not text or not text.isdigit():
+            return 0
+        return int(text)
+    except (TypeError, ValueError):
+        return 0

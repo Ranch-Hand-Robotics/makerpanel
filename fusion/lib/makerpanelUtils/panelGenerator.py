@@ -93,8 +93,11 @@ def _add_mounting_features(sketch, panel_width, panel_height, style, ox, oy, min
     hole_radius = const.PANEL_MOUNTING_HOLE_DIAMETER / 2.0
     half_extent = hole_radius + const.PANEL_MOUNTING_SLOT_EXTRA  # cm
 
-    # Vertical position of the slot/hole centre measured from each edge
-    y_from_edge = const.PANEL_MIN_EDGE_CLEARANCE + hole_radius
+    # Vertical position of the slot/hole centre measured from each edge.
+    # Matches the MakerRail hole centreline used in panel.scad/rack.scad:
+    # half the rail height inset from the panel edge, not just a minimum
+    # edge clearance — otherwise Fusion panels miss the rail T-slot.
+    y_from_edge = const.RAIL_DEFAULT_HEIGHT / 2.0
     y_bottom = oy + y_from_edge
     y_top    = oy + panel_height - y_from_edge
 
