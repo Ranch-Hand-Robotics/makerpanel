@@ -37,6 +37,7 @@ def createMakerPanelSketch(
     addMountingSlots: bool = True,
     slotStyle: str = 'oblong',
     minimalMounting: bool = False,
+    screwSize: str = 'M3',
     existing_sketch: adsk.fusion.Sketch = None,
 ) -> adsk.fusion.Sketch:
     """Create a 2D MakerPanel sketch on the component's XY plane.
@@ -51,6 +52,8 @@ def createMakerPanelSketch(
         minimalMounting:  When True, only left edge, right edge, and centre
                           mounting features are placed instead of a full row
                           at every 25 mm interval.
+        screwSize:        'M3' or 'M4' — selects the mounting hole clearance
+                          diameter.
         existing_sketch:  When provided, geometry is drawn into this sketch
                           instead of creating a new one (e.g. when the user
                           invokes the command while editing a sketch).
@@ -79,7 +82,7 @@ def createMakerPanelSketch(
 
     if addMountingSlots:
         _add_mounting_features(sketch, panel_width, panel_height, slotStyle, ox, oy,
-                               minimal=minimalMounting)
+                               minimal=minimalMounting, screwSize=screwSize)
 
     return sketch
 
@@ -88,9 +91,11 @@ def createMakerPanelSketch(
 # Private helpers
 # ---------------------------------------------------------------------------
 
-def _add_mounting_features(sketch, panel_width, panel_height, style, ox, oy, minimal=False):
+def _add_mounting_features(sketch, panel_width, panel_height, style, ox, oy, minimal=False, screwSize='M3'):
     """Add mounting holes or oblong slots at the top and bottom of the panel."""
-    hole_radius = const.PANEL_MOUNTING_HOLE_DIAMETER / 2.0
+    hole_diameter = (const.PANEL_MOUNTING_HOLE_DIAMETER_M4 if screwSize == 'M4'
+                     else const.PANEL_MOUNTING_HOLE_DIAMETER_M3)
+    hole_radius = hole_diameter / 2.0
     half_extent = hole_radius + const.PANEL_MOUNTING_SLOT_EXTRA  # cm
 
     # Vertical position of the slot/hole centre measured from each edge.

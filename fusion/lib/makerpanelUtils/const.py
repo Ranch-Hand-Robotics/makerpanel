@@ -34,6 +34,9 @@ RAIL_3U_SPACING = 13.335    # 133.35 mm — 3U rail mounting centres (3 × 1U)
 PANEL_MOUNTING_HOLE_SPACING = 2.5   # 25.0 mm centre-to-centre
 # M3 clearance hole (3.2 mm diameter)
 PANEL_MOUNTING_HOLE_DIAMETER = 0.32
+# Clearance hole diameters (cm) by screw size, selectable in the panel UI
+PANEL_MOUNTING_HOLE_DIAMETER_M3 = 0.32   # 3.2 mm
+PANEL_MOUNTING_HOLE_DIAMETER_M4 = 0.45   # 4.5 mm
 # Extra half-length added to each side of a circular hole to form an
 # oblong (adjustment) slot.  Total slot length = diameter + 2 × extra.
 PANEL_MOUNTING_SLOT_EXTRA = 0.25    # 2.5 mm

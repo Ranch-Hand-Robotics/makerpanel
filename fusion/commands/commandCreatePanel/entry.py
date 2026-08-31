@@ -56,6 +56,7 @@ PANEL_HEIGHT_PRESET_INPUT     = 'panel_height_preset'
 PANEL_HEIGHT_CUSTOM_INPUT     = 'panel_height_custom'
 PANEL_ADD_MOUNTING_SLOTS_INPUT = 'panel_add_mounting_slots'
 PANEL_SLOT_STYLE_INPUT        = 'panel_slot_style'
+PANEL_SCREW_SIZE_INPUT        = 'panel_screw_size'
 PANEL_ACTUAL_DIMS_INPUT       = 'panel_actual_dims'   # read-only text
 SHOW_PREVIEW_INPUT            = 'show_preview'
 
@@ -78,6 +79,10 @@ HEIGHT_PRESET_CUSTOM = 'Custom'
 # Slot style option strings
 SLOT_STYLE_OBLONG = 'Oblong (adjustment slots)'
 SLOT_STYLE_CIRCLE = 'Circular (fixed holes)'
+
+# Screw size option strings
+SCREW_SIZE_M3 = 'M3'
+SCREW_SIZE_M4 = 'M4'
 
 # Mounting density option strings
 PANEL_MOUNTING_DENSITY_INPUT   = 'panel_mounting_density'
@@ -151,6 +156,7 @@ def initUiState():
     uiState.initValue(PANEL_HEIGHT_CUSTOM_INPUT,     const.PANEL_3U_HEIGHT,    adsk.core.ValueCommandInput.classType())
     uiState.initValue(PANEL_ADD_MOUNTING_SLOTS_INPUT,  True,                     adsk.core.BoolValueCommandInput.classType())
     uiState.initValue(PANEL_SLOT_STYLE_INPUT,          SLOT_STYLE_OBLONG,        adsk.core.DropDownCommandInput.classType())
+    uiState.initValue(PANEL_SCREW_SIZE_INPUT,          SCREW_SIZE_M3,            adsk.core.DropDownCommandInput.classType())
     uiState.initValue(PANEL_MOUNTING_DENSITY_INPUT,    MOUNTING_DENSITY_FULL,    adsk.core.DropDownCommandInput.classType())
     uiState.initValue(SHOW_PREVIEW_INPUT,             True,                    adsk.core.BoolValueCommandInput.classType())
 
@@ -247,6 +253,15 @@ def command_created(args: adsk.core.CommandCreatedEventArgs):
     slotStyleInput.listItems.add(SLOT_STYLE_CIRCLE, current_style == SLOT_STYLE_CIRCLE)
     slotStyleInput.isEnabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
     uiState.registerCommandInput(slotStyleInput)
+
+    screwSizeInput = mountGroup.children.addDropDownCommandInput(
+        PANEL_SCREW_SIZE_INPUT, 'Screw Size',
+        adsk.core.DropDownStyles.TextListDropDownStyle)
+    current_screw_size = uiState.getState(PANEL_SCREW_SIZE_INPUT)
+    screwSizeInput.listItems.add(SCREW_SIZE_M3, current_screw_size == SCREW_SIZE_M3)
+    screwSizeInput.listItems.add(SCREW_SIZE_M4, current_screw_size == SCREW_SIZE_M4)
+    screwSizeInput.isEnabled = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
+    uiState.registerCommandInput(screwSizeInput)
 
     densityInput = mountGroup.children.addDropDownCommandInput(
         PANEL_MOUNTING_DENSITY_INPUT, 'Hole Density',
@@ -350,6 +365,9 @@ def command_input_changed(args: adsk.core.InputChangedEventArgs):
         style = inputs.itemById(PANEL_SLOT_STYLE_INPUT)
         if style:
             style.isEnabled = enabled
+        screwSize = inputs.itemById(PANEL_SCREW_SIZE_INPUT)
+        if screwSize:
+            screwSize.isEnabled = enabled
         density = inputs.itemById(PANEL_MOUNTING_DENSITY_INPUT)
         if density:
             density.isEnabled = enabled
@@ -399,6 +417,7 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
         add_slots  = uiState.getState(PANEL_ADD_MOUNTING_SLOTS_INPUT)
         style_name   = uiState.getState(PANEL_SLOT_STYLE_INPUT)
         style        = 'oblong' if style_name == SLOT_STYLE_OBLONG else 'circle'
+        screw_size   = uiState.getState(PANEL_SCREW_SIZE_INPUT)
         density_name = uiState.getState(PANEL_MOUNTING_DENSITY_INPUT)
         minimal      = (density_name == MOUNTING_DENSITY_MINIMAL)
 
@@ -413,6 +432,7 @@ def _generate_panel(args: adsk.core.CommandEventArgs):
             addMountingSlots=add_slots,
             slotStyle=style,
             minimalMounting=minimal,
+            screwSize=screw_size,
             existing_sketch=active_sketch,
         )
     except Exception as err:
