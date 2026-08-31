@@ -1,50 +1,47 @@
-// RailPanel
-// HP-by-U rack faceplate with integrated MakerRail slot rows.
+// 10-inch or 19-inch rack faceplate with integrated MakerRail slot rows.
 
 include <makerpanel/common.scad>
-use <makerpanel/panel.scad>
 use <makerpanel/rack.scad>
-
-/* [Customization] */
-panelThickness = 3; // [1:0.5:3] Panel thickness in millimeters
-horizontalPitch = 35; // [16:1:80] MakerPanel width in HP
-verticalUnits = 2; // [1:1:8] MakerPanel height in U
 
 /* [Part Selection] */
 part = "rail_panel"; // [rail_panel, rail_panel_2d]
 
+/* [Customization] */
+rackWidthInches = 10; // [10, 19] 10 inches (254 mm) or 19 inches (482.6 mm)
+panelThickness = 3; // [1:0.5:3] Panel thickness in millimeters
+verticalUnits = 2; // [0:1:8] 0 = one offset-ear rail; rotate its mate 180 degrees
+
+
 /* [Hidden] */
+function is_single_rail() = verticalUnits == 0;
 function effective_vertical_units() = max(1, verticalUnits);
-function panel_width() = hp_to_mm(horizontalPitch);
-function rack_hole_spacing() =
-    panel_width() - 2 * RACK_RAIL_HEIGHT;
-function center_clearance() =
-    panel_width() - 2 * RACK_RAIL_HEIGHT;
+function rack_outer_width() = rack_outer_width_mm(rackWidthInches);
+function rack_hole_spacing() = rack_mount_c2c_mm(rackWidthInches);
+function center_clearance() = rack_center_clearance_mm(rackWidthInches);
 
 module rail_panel_2d() {
-    assert(horizontalPitch >= 16, "Horizontal pitch must be at least 16HP.");
+    assert(
+        rackWidthInches == 10 || rackWidthInches == 19,
+        "Rack width must be 10 inches or 19 inches."
+    );
     assert(panelThickness > 0, "Panel thickness must be positive.");
     assert(
         part == "rail_panel" || part == "rail_panel_2d",
         "Part must be rail_panel or rail_panel_2d."
     );
 
-    if (effective_vertical_units() != verticalUnits) {
-        echo("Legacy panel height is below 1U; using 1U.");
-    }
-
-    intersection() {
-        makerpanel_2d(
-            horizontalPitch,
-            effective_vertical_units()
+    if (is_single_rail()) {
+        rack_single_rail_2d(
+            outer_width=rack_outer_width(),
+            hole_c2c=rack_hole_spacing(),
+            center_clearance=center_clearance()
         );
+    } else {
         rack_faceplate_2d(
             rack_u=effective_vertical_units(),
-            outer_width=panel_width(),
+            outer_width=rack_outer_width(),
             hole_c2c=rack_hole_spacing(),
-            center_clearance=center_clearance(),
-            rack_mounting_holes=false,
-            rail_edge_margin=0
+            center_clearance=center_clearance()
         );
     }
 }

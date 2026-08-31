@@ -11,6 +11,7 @@
 // ============================================
 
 // Panel Units
+INCH = 25.4;         // Millimeters per inch
 HP = 5.08;           // Horizontal Pitch = 5.08mm (0.200")
 U = 44.45;           // Vertical Unit outer span = 44.45mm (1.75")
 
@@ -30,8 +31,8 @@ CENTER_CUTOUT_SIDE_MARGIN = 2.5;
 CENTER_CUTOUT_SLOT_MARGIN = 2;
 
 // Rack Widths
-RACK_19_WIDTH = 465.1;      // 19" rack outer width
-RACK_10_WIDTH = 254;        // 10" rack outer width (approx)
+RACK_19_WIDTH = 19 * INCH;  // 19 inches = 482.6 mm
+RACK_10_WIDTH = 10 * INCH;  // 10 inches = 254 mm
 
 // Panel Specifications
 PANEL_THICKNESS = 3;        // Aluminum panel thickness

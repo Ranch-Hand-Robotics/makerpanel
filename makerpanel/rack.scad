@@ -11,31 +11,26 @@ part = "rack_19"; // [rack_19, rack_10, rack_19_2d, rack_10_2d]
 
 rack_height_u = 2; // Height of the rack in Standard Rack Units
 
-// Rack faceplate dimensions (EIA style)
-RACK_19_OUTER_WIDTH = 482.6;      // 19.000"
-RACK_19_MOUNT_C2C = 465.1;        // 18.312" center-to-center between left/right rack rails
-RACK_19_CENTER_CLEARANCE = 450;   // Practical center opening for adapter body
+function rack_outer_width_mm(rack_width_inches) = rack_width_inches * INCH;
+function rack_mount_c2c_mm(rack_width_inches) =
+    (rack_width_inches == 19 ? 18.312 : 9.312) * INCH;
+function rack_center_clearance_mm(rack_width_inches) =
+    rack_width_inches == 19 ? 450 : 220;
 
-RACK_10_OUTER_WIDTH = 254;        // 10.000"
-RACK_10_MOUNT_C2C = 236.525;      // 9.312" center-to-center between left/right rack rails
-RACK_10_CENTER_CLEARANCE = 220;   // Practical center opening for adapter body
+RACK_19_OUTER_WIDTH = rack_outer_width_mm(19);  // 19 inches = 482.6 mm
+RACK_19_MOUNT_C2C = rack_mount_c2c_mm(19);      // 18.312 inches = 465.1248 mm
+RACK_19_CENTER_CLEARANCE = rack_center_clearance_mm(19);
 
-// 10" Rack Dimensions:
-// Height Unit (1U): 44.45mm (1.75") - identical to standard 19" racks
-// Width between 10" mounting holes: 236.525mm (9.312")
-// Maximum horizontal clearance: 220mm (8.75")
-// Recommended equipment width: 210mm (8.45") for proper fit with tolerance
+RACK_10_OUTER_WIDTH = rack_outer_width_mm(10);  // 10 inches = 254 mm
+RACK_10_MOUNT_C2C = rack_mount_c2c_mm(10);      // 9.312 inches = 236.5248 mm
+RACK_10_CENTER_CLEARANCE = rack_center_clearance_mm(10);
+RACK_HOLE_EDGE_OFFSET = 6.35;
+RACK_MOUNT_HOLE_DIAMETER = 6.5;
 
-
-// 19" Rack Dimensions:
-// Height Unit (1U): 44.45mm (1.75")
-// Width between 19" mounting holes: 482.6mm (19")
-// Maximum horizontal clearance: 465.1mm (18.3")
-// Recommended equipment width: 450mm (17.7") for proper fit with tolerance
+// Rack dimensions are stored in millimeters after explicit inch conversion.
 
 
-// Standard 1U Rack Hole pattern parameters. 
-// Holes are M6 threaded, with a horizontal pitch of 15.875mm (5/8") and a vertical pitch of 12.7mm (1/2").
+// EIA vertical pattern: 15.875 mm, 15.875 mm, then 12.7 mm to the next U.
 //     O
 //     15.875mm
 //     O
@@ -89,24 +84,27 @@ module obround_slot_2d(length, diameter) {
 // Helper: Standard rack mounting holes for N-U panel
 // ============================================
 
+module rack_mount_hole_pair_2d(y, hole_c2c, slot_len=8, hole_d=6.5) {
+    // Left ear
+    translate([-hole_c2c/2, y])
+        obround_slot_2d(slot_len, hole_d);
+
+    // Right ear
+    translate([hole_c2c/2, y])
+        obround_slot_2d(slot_len, hole_d);
+}
+
 module rack_mount_holes_2d(rack_u, hole_c2c, slot_len=8, hole_d=6.5) {
     height = u_to_mm(rack_u);
     y_min = -height/2;
 
     // Per-U EIA vertical hole positions (from each U start)
-    hole_offsets = [6.35, 22.225, 38.1];
+    hole_offsets = [RACK_HOLE_EDGE_OFFSET, U/2, U - RACK_HOLE_EDGE_OFFSET];
 
     for (u_idx = [0 : rack_u - 1]) {
         for (offset = hole_offsets) {
             y = y_min + u_idx * U + offset;
-
-            // Left ear
-            translate([-hole_c2c/2, y])
-                obround_slot_2d(slot_len, hole_d);
-
-            // Right ear
-            translate([hole_c2c/2, y])
-                obround_slot_2d(slot_len, hole_d);
+            rack_mount_hole_pair_2d(y, hole_c2c, slot_len, hole_d);
         }
     }
 }
@@ -173,6 +171,51 @@ module rack_faceplate_2d(
         if (rack_mounting_holes) {
             rack_mount_holes_2d(rack_u, hole_c2c);
         }
+    }
+}
+
+// ============================================
+// Helper: Single spanning MakerRail (0U)
+// ============================================
+// Rotate the second rail 180 degrees to place rail centerlines exactly 1U apart.
+
+module rack_single_rail_2d(
+    outer_width,
+    hole_c2c,
+    center_clearance,
+    rail_edge_margin=RACK_SUPPORT_WIDTH,
+    rail_height=RACK_RAIL_HEIGHT
+) {
+    center_open_width = min(outer_width - 2 * RACK_SUPPORT_WIDTH, center_clearance);
+    ear_width = (outer_width - center_open_width) / 2;
+    ear_top = RACK_HOLE_EDGE_OFFSET
+        + RACK_MOUNT_HOLE_DIAMETER/2
+        + CENTER_CUTOUT_SIDE_MARGIN;
+    ear_height = ear_top + rail_height/2;
+
+    difference() {
+        union() {
+            square([outer_width, rail_height], center=true);
+            translate([-outer_width/2, -rail_height/2])
+                square([ear_width, ear_height]);
+            translate([center_open_width/2, -rail_height/2])
+                square([ear_width, ear_height]);
+        }
+
+        translate([-center_open_width/2, 0])
+            maker_rail_2d(
+                center_open_width,
+                rail_height,
+                mounting_holes=false,
+                base=false,
+                edge_support_width=rail_edge_margin
+            );
+
+        rack_mount_hole_pair_2d(
+            RACK_HOLE_EDGE_OFFSET,
+            hole_c2c,
+            hole_d=RACK_MOUNT_HOLE_DIAMETER
+        );
     }
 }
 
