@@ -12,9 +12,9 @@ include <panel.scad>
 part = "assembly"; // [assembly, panel, panel_2d]
 verticalUnits = 2; //[2:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [16:1:80] Minimum MakerPanel horizontal pitch (HP) for panel width
-circleInset = 15; // mm - inset from the outer slot positions. Positive values pull controls toward the center, negative values push them outward.
+circleInset = 10; // mm - inset from the outer slot positions. Positive values pull controls toward the center, negative values push them outward.
 panel_depth = 3; // mm.
-joystickCount = 1; // [1:1:3] Number of joystick holes to generate
+joystickCount = 2; // [1:1:3] Number of joystick holes to generate
 e_stop = true; // Add an e-stop hole as the second control position
 e_stop_diameter = 16; // [8:1:60] mm - diameter of the e-stop hole
 

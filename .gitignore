@@ -24,5 +24,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
-*.glb
 **/*.stl
+**/*.svg
+**/*.glb
