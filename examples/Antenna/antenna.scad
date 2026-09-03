@@ -10,9 +10,11 @@ use <examples/vent_panel/IsoGridScad/isogrid.scad>
 part = "assembly"; // [assembly, panel, panel_2d]
 
 horizontalPitch = 35; // [4:1:80] MakerPanel horizontal pitch (HP) for panel width
-verticalUnits = .375; // [.5:.25:2] MakerPanel vertical units (U) for panel height
-
+verticalUnits = 1; // [1:.25:2] MakerPanel vertical units (U) for panel height
 antenna_count = 4; // [1:1:16] Number of antenna pass-through holes
+sdr_module = "KerberosSDR"; // [none, bladeRF, LimeSDR, HackRF, KrakenSDR, KerberosSDR] SDR module to fit in panel cutout
+
+/* [Hidden] */
 antenna_hole_diameter = 8; // [4:0.5:20] mm - antenna pass-through hole diameter
 antenna_edge_inset = 30; // [2:1:40] mm - inset distance from left/right panel edges to first/last antenna hole centers
 antenna_rail_buffer = 2; // [0:0.5:10] mm - clearance between each antenna hole edge and the rail mount zone
@@ -25,9 +27,6 @@ kerberos_mount_pad_diameter = 12; // [8:1:20] mm - reinforced area around each m
 kerberos_mount_recess_diameter = 6; // [4:0.5:10] mm - recessed screw-head diameter
 kerberos_mount_recess_depth = 1.5; // [0.5:0.25:2.5] mm - recessed screw-head depth
 
-sdr_module = "KerberosSDR"; // [none, bladeRF, LimeSDR, HackRF, KrakenSDR, KerberosSDR] SDR module to fit in panel cutout
-
-/* [Hidden] */
 panel_depth = 3; // mm - panel thickness
 sdr_edge_clearance = 2; // mm - minimum clearance around the SDR footprint
 epsilon = 0.01;

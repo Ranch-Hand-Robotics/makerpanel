@@ -18,7 +18,7 @@ part = "assembly"; // [assembly, lilygo_screen, lilygo_pcb, lilygo_panel]
 /* [Parameters] */
 
 verticalUnits = 2; // [1:1:8] MakerPanel vertical units (U) for panel height
-horizontalPitch = 26; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
+horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 screen_panel_depth = 3; // mm.
 
 ribbon_cutout_w = 10; // mm width of the cutout for the ribbon cable

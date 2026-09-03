@@ -6,9 +6,11 @@
 include <common.scad>
 include <makerpanel/panel.scad>
 
+// [Part Selection]
+parts = "mousepad_panel"; // [mousepad_panel, mousepad_panel_laser, assembly]
+
 /* [Customization] */
-mousepad_panel_depth = 3; // mm - thickness of the panel
-verticalUnits = 5; // [1:1:8] MakerPanel vertical units (U) for panel height
+verticalUnits = 4; // [1:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 
 // The mouse pad is just a maker panel with specific dimensions and no cutouts, 
@@ -18,10 +20,11 @@ horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel wid
 // Because the mousepad spans the keyboard bay AND right front of the deck, there needs to be 
 // mounting holes in the mousepad area that are not obstructed by the keyboard bay.
 
+/* [Hidden] */
+mousepad_panel_depth = 3; // mm - thickness of the panel
+
 epsilon = 0.01;
 
-// [Part Selection]
-parts = "mousepad_panel"; // [mousepad_panel, mousepad_panel_laser, assembly]
 
 // ============================================
 // Modules

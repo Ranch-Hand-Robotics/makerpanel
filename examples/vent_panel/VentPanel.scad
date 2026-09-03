@@ -6,9 +6,8 @@ include <makerpanel/panel.scad>
 use <IsoGridScad/isogrid.scad>
 
 /* [Customization] */
-panelThickness = 3; // [1:0.5:6] Panel thickness in millimeters
 horizontalPitch = 35; // [4:1:80] MakerPanel width in HP
-verticalUnits = 5; // [1:1:8] MakerPanel height in U
+verticalUnits = 2; // [1:1:8] MakerPanel height in U
 inset = 10; // [2:1:30] Solid border around the vents in millimeters
 type = "Holes"; // [Holes, Honeycomb, Isogrid]
 gridScale = 1; // [0.5:0.05:1.2] Vent opening scale
@@ -18,6 +17,7 @@ fan = "None"; // [None, 40mm, 60mm, 80mm, 92mm, 120mm]
 part = "panel"; // [panel, panel_2d]
 
 /* [Hidden] */
+panelThickness = 3; // [1:0.5:6] Panel thickness in millimeters
 holeSpacing = 12;
 isogridTriangleSize = 15;
 isogridBaseHoleSize = 5;

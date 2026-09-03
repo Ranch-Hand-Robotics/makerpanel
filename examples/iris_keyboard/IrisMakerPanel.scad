@@ -9,13 +9,14 @@ include <makerpanel/panel.scad>
 /* [Customization] */
 verticalUnits = 4; // [1:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
-keyboard_panel_depth = 3; // mm.
 
 // [Part Selection]
-part = "iris_keyboard"; // [iris_keyboard, iris_keyboard_laser]
+part = "assembly"; // [assembly, iris_keyboard, iris_keyboard_laser]
 
+/* [Hidden] */
 // Iris Keyboard Cutout
 // The keyboard cutout is an svg which will be extruded to delete from the panel.
+keyboard_panel_depth = 3; // mm.
 keyboard_cutout = "IrisCutout.svg"; // Path to the SVG file for the keyboard cutout
 keyboard_cutout_depth = 3; // Depth to extrude the cutout for deletion
 
@@ -59,7 +60,21 @@ module iris_keyboard(thickness=keyboard_panel_depth) {
 	}
 }
 
-if (part == "iris_keyboard") {
+// Visualization-only split-keyboard assembly. The two halves remain separate
+// MakerPanels, with the second half mirrored across its local center and
+// placed directly beside the first half.
+module iris_keyboard_assembly() {
+	panel_width_mm = hp_to_mm(horizontalPitch);
+	translate([-panel_width_mm / 2, 0, 0])
+		iris_keyboard();
+	translate([panel_width_mm / 2, 0, 0])
+		mirror([1, 0, 0])
+			iris_keyboard();
+}
+
+if (part == "assembly") {
+	iris_keyboard_assembly();
+} else if (part == "iris_keyboard") {
 	iris_keyboard();
 } else if (part == "iris_keyboard_laser") {
 	iris_keyboard_laser();

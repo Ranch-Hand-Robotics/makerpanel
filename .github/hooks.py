@@ -123,6 +123,33 @@ def _find_scad_assets(slug):
     return assets
 
 
+def _find_scad_dimensions(slug, scad_file):
+    """Read simple HP/U defaults from the example's SCAD source."""
+    if not scad_file:
+        return None, None
+
+    scad_path = Path(scad_file)
+    if not scad_path.exists():
+        return None, None
+
+    content = scad_path.read_text(encoding='utf-8')
+
+    def read_number(names):
+        for name in names:
+            match = re.search(
+                rf'\b{name}\s*=\s*([-+]?\d*\.?\d+)',
+                content,
+            )
+            if match:
+                return float(match.group(1))
+        return None
+
+    return (
+        read_number(('horizontalPitch', 'horizontal_pitch', 'panel_hp')),
+        read_number(('verticalUnits', 'vertical_units', 'panel_u')),
+    )
+
+
 def _build_example_entry(slug, existing_entry=None):
     override = EXAMPLE_OVERRIDES.get(slug, {})
     scad_file = override.get('scadFile') or _find_scad_url(slug)
@@ -131,12 +158,13 @@ def _build_example_entry(slug, existing_entry=None):
     existing_thumbnail = str(existing_entry.get('thumbnail', '')).strip()
     thumbnail = existing_thumbnail or DEFAULT_EXAMPLE_THUMBNAIL
 
+    scad_hp, scad_u = _find_scad_dimensions(slug, scad_file)
     entry = {
         'slug': slug,
         'title': override.get('title', _title_from_slug(slug)),
         'category': override.get('category', 'Other'),
-        'horizontalPitch': override.get('horizontalPitch'),
-        'verticalUnits': override.get('verticalUnits'),
+        'horizontalPitch': override.get('horizontalPitch', scad_hp),
+        'verticalUnits': override.get('verticalUnits', scad_u),
         'contributor': 'Ranch Hand Robotics',
         'description': override.get('description', 'Makerpanel example design.'),
         'thumbnail': thumbnail,

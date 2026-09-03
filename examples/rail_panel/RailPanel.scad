@@ -8,11 +8,11 @@ part = "rail_panel"; // [rail_panel, rail_panel_2d]
 
 /* [Customization] */
 rackWidthInches = 10; // [10, 19] 10 inches (254 mm) or 19 inches (482.6 mm)
-panelThickness = 3; // [1:0.5:3] Panel thickness in millimeters
 verticalUnits = 2; // [0:1:8] 0 = one offset-ear rail; rotate its mate 180 degrees
 
 
 /* [Hidden] */
+panelThickness = 3; // [1:0.5:3] Panel thickness in millimeters
 function is_single_rail() = verticalUnits == 0;
 function effective_vertical_units() = max(1, verticalUnits);
 function rack_outer_width() = rack_outer_width_mm(rackWidthInches);

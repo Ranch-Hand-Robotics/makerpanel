@@ -5,12 +5,14 @@
 
 include <panel.scad>
 
-/* [Parameters] */
+/* [Customization] */
 verticalUnits = 1; //[1:1:8] MakerPanel vertical units (U) for panel height
-horizontalPitch = 9; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
-panel_depth = 3; // mm.
+horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 
+/* [Hidden] */
 module hidden() {}
+
+panel_depth = 3; // mm.
 
 lilygo_radius = 35.5/2; // mm, radius of the circular area for the encoder
 
