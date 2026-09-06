@@ -1,38 +1,39 @@
 // MakerPanel design for Elgato Stream Deck OEM Modules.
-// This is a 3D-printed, front drop-in tray with rear screw retention.
+// Rear-loading sleeve with a separate, panel-bolted rear retainer.
 // Laser-cut versions are intentionally not supported.
 
 // Reference: https://www.elgato.com/us/en/p/stream-deck-module-32-keys
-// The 32-key DXF supplies the module opening and its rear mounting holes.
-// The 6-key and 15-key envelopes below are provisional until their CAD files
-// are added; replace those values with measured dimensions before fabrication.
+// All rectangular device envelopes and bezel overlaps are provisional.
+// The supplied 32-key DXF is retained as a reference, not used for this fit:
+// its extents differ from the current envelope. Measure before fabrication.
 include <makerpanel/common.scad>
 include <makerpanel/panel.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, panel, box, solids, subtractions]
+part = "assembly"; // [assembly, panel, bottom]
 verticalUnits = 3.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
 horizontalPitch = 43; // [16:1:80] Panel width (HP); adds 4HP flange margin
-tilt_angle = 15; // [0:1:25] box tilt about X; positive raises the +Y edge
+tilt_angle = 15; // [0:1:25] positive raises the +Y edge
 module_type = "32_key"; // [6_key, 15_key, 32_key]
 
 /* [Hidden] */
 module hidden() {}
 panel_depth = 3; // mm
 tray_wall = 3; // mm
-tray_floor = 3; // mm
-tray_recess_depth = 0; // mm; recess is deferred until the box is validated
+front_lip_depth = 3; // mm along the device axis
 module_clearance = 0.6; // mm per side
-retention_lip = 2.5; // mm
-rear_screw_diameter = 3.2; // mm
-rear_screw_head_diameter = 6.5; // mm
-rear_screw_head_depth = 2.2; // mm
-rear_mount_x_spacing = 250; // mm, provisional 32-key rear-hole spacing
-rear_mount_y_from_back = 18; // mm, provisional rear-hole inset
+retention_lip = 2.5; // mm overlap onto device front perimeter
+rear_plate_depth = 3; // mm along the device axis
+rear_support_width = 6; // mm rear bearing rim around the cable opening
+rear_seat_clearance = 0.2; // mm axial play; adjust for a thin compliant pad
+rear_insert_clearance = 0.3; // mm per side where retainer enters the sleeve
+rear_flange_width = 9; // mm beyond each side of the sleeve
+rear_flange_depth = 3; // mm; flange mating face is always world Z=0
+rear_bolt_diameter = 3.2; // mm; four M3 through-bolts, not device screws
+rear_bolt_end_inset = 12; // mm from each end of a side flange
 epsilon = 0.01;
 
-// Provisional envelope dimensions, measured/derived in the same XY plane as
-// the 32-key DXF. The 32-key opening remains the authoritative profile.
+// Provisional device dimensions; no scale is inferred from the reference DXF.
 function module_width_mm(kind) =
 	kind == "6_key" ? 72 :
 	kind == "15_key" ? 108 :
@@ -51,37 +52,46 @@ function module_depth_mm(kind) =
 function module_width() = module_width_mm(module_type);
 function module_height() = module_height_mm(module_type);
 function module_depth() = module_depth_mm(module_type);
+function streamdeck_bore_width() = module_width() + 2*module_clearance;
+function streamdeck_bore_height() = module_height() + 2*module_clearance;
+function streamdeck_outer_width() = streamdeck_bore_width() + 2*tray_wall;
+function streamdeck_outer_height() = streamdeck_bore_height() + 2*tray_wall;
+
+// Device front seats at local Z=0, rear at local Z=-module_depth().
+// Raise the tilted seat so its lowest outer edge reaches the panel underside.
+// At zero tilt the seat and the rear flange mating faces are all world Z=0.
+function streamdeck_seat_z() =
+	streamdeck_outer_height()/2 * sin(tilt_angle);
+// Intersection of the straight, tilted sleeve with the flat panel plane.
+function streamdeck_foot_y() = streamdeck_seat_z() * tan(tilt_angle);
+function streamdeck_foot_depth() =
+	streamdeck_outer_height() / cos(tilt_angle);
 function minimum_horizontal_pitch() =
-	// Reserve one full MakerRail width on each side of the device.
-	ceil((module_width() + 2*RACK_RAIL_HEIGHT + 2*module_clearance) / HP);
+	// Reserve side flanges plus a separate rail-mounting strip on each side.
+	ceil((streamdeck_outer_width() + 2*rear_flange_width
+		+ 2*RACK_RAIL_HEIGHT) / HP);
 function minimum_vertical_units() =
-	ceil((module_height() + 2*module_clearance) / U);
+	// Include the shifted sleeve footprint; round up in half-U increments.
+	ceil(4*(abs(streamdeck_foot_y()) + streamdeck_foot_depth()/2
+		+ RACK_RAIL_HEIGHT) / U) / 2;
 function effective_horizontal_pitch() =
 	max(horizontalPitch, minimum_horizontal_pitch());
 function effective_vertical_units() =
 	max(verticalUnits, minimum_vertical_units());
-// Device clearances are defined in box-local coordinates before tilting.
-function tray_origin_z() = tray_recess_depth;
-
-// Bounds of the flat panel and box in the tilted box's coordinate frame.
-// Extend openings through the hull without moving the retention ledge.
-function streamdeck_local_min_z() = min(
-	-(module_depth() + tray_floor)/2,
-	-u_to_mm(effective_vertical_units())/2 * abs(sin(tilt_angle))
-);
-function streamdeck_local_max_z() = max(
-	(module_depth() + tray_floor)/2,
-	u_to_mm(effective_vertical_units())/2 * abs(sin(tilt_angle))
-		+ panel_depth * cos(tilt_angle)
-);
-function streamdeck_hull_z_extent() = max(
-	panel_depth,
-	(module_height() + 2*tray_wall)/2 * abs(sin(tilt_angle))
-		+ (module_depth() + tray_floor)/2 * abs(cos(tilt_angle))
-) + epsilon;
+// Finite working bound for cutters and clipping planes, not a fit dimension.
+function streamdeck_cut_span() =
+	hp_to_mm(effective_horizontal_pitch())
+	+ u_to_mm(effective_vertical_units())
+	+ module_depth() + streamdeck_seat_z() + rear_plate_depth;
+function streamdeck_rear_seat_z() = -module_depth() - rear_seat_clearance;
+function streamdeck_bolt_x() =
+	streamdeck_outer_width()/2 + rear_flange_width/2;
+function streamdeck_bolt_y_offset() =
+	streamdeck_foot_depth()/2 - rear_bolt_end_inset;
 
 module streamdeck_placement() {
-	rotate([tilt_angle, 0, 0]) children();
+	translate([0, 0, streamdeck_seat_z()])
+		rotate([tilt_angle, 0, 0]) children();
 }
 
 module streamdeck_32_cutout_2d() {
@@ -103,69 +113,40 @@ module streamdeck_module_cutout_2d() {
 }
 
 module streamdeck_device_clearance_3d() {
-	// Keep the existing seating levels, extending only the open ends.
-	device_bottom = tray_origin_z() + tray_floor
-		- module_depth()/2 - epsilon;
-	device_top = max(
-		tray_origin_z() + tray_floor + 1.5*module_depth() + epsilon,
-		streamdeck_local_max_z() + epsilon
-	);
-	rear_top = -tray_origin_z() - 2*tray_floor
-		+ module_depth()/2 + epsilon;
-	rear_bottom = min(
-		-tray_origin_z() - 2*tray_floor - module_depth()/2 - epsilon,
-		streamdeck_local_min_z() - epsilon
-	);
+	// Full device envelope slides in from local -Z up to the front stop.
+	// No rear floor or smaller rear opening may obstruct this path.
+	span = streamdeck_cut_span();
 	union() {
-		translate([0, 0, (device_bottom + device_top)/2])
+		translate([0, 0, -span/2])
 			cube([
-				module_width() + 2*module_clearance,
-				module_height() + 2*module_clearance,
-				device_top - device_bottom
+				streamdeck_bore_width(),
+				streamdeck_bore_height(),
+				span
 			], center=true);
 
-		// Blast the smaller rear/bottom opening through the box floor. Its
-		// 10 mm inset leaves a continuous perimeter for structural support.
-		translate([
-			0,
-			0,
-			(rear_bottom + rear_top)/2
-		])
-			cube([
-				module_width() + 2*tray_wall - 20,
-				module_height() + 2*tray_wall - 20,
-				rear_top - rear_bottom
-			], center=true);
+		// Smaller front aperture leaves a lip bearing on the device bezel.
+		cube([
+			module_width() - 2*retention_lip,
+			module_height() - 2*retention_lip,
+			2*span
+		], center=true);
 	}
 }
 
-module rear_screw_holes_local() {
-	// Screws enter from the underside of the MakerPanel, through the tray
-	// floor, and into the module's rear mounting holes.
-	for (x = [-1, 1])
-		translate([
-			x * rear_mount_x_spacing/2,
-			module_height()/2 - rear_mount_y_from_back,
-			-epsilon
-		]) {
-				cylinder(
-				d=rear_screw_diameter,
-				h=tray_floor + 2*epsilon,
-				$fn=32
-			);
-			translate([0, 0, -epsilon])
-				cylinder(
-					d=rear_screw_head_diameter,
-					h=rear_screw_head_depth,
-					$fn=32
-				);
-		}
+module streamdeck_rear_bolt_holes() {
+	// One shared pattern for the panel and the removable retainer flanges.
+	// Bolts are normal to the MakerPanel regardless of the device tilt.
+	for (side = [-1, 1], end = [-1, 1])
+		translate([side*streamdeck_bolt_x(),
+			streamdeck_foot_y() + end*streamdeck_bolt_y_offset(), 0])
+			cylinder(d=rear_bolt_diameter,
+				h=2*streamdeck_cut_span(), center=true, $fn=32);
 }
 
-// Recover the standard rail-hole profile after hull() fills all holes.
+// Preserve the standard rail-hole profile through any added host geometry.
 // These bores stay normal to the flat panel, not the tilted device.
 module streamdeck_panel_mount_subtractions() {
-	linear_extrude(height=2*streamdeck_hull_z_extent(), center=true)
+	linear_extrude(height=2*streamdeck_cut_span(), center=true)
 		difference() {
 			square([
 				hp_to_mm(effective_horizontal_pitch()),
@@ -179,23 +160,21 @@ module streamdeck_panel_mount_subtractions() {
 }
 
 module streamdeck_device_subtractions() {
-	streamdeck_placement() {
-		streamdeck_device_clearance_3d();
-		rear_screw_holes_local();
-	}
+	streamdeck_placement() streamdeck_device_clearance_3d();
 }
 
-// Panel underside Z=0, panel top Z=panel_depth; box pivots at its center.
+// Front/host cuts only. Do not apply these to the removable rear retainer.
 // Keep cuts outside union()/hull() so joined material cannot refill them.
 module streamdeck_subtractions() {
 	union() {
 		streamdeck_device_subtractions();
 		streamdeck_panel_mount_subtractions();
+		streamdeck_rear_bolt_holes();
 	}
 }
 
 // Apply the Stream Deck volumes to any number of positive child objects.
-// Openings span this panel/box hull; deeper child shells need longer cutters.
+// Openings span the current assembly; larger host shells need longer cutters.
 module streamdeck_subtract() {
 	difference() {
 		union() {
@@ -206,12 +185,17 @@ module streamdeck_subtract() {
 }
 
 module streamdeck_box_solid() {
-	streamdeck_placement()
-		cube([
-			module_width() + 2*tray_wall,
-			module_height() + 2*tray_wall,
-			module_depth() + tray_floor
-		], center=true);
+	// Straight sleeve along the slide axis, trimmed at the panel underside.
+	// Unlike a hull to an untilted foot, this cannot pinch the loading bore.
+	span = streamdeck_cut_span();
+	intersection() {
+		streamdeck_placement()
+			translate([0, 0, (front_lip_depth - span)/2])
+				cube([streamdeck_outer_width(),
+					streamdeck_outer_height(), span + front_lip_depth],
+					center=true);
+		translate([-span, -span, 0]) cube([2*span, 2*span, span]);
+	}
 }
 
 module streamdeck_panel_solid() {
@@ -224,31 +208,10 @@ module streamdeck_panel_solid() {
 	);
 }
 
-module streamdeck_mount_solid() {
-	// Bridge only the box footprint to the panel plane. Hulling the entire
-	// MakerPanel would bury its flat mounting flange inside the sloped body.
-	hull() {
-		translate([0, 0, panel_depth/2])
-			cube([
-				module_width() + 2*tray_wall,
-				module_height() + 2*tray_wall,
-				panel_depth
-			], center=true);
-		streamdeck_box_solid();
-	}
-}
-
 module streamdeck_solids() {
 	union() {
 		streamdeck_panel_solid();
-		streamdeck_mount_solid();
-	}
-}
-
-module streamdeck_box() {
-	difference() {
 		streamdeck_box_solid();
-		streamdeck_device_subtractions();
 	}
 }
 
@@ -259,25 +222,89 @@ module streamdeck_panel() {
 	}
 }
 
-// Supply a future hull as a child: streamdeck_assembly() my_hull();
-// For custom unions or hull() operations, pass positive geometry to
-// streamdeck_subtract(), or subtract streamdeck_subtractions() explicitly.
-// Apply the same placement transform to solids and cutters together.
-module streamdeck_assembly() {
-	streamdeck_panel() children();
+module streamdeck_rear_flange_solids() {
+	for (side = [-1, 1])
+		translate([side*streamdeck_bolt_x(), streamdeck_foot_y(),
+			-rear_flange_depth/2])
+			cube([rear_flange_width + epsilon, streamdeck_foot_depth(),
+				rear_flange_depth], center=true);
 }
+
+module streamdeck_rear_solid() {
+	span = streamdeck_cut_span();
+	union() {
+		intersection() {
+			// Angled back plate connected to a flat mating rim at world Z=0.
+			hull() {
+				streamdeck_placement()
+					translate([0, 0, streamdeck_rear_seat_z()
+						- rear_plate_depth/2])
+						cube([streamdeck_outer_width(),
+							streamdeck_outer_height(), rear_plate_depth],
+							center=true);
+				translate([0, streamdeck_foot_y(), -rear_flange_depth/2])
+					cube([streamdeck_outer_width(), streamdeck_foot_depth(),
+						rear_flange_depth], center=true);
+			}
+			union() {
+				// The main cup stays behind the flat MakerPanel.
+				translate([-span, -span, -span])
+					cube([2*span, 2*span, span]);
+				// The raised portion of the angled seat fits INSIDE the bore.
+				// Clearance prevents collision with the fixed front sleeve.
+				streamdeck_placement()
+					cube([
+						streamdeck_bore_width() - 2*rear_insert_clearance,
+						streamdeck_bore_height() - 2*rear_insert_clearance,
+						2*span
+					], center=true);
+			}
+		}
+		streamdeck_rear_flange_solids();
+	}
+}
+
+module streamdeck_rear_subtractions() {
+	span = streamdeck_cut_span();
+	streamdeck_placement() {
+		// Angled seating inset: leave a back plate at the device rear face.
+		translate([0, 0, (streamdeck_rear_seat_z() + span)/2])
+			cube([streamdeck_bore_width(), streamdeck_bore_height(),
+				span - streamdeck_rear_seat_z()], center=true);
+		// Cable/vent access retains a perimeter that traps the device.
+		cube([module_width() - 2*rear_support_width,
+			module_height() - 2*rear_support_width, 2*span], center=true);
+	}
+	streamdeck_rear_bolt_holes();
+}
+
+module streamdeck_rear() {
+	difference() {
+		streamdeck_rear_solid();
+		streamdeck_rear_subtractions();
+	}
+}
+
+// Attach future host geometry to the fixed front, never to the rear retainer:
+// streamdeck_panel() my_hull(); or streamdeck_assembly() my_hull();
+// Keep the world-Z<0 loading corridor clear; cutters open that corridor.
+module streamdeck_assembly() {
+	color("LightSlateGray") streamdeck_panel() children();
+	color("DarkOrange") streamdeck_rear();
+}
+
+assert(tilt_angle >= 0 && tilt_angle <= 25,
+	"Rear-loading mount supports tilt angles from 0 to 25 degrees.");
+assert(min(module_width(), module_height()) >
+	2*max(retention_lip, rear_support_width), "Invalid retaining rim width.");
+assert(rear_insert_clearance > 0 &&
+	rear_insert_clearance < module_clearance + rear_support_width,
+	"Rear insert needs clearance and a remaining support rim.");
 
 if (part == "assembly") {
 	streamdeck_assembly();
-} else if (part == "box") {
-	streamdeck_box();
-} else if (part == "solids") {
-	streamdeck_solids();
-} else if (part == "subtractions") {
-	streamdeck_subtractions();
 } else if (part == "panel") {
-		makerpanel_2d(
-			effective_horizontal_pitch(),
-			effective_vertical_units()
-		);
+	streamdeck_panel();
+} else if (part == "bottom") {
+	streamdeck_rear();
 }
