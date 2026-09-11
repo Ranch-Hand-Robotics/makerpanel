@@ -5,10 +5,15 @@
 // counterbalance or transport latch. Rear pads stop over-opening only.
 include <makerpanel/common.scad>
 include <makerpanel/panel.scad>
+use <examples/vent_panel/IsoGridScad/isogrid.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, poses, maker_panel, vesa_panel, brace, brace_profile, slider_bolt, slider_washer, slider_locknut, pivot_washer, rear_pad, stow_pad]
-metal_thickness = 1.5; // [1:0.5:4]
+part = "assembly"; // [assembly, maker_panel, vesa_panel, brace, brace_2d]
+metal_thickness = 4; // [1:0.5:4]
+// Optional arm-pivot washers; zero omits them from the assembly.
+washer_thickness = 0; // [0:0.1:2]
+// Total free space across both sides of the arm/optional washer stack.
+pivot_clearance = 0.2; // [0:0.05:1]
 verticalUnits = 4; // [1:1:8]
 horizontalPitch = 35; // [4:1:40]
 deployment = 0; // [0:0.01:1]
@@ -17,13 +22,27 @@ show_hardware = true;
 monitor_width = 700;
 monitor_height = 190;
 monitor_depth = 15;
-monitor_row_offset = 60;
+// Distance from the actual monitor bottom to the VESA screw centers (mm).
+monitor_row_offset = 90;
 monitor_offset_x = 70;
 panel_depth = 3;
 vesa_plate_width = 0;
+base_isogrid = true;
+carrier_isogrid = true;
+grid_triangle = 15; // [10:1:30] Triangle side, not perpendicular pitch.
+grid_hole = 5; // [0:0.5:10] Intersection hole diameter, matching VentPanel.
+grid_rib = 3; // [3:0.5:5] Retained solid stroke width.
+grid_border = 10; // [10:1:20] Solid perimeter, before functional holes.
+grid_margin = 4; // [4:0.5:8] OUTSIDE each structural XY footprint.
+mount_washer_diameter = 7; // Bearing envelope only; no new seats.
+vesa_bearing_diameter = 9; // Larger of purchased washer/nut footprint.
 
 /* [Hidden] */
 module hidden() {}
+grid_eps = 0.01;
+grid_facets = 64;
+mount_pad_radius = max(8, mount_washer_diameter / 2 + grid_margin);
+vesa_pad_radius = max(8, vesa_bearing_diameter / 2 + grid_margin);
 panel_width = hp_to_mm(horizontalPitch);
 panel_height = u_to_mm(verticalUnits);
 panel_front = -panel_height / 2;
@@ -36,8 +55,7 @@ pivot_radius = 8;
 slider_z = panel_depth + pivot_radius + 0.2;
 bore_radius = 2.7;
 cheek_thickness = 8;
-washer_thickness = 1;
-clevis_gap = metal_thickness + 2 * washer_thickness;
+clevis_gap = metal_thickness + 2 * washer_thickness + pivot_clearance;
 cheek_offset = clevis_gap / 2 + cheek_thickness / 2;
 bolt_radius = 2.5;
 nut_radius = 4.7; // Circumscribes an 8 mm across-flats M5 hex nut.
@@ -93,7 +111,7 @@ plate_top = plate_bottom + plate_thickness;
 plate_start = monitor_bottom_y;
 monitor_top_y = monitor_bottom_y + monitor_height;
 monitor_center_y = monitor_bottom_y + monitor_height / 2;
-vesa_row_y = monitor_center_y + monitor_row_offset;
+vesa_row_y = monitor_bottom_y + monitor_row_offset;
 vesa_spacing = 75;
 vesa_bore = 2.25;
 vesa_margin = 9;
@@ -105,9 +123,18 @@ fixed_b = [panel_rear - anchor_rear_inset, slider_z];
 slider_start = panel_front + slider_lug_radius;
 carrier_span = (fixed_b[0] - slider_start - 1) / 2;
 brace_length = carrier_span + 1;
+// Keep the slider load path into the full D-pivot band, not past it.
+slider_rib_end = min(plate_end, carrier_span + 8 + grid_margin);
+// Define the stow footprint before the plate bounds that depend on it.
+stow_depth = 10;
+stow_width = 10;
+// Keep the widened stops outside the metal-arm sweep, even at 4 mm stock.
+stow_lane = max(69, brace_lane + metal_thickness / 2 + stow_width / 2 + 0.2);
 required_left = min(-brace_lane - clevis_gap / 2 - cheek_thickness - 2,
+    -stow_lane - stow_width / 2,
     monitor_offset_x - vesa_spacing / 2 - vesa_margin);
 required_right = max(brace_lane + clevis_gap / 2 + cheek_thickness + 2,
+    stow_lane + stow_width / 2,
     monitor_offset_x + vesa_spacing / 2 + vesa_margin);
 plate_extra = max(0, vesa_plate_width - required_right + required_left) / 2;
 plate_left = required_left - plate_extra;
@@ -131,14 +158,21 @@ pad_back = [slider_end + monitor_bottom_y * cos(deployed_angle)
         + plate_top * cos(deployed_angle)];
 pad_front = pad_back + [-monitor_depth * sin(deployed_angle),
     monitor_depth * cos(deployed_angle)];
-stow_depth = 4;
-stow_lane = 69;
-stow_width = 8;
-// Rear-edge setback preserves default Y65.5..69.5. The shorter folded
-// plate footprint on 5U moves these stops forward, clear of the screen.
+stow_pad_thickness = 0.5; // Separate from the 1.5 mm rear cushions.
+magnet_diameter = 6;
+magnet_thickness = 2;
+magnet_pocket_diameter = 6.2;
+magnet_pocket_depth = 2.1;
+magnet_facets = 64;
+// Keep outer supports ahead of the folded middle-pivot cheeks, not
+// merely outside the narrower metal arms. Their carrier pockets follow.
 stow_margin = 19.4;
-stow_rear_y = min(panel_rear, slider_start + plate_end)
-    - stow_depth / 2 - stow_margin;
+stow_pivot_gap = 2;
+stow_rear_y = min(
+    min(panel_rear, slider_start + plate_end)
+        - stow_depth / 2 - stow_margin,
+    slider_start + carrier_span - pivot_radius
+        - stow_depth / 2 - stow_pivot_gap);
 // If the rear candidate is not behind the standing screen, place the
 // whole pad ahead of it. This also accommodates lower VESA row inputs.
 stow_screen_gap = 2;
@@ -146,6 +180,23 @@ stow_y = stow_rear_y - stow_depth / 2 >= pad_back[0] + stow_screen_gap
     ? stow_rear_y
     : min(stow_rear_y, pad_front[0] - stow_depth / 2 - stow_screen_gap);
 stow_top = slider_z + plate_bottom;
+// Inboard stow posts follow the folded carrier's middle (D) pivot band.
+// Their matching seats remain compact and entirely under the plate.
+dock_lane = 35;
+dock_width = 10;
+dock_stow_wall = 1.55; // Retained fore/aft pocket wall: 9.3 mm post depth.
+dock_depth = magnet_pocket_diameter + 2 * dock_stow_wall;
+dock_y = slider_start + carrier_span;
+dock_contact_z = pad_back[1] - 3; // Folded contact 3 mm below screen stop.
+dock_pad_thickness = 0.5;
+dock_top = dock_contact_z - dock_pad_thickness;
+// The pedestals meet these broad underside seats ONLY when folded flat.
+// Invert the folded translation so both magnet pairs move together.
+dock_fold_y = dock_y - slider_start;
+dock_fold_bottom = dock_contact_z - slider_z;
+dock_fold_top = plate_bottom + 2;
+// Local pocket-sized bosses, not bars extending beyond the plate.
+dock_fold_start = dock_fold_y - dock_depth / 2;
 validation_steps = 1000;
 
 function yz_rotate(p, a) = [p[0] * cos(a) - p[1] * sin(a),
@@ -181,7 +232,7 @@ function cheek_x(side, cheek) = handed(side,
     brace_lane + cheek * cheek_offset - cheek_thickness / 2,
     brace_lane + cheek * cheek_offset + cheek_thickness / 2);
 
-// Exact tables drive rendering AND source tests. Boxes: [name, XYZ lo/hi].
+// Exact tables drive rendering and inline checks. Boxes: [name, XYZ lo/hi].
 // Rounds/cuts: [name, X lo/hi, YZ start/end, radius].
 function base_boxes() = concat([
     ["track", [-track_half_width, track_front, panel_depth - overlap],
@@ -193,7 +244,12 @@ function base_boxes() = concat([
     ["stow_stop", [side * stow_lane - stow_width / 2,
         stow_y - stow_depth / 2, panel_depth - overlap],
         [side * stow_lane + stow_width / 2,
-        stow_y + stow_depth / 2, stow_top - pad_thickness]]]);
+        stow_y + stow_depth / 2, stow_top - stow_pad_thickness]]
+], [for (side = [-1, 1])
+    ["dock_pedestal", [side * dock_lane - dock_width / 2,
+        dock_y - dock_depth / 2, panel_depth - overlap],
+        [side * dock_lane + dock_width / 2,
+        dock_y + dock_depth / 2, dock_top]]]);
 function base_rounds() = [
     for (side = [-1, 1], cheek = [-1, 1]) let(x = cheek_x(side, cheek))
     ["B_cheek", x[0], x[1], fixed_b, fixed_b, pivot_radius]
@@ -213,11 +269,16 @@ function carrier_boxes() = concat([
 ], [for (side = [-1, 1]) let(x = handed(side,
         slider_lug_inner, slider_lug_outer))
     ["slider_riser", [x[0], 0, 0],
-        // Continue toward screen top (+Y), all the way to the plate edge.
-        [x[1], plate_end, plate_bottom + 2]]
+        // End at the brace band; the plate carries the VESA row above it.
+        [x[1], slider_rib_end, plate_bottom + 2]]
 ], [for (side = [-1, 1], cheek = [-1, 1]) let(x = cheek_x(side, cheek))
     ["D_riser", [x[0], carrier_span - 8, 0],
         [x[1], carrier_span + 8, plate_bottom + 2]]
+], [for (side = [-1, 1])
+    ["dock_fold_boss", [side * dock_lane - dock_width / 2,
+        dock_fold_start, dock_fold_bottom],
+        [side * dock_lane + dock_width / 2,
+        dock_fold_y + dock_depth / 2, dock_fold_top]]
 ]);
 function carrier_rounds() = concat([
     for (side = [-1, 1]) let(x = handed(side,
@@ -243,8 +304,10 @@ function brace_hardware() = [
     ["bolt", clevis_outer(), clevis_outer() + head_thickness, head_radius, 0],
     ["nut", clevis_inner() - nut_thickness, clevis_inner(),
         nut_radius, bolt_radius + thread_clearance],
+    if (washer_thickness > 0)
     ["washer_i", brace_lane - metal_thickness / 2 - washer_thickness,
         brace_lane - metal_thickness / 2, head_radius, bore_radius],
+    if (washer_thickness > 0)
     ["washer_o", brace_lane + metal_thickness / 2,
         brace_lane + metal_thickness / 2 + washer_thickness,
         head_radius, bore_radius]
@@ -277,6 +340,117 @@ function rear_pad_yz() = [
     [pad_back[0], pad_back[1] - pad_thickness],
     [pad_front[0], pad_front[1] - pad_thickness], pad_front, pad_back
 ];
+
+// Blind Z pockets: [XY center, radius, Z floor, Z ceiling], part-local.
+// Base opens upward; carrier opens downward. EPS extends ONLY into air.
+function magnet_pockets(carrier) = [for (side = [-1, 1])
+    [[side * stow_lane, stow_y - (carrier ? slider_start : 0)],
+     magnet_pocket_diameter / 2,
+     carrier ? plate_bottom
+        : stow_top - stow_pad_thickness - magnet_pocket_depth,
+     carrier ? plate_bottom + magnet_pocket_depth
+        : stow_top - stow_pad_thickness]
+];
+module magnet_voids(carrier) {
+    for (p = magnet_pockets(carrier))
+        translate([p[0][0], p[0][1], p[2] - (carrier ? grid_eps : 0)])
+            cylinder(r=p[1], h=p[3] - p[2] + grid_eps, $fn=magnet_facets);
+}
+
+// Two inboard carrier Z pockets: eight magnets total, four folded pairs.
+// The cavity ends below the skin; keepouts retain its solid roof/root.
+function dock_fold_magnet_pockets() = [for (side = [-1, 1])
+    [[side * dock_lane, dock_fold_y], magnet_pocket_diameter / 2,
+     dock_fold_bottom, dock_fold_bottom + magnet_pocket_depth]
+];
+module dock_fold_magnet_voids() {
+    for (p = dock_fold_magnet_pockets())
+        translate([p[0][0], p[0][1], p[2] - grid_eps])
+            cylinder(r=p[1], h=p[3] - p[2] + grid_eps, $fn=magnet_facets);
+}
+
+// Inboard base Z pockets open upward toward the folded underside seats.
+function dock_magnet_pockets() = [for (side = [-1, 1])
+    [[side * dock_lane, dock_y],
+     magnet_pocket_diameter / 2,
+     dock_top - magnet_pocket_depth, dock_top]
+];
+module dock_magnet_voids() {
+    for (p = dock_magnet_pockets())
+        translate([p[0][0], p[0][1], p[2]])
+            cylinder(r=p[1], h=p[3] - p[2] + grid_eps,
+                $fn=magnet_facets);
+}
+
+// Skin rectangles and keepouts are XY, in each part's own coordinates.
+// Project entire root envelopes, including round feet, not just centers.
+function skin_bounds(carrier) = carrier
+    ? [[plate_left, plate_start], [plate_right, plate_end]]
+    : [[-panel_width / 2, panel_front], [panel_width / 2, panel_rear]];
+function skin_roots(carrier) = concat([
+    for (b = carrier ? carrier_boxes() : base_boxes())
+        if (b[0] != "plate") [[b[1][0], b[1][1]], [b[2][0], b[2][1]]]
+], [
+    for (p = carrier ? carrier_rounds() : base_rounds())
+        [[p[1], min(p[3][0], p[4][0]) - p[5]],
+         [p[2], max(p[3][0], p[4][0]) + p[5]]]
+], carrier ? [
+    for (b = base_boxes()) if (b[0] == "stow_stop")
+        [[b[1][0], b[1][1] - slider_start],
+         [b[2][0], b[2][1] - slider_start]]
+] : [
+    for (side = [-1, 1])
+        [[side * pad_lane - pad_width / 2,
+            min([for (p = rear_support_yz()) p[0]])],
+         [side * pad_lane + pad_width / 2,
+            max([for (p = rear_support_yz()) p[0]])]]
+]);
+// Bands span the entire carrier, linking both side mounts, ribs and border.
+function skin_bands(carrier) = carrier ? [
+    [[plate_left, min([for (b = carrier_boxes())
+        if (b[0] == "D_riser") b[1][1]]) - grid_margin],
+     [plate_right, max([for (b = carrier_boxes())
+        if (b[0] == "D_riser") b[2][1]]) + grid_margin]],
+    [[plate_left, vesa_row_y - vesa_pad_radius],
+     [plate_right, vesa_row_y + vesa_pad_radius]]
+] : [];
+// Pads retain surrounding material only: existing bores remain subtractive.
+function skin_pads(carrier) = carrier ? [
+    for (side = [-1, 1]) [vesa_x(side), vesa_row_y, vesa_pad_radius]
+] : [
+    for (sx = [-1, 1], sy = [-1, 1])
+        [sx * (panel_width / 2 - RACK_RAIL_HEIGHT / 2),
+         sy * (panel_height / 2 - RACK_RAIL_HEIGHT / 2), mount_pad_radius]
+];
+module skin_rectangle(bounds, margin=0) {
+    translate(bounds[0] - [margin, margin])
+        square(bounds[1] - bounds[0] + [2 * margin, 2 * margin]);
+}
+module skin_keepouts(carrier) {
+    for (r = skin_roots(carrier)) skin_rectangle(r, grid_margin);
+    for (r = skin_bands(carrier)) skin_rectangle(r);
+    for (p = skin_pads(carrier)) translate([p[0], p[1]])
+        // Circumscribed polygon: even facet midpoints retain full radius.
+        circle(r=p[2] / cos(180 / grid_facets), $fn=grid_facets);
+}
+module skin_voids(carrier) {
+    bounds = skin_bounds(carrier);
+    size = bounds[1] - bounds[0];
+    bottom = carrier ? plate_bottom : 0;
+    depth = carrier ? plate_thickness : panel_depth;
+    translate([0, 0, bottom - grid_eps])
+        linear_extrude(height=depth + 2 * grid_eps)
+            difference() {
+                skin_rectangle(bounds, -grid_border);
+                // Library returns POSITIVE ribs. Subtract their complement.
+                translate((bounds[0] + bounds[1]) / 2)
+                    isogrid_rect(size[0], size[1],
+                        triangle_size=grid_triangle, thickness=grid_rib,
+                        extrude=0, hole_size=grid_hole,
+                        top_chamfer=0, bottom_chamfer=0);
+                skin_keepouts(carrier);
+            }
+}
 module bounds_box(box) {
     translate((box[1] + box[2]) / 2)
         cube(box[2] - box[1], center=true);
@@ -305,6 +479,9 @@ module maker_panel() {
                     pad_width, rear_support_yz());
         }
         for (p = base_cuts()) round_solid(p);
+        magnet_voids(false);
+        dock_magnet_voids();
+        if (base_isogrid) skin_voids(false);
     }
 }
 module vesa_panel() {
@@ -314,13 +491,16 @@ module vesa_panel() {
             for (p = carrier_rounds()) round_solid(p);
         }
         for (p = carrier_cuts()) round_solid(p);
+        magnet_voids(true);
+        dock_fold_magnet_voids();
+        if (carrier_isogrid) skin_voids(true);
         for (side = [-1, 1])
             translate([vesa_x(side), vesa_row_y, -1])
                 cylinder(r=vesa_bore, h=plate_top + 2, $fn=48);
     }
     // Deliberately NO VESA bosses: monitor back is flush at plate_top.
 }
-module brace_profile() {
+module brace_2d() {
     difference() {
         hull() for (y = [0, brace_length])
             translate([0, y]) circle(r=link_radius, $fn=48);
@@ -330,7 +510,7 @@ module brace_profile() {
 }
 module brace() {
     rotate([0, 90, 0]) linear_extrude(height=metal_thickness, center=true)
-        brace_profile();
+        brace_2d();
 }
 module ring(r, bore, height) {
     difference() {
@@ -351,11 +531,24 @@ module rear_pad() {
         yz_prism(0, pad_width, rear_pad_yz());
 }
 module stow_pad() {
-    cube([stow_width, stow_depth, pad_thickness]);
+    difference() {
+        cube([stow_width, stow_depth, stow_pad_thickness]);
+        translate([stow_width / 2, stow_depth / 2, -grid_eps])
+            cylinder(d=magnet_pocket_diameter,
+                h=stow_pad_thickness + 2 * grid_eps, $fn=magnet_facets);
+    }
 }
 module carrier_pose(t) {
     translate([0, slider(t)[0], slider(t)[1]])
         rotate([carrier_angle(t), 0, 0]) children();
+}
+module dock_pad() {
+    difference() {
+        cube([dock_width, dock_depth, dock_pad_thickness]);
+        translate([dock_width / 2, dock_depth / 2, -grid_eps])
+            cylinder(d=magnet_pocket_diameter,
+                h=dock_pad_thickness + 2 * grid_eps, $fn=magnet_facets);
+    }
 }
 module assembly(t=deployment) {
     color("SteelBlue") maker_panel();
@@ -368,7 +561,10 @@ module assembly(t=deployment) {
         for (side = [-1, 1])
             translate([side * stow_lane - stow_width / 2,
                 stow_y - stow_depth / 2,
-                stow_top - pad_thickness]) stow_pad();
+                stow_top - stow_pad_thickness]) stow_pad();
+        for (side = [-1, 1])
+            translate([side * dock_lane - dock_width / 2,
+                dock_y - dock_depth / 2, dock_top]) dock_pad();
     }
     for (side = [-1, 1]) {
         p = brace_tip(t);
@@ -391,7 +587,19 @@ module assembly(t=deployment) {
     }
 }
 
-// Basic fabrication guards. External tests check the complete finite sweep.
+// Basic fabrication guards; not a complete finite-sweep collision proof.
+assert(grid_triangle >= 10 && grid_triangle <= 30
+    && grid_rib >= 3 && grid_rib <= 5
+    && grid_triangle > sqrt(3) * grid_rib,
+    "Grid must retain >=3 mm ribs and positive triangular openings");
+assert(grid_border >= 10 && grid_border <= 20
+    && grid_margin >= 4 && grid_margin <= 8
+    && mount_washer_diameter >= MOUNT_HOLE_DIAMETER
+    && vesa_bearing_diameter >= 2 * vesa_bore,
+    "Keep perimeter, outside-root margins and hardware bearing envelopes");
+assert(min(panel_width, panel_height, plate_right - plate_left,
+    plate_end - plate_start) > 2 * grid_border,
+    "Border must leave a positive inset rectangle");
 assert(deployment >= 0 && deployment <= 1, "deployment must be 0..1");
 assert(metal_thickness >= 1 && metal_thickness <= 4, "Stock must be 1..4 mm");
 assert(panel_depth >= 1 && panel_depth <= 3, "Panel must be 1..3 mm");
@@ -450,6 +658,17 @@ assert(slider_z + monitor_bottom_y > track_top + 0.5
     "Screen, plate, pads and slotted housing need running clearance");
 assert(stow_lane - stow_width / 2 > slider_hardware_reach,
     "Stow pedestals must be outside the slider hardware sweep");
+assert(stow_lane - stow_width / 2 > brace_lane + metal_thickness / 2
+    && -stow_lane - stow_width / 2 >= plate_left
+    && stow_lane + stow_width / 2 <= plate_right,
+    "Stow footprints must clear arms and fit entirely within the carrier");
+assert(magnet_pocket_diameter * cos(180 / magnet_facets) > magnet_diameter
+    && magnet_pocket_depth > magnet_thickness && magnet_thickness > 0
+    && min(stow_width, stow_depth) >= magnet_pocket_diameter + 3.8
+    && plate_thickness - magnet_pocket_depth >= 0.9 - 0.00000001
+    && stow_pad_thickness > 0
+    && stow_top - stow_pad_thickness - magnet_pocket_depth > panel_depth,
+    "Magnet pockets need insertion clearance, side walls and blind floors");
 assert(stow_margin >= 2
     && stow_y - stow_depth / 2 >= panel_front + 2
     && stow_y + stow_depth / 2 <= panel_rear - 2
@@ -470,6 +689,27 @@ assert(pad_front[0] > panel_rear / 3 && pad_back[0] <= panel_rear - 2
 assert(pad_lane - pad_width / 2 > slider_hardware_reach
     && pad_lane + pad_width / 2 < brace_lane - metal_thickness / 2,
     "Rear pads must clear slider hardware and low metal arms");
+assert(dock_lane - dock_width / 2 > slider_hardware_reach + 1.5
+    && dock_lane + dock_width / 2 < clevis_inner()
+        - nut_thickness - bolt_extension - 1.5,
+    "Dock lanes must clear the full slider and brace hardware envelopes");
+assert(min(dock_width, dock_depth) >= magnet_pocket_diameter + 3
+    && dock_stow_wall >= 1.5 && dock_pad_thickness == 0.5,
+    "Inboard stow seats need >=1.5 mm walls and 0.5 mm cushions");
+assert(dock_top - magnet_pocket_depth - panel_depth >= 1.5
+    && dock_y + dock_depth / 2 < panel_rear - 2
+    && dock_contact_z < pad_back[1]
+    && -dock_lane - dock_width / 2 >= plate_left
+    && dock_lane + dock_width / 2 <= plate_right,
+    "Dock pedestals need pocket floors and must fit within the carrier");
+assert(dock_fold_bottom > 0
+    && dock_fold_bottom + magnet_pocket_depth < plate_bottom
+    && dock_fold_top - dock_fold_bottom - magnet_pocket_depth >= 1.5
+    && dock_fold_top - plate_bottom >= 2 && dock_fold_top < plate_top
+    && dock_fold_start >= plate_start
+    && min(plate_end, dock_fold_y + dock_depth / 2) - dock_fold_start >= 5
+    && dock_fold_y + dock_depth / 2 <= monitor_top_y,
+    "Folded dock seats need blind roofs and full-volume plate roots");
 
 if (part == "assembly") {
     assembly();
@@ -483,8 +723,8 @@ if (part == "assembly") {
     vesa_panel();
 } else if (part == "brace") {
     brace();
-} else if (part == "brace_profile") {
-    brace_profile();
+} else if (part == "brace_2d") {
+    brace_2d();
 } else if (part == "slider_bolt") {
     hardware_set(1, [0, 0], slider_bolt_hardware());
 } else if (part == "slider_washer") {
@@ -492,7 +732,8 @@ if (part == "assembly") {
 } else if (part == "slider_locknut") {
     hardware_set(1, [0, 0], slider_locknut_hardware());
 } else if (part == "pivot_washer") {
-    ring(head_radius, bore_radius, washer_thickness);
+    if (washer_thickness > 0)
+        ring(head_radius, bore_radius, washer_thickness);
 } else if (part == "rear_pad") {
     rear_pad();
 } else if (part == "stow_pad") {

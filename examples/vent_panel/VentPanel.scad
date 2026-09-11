@@ -1,17 +1,27 @@
 // VentPanel
 // MakerPanel-compatible ventilation panel with selectable vent patterns.
 
-include <common.scad>
+include <makerpanel/common.scad>
 include <makerpanel/panel.scad>
 use <IsoGridScad/isogrid.scad>
 
 /* [Customization] */
 horizontalPitch = 35; // [4:1:80] MakerPanel width in HP
-verticalUnits = 2; // [1:1:8] MakerPanel height in U
+verticalUnits = 4; // [1:1:8] MakerPanel height in U
 inset = 10; // [2:1:30] Solid border around the vents in millimeters
-type = "Holes"; // [Holes, Honeycomb, Isogrid]
+type = "Isogrid"; // [Holes, Honeycomb, Isogrid]
 gridScale = 1; // [0.5:0.05:1.2] Vent opening scale
 fan = "None"; // [None, 40mm, 60mm, 80mm, 92mm, 120mm]
+
+/* [Finger Hole] */
+fingerHole = true;
+fingerHoleDiameter = 25; // [15:0.5:40] Bore diameter in millimeters
+fingerHoleAngle = 50; // [0:1:75] Degrees from the panel normal
+fingerHoleRingWidth = 3; // [0:0.5:10] Flush solid border in millimeters
+// Top-face bore center, measured inward from the right (+X) edge.
+fingerHoleXOffset = 20; // [0:0.5:400]
+// Top-face bore center, measured inward from the rear (+Y) edge.
+fingerHoleYOffset = 55; // [0:0.5:400]
 
 /* [Part Selection] */
 part = "panel"; // [panel, panel_2d]
@@ -278,7 +288,7 @@ module isogrid_panel_2d() {
     }
 }
 
-module vent_panel_2d() {
+module vent_pattern_2d() {
     assert(
         vent_width() > 0 && vent_height() > 0,
         "Inset must leave a positive ventilation area."
@@ -315,9 +325,81 @@ module vent_panel_2d() {
     }
 }
 
+module finger_hole_cutout(thickness=panelThickness) {
+    radius = fingerHoleDiameter / 2;
+
+    // Tilt toward the rear (+Y) as the finger passes below the top face.
+    // Extend both caps beyond the panel, including the tilted bore radius.
+    cutterLength = 2 * (
+        thickness / cos(fingerHoleAngle)
+        + radius * tan(fingerHoleAngle) + epsilon
+    );
+    translate([
+        panel_width() / 2 - fingerHoleXOffset,
+        panel_height() / 2 - fingerHoleYOffset,
+        thickness
+    ])
+        rotate([fingerHoleAngle, 0, 0])
+            #cylinder(
+                d=fingerHoleDiameter,
+                h=cutterLength,
+                center=true,
+                $fn=96
+            );
+}
+
+module finger_hole_pad_2d(thickness=panelThickness) {
+    // Enclose both face openings so the ring stays solid through the panel.
+    translate([
+        panel_width() / 2 - fingerHoleXOffset,
+        panel_height() / 2 - fingerHoleYOffset
+    ])
+        offset(r=fingerHoleRingWidth, $fn=96)
+            hull() {
+                for (shift = [0, thickness * tan(fingerHoleAngle)]) {
+                    translate([0, shift])
+                        scale([1, 1 / cos(fingerHoleAngle)])
+                            circle(d=fingerHoleDiameter, $fn=96);
+                }
+            }
+}
+
+module reinforced_vent_pattern_2d(thickness=panelThickness) {
+    union() {
+        vent_pattern_2d();
+        if (fingerHole && fingerHoleRingWidth > 0) {
+            // Preserve the panel outline and all hardware mounting holes.
+            difference() {
+                intersection() {
+                    makerpanel_2d(horizontalPitch, verticalUnits);
+                    finger_hole_pad_2d(thickness);
+                }
+                fan_mount_holes();
+            }
+        }
+    }
+}
+
+module vent_panel_2d() {
+    difference() {
+        reinforced_vent_pattern_2d();
+        // Top-face section only; 2D exports cannot represent bore tilt.
+        if (fingerHole) {
+            projection(cut=true)
+                translate([0, 0, -panelThickness])
+                    finger_hole_cutout();
+        }
+    }
+}
+
 module vent_panel(thickness=panelThickness) {
-    linear_extrude(height=thickness)
-        vent_panel_2d();
+    difference() {
+        linear_extrude(height=thickness)
+            reinforced_vent_pattern_2d(thickness);
+        if (fingerHole) {
+            finger_hole_cutout(thickness);
+        }
+    }
 }
 
 if (part == "panel_2d") {
