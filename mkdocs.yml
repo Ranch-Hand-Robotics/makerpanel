@@ -1,7 +1,7 @@
-site_name: Maker Panel
-site_description: Specification and Gallery of Maker Panels
+site_name: MakerPanel.tech
+site_description: An open hardware standard for modular panels. Build a cyberdeck, a control surface, or something nobody has imagined yet.
 site_author: Ranch Hand Robotics
-site_url: https://ranch-hand-robotics.github.io/makerpanel
+site_url: https://makerpanel.tech/
 
 repo_name: Ranch-Hand-Robotics/makerpanel
 repo_url: https://github.com/Ranch-Hand-Robotics/makerpanel
@@ -9,17 +9,20 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
-  - Specification: specification.md
-  - Gallery: gallery.md
-  - Create Panel: create-panel.md
+  - Explore panels: gallery.md
+  - The standard: specification.md
+  - Start building: create-panel.md
   - About: about.md
 
 theme:
   name: mkdocs
   custom_dir: theme
 
+# The custom theme uses its own catalog search, not the bundled search UI.
+plugins: []
+
 extra_css:
-  - css/custom.css
+  - css/site.css
 
 markdown_extensions:
   - attr_list

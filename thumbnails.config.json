@@ -1,0 +1,26 @@
+{
+  "width": 800,
+  "height": 520,
+  "timeoutMs": 180000,
+  "wasm": {
+    "url": "https://github.com/Ranch-Hand-Robotics/openscad-wasm/releases/download/v-local-test/openscad-wasm-collateral-v-local-test.zip",
+    "sha256": "c6d7e32bba885a537b43ba4b1db2c467ef4b610975eb7aa120287e81fd2c4743"
+  },
+  "themes": {
+    "light": { "background": "#e8ecdf", "material": "#b8e63e" },
+    "dark": { "background": "#202820", "material": "#b8e63e" }
+  },
+  "panels": {
+    "joystick": { "image": "examples/joystick/design/joystick_screenshot.png" },
+    "lilygo_screen_4_7_s3": { "image": "examples/lilygo_screen_4_7_s3/lilygo_screen_screenshot.png" },
+    "lilygo_t-encoder-pro": {
+      "image": "examples/lilygo_t-encoder-pro/design/lilygo_t-encoder-pro_screenshot.png",
+      "scadFile": "examples/lilygo_t-encoder-pro/design/lilygo_t-encoder-pro.scad"
+    },
+    "measure": { "image": "examples/measure/measure_screenshot.png" },
+    "keyboard": {
+      "scadFile": "examples/keyboard/kinst_mf34.scad",
+      "module": "kinst_mf34"
+    }
+  }
+}

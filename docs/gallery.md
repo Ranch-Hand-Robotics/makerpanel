@@ -1,122 +1,24 @@
 ---
-hide:
-  - navigation
-  - toc
-title: Gallery
+title: Explore panels
+description: Find your next starting point. Search open MakerPanel designs for keyboards, controls, displays, and more.
 ---
-<!-- Copyright (c) 2025 Ranch Hand Robotics, LLC. All rights reserved. Licensed under MIT License. -->
 
-<div class="gallery-hero">
-  <div class="gallery-hero__content">
-    <h1>
-      > Maker Panels
-    </h1>
-    <p>
-      Browse community-contributed panel designs, download files, and get inspired for your next project
-    </p>
-    <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new?template=submit-panel.yml" class="gallery-cta">
-      + Submit Panel
-    </a>
+<section class="gallery-header" aria-labelledby="gallery-title">
+  <div>
+    <p class="eyebrow">THE OPEN PARTS BIN / MAKERPANEL GALLERY</p>
+    <h1 id="gallery-title">Good ideas.<br>Ready to remix.</h1>
+    <p>Find the piece that gets you started. Explore the designs, take the source files, and make something that’s yours.</p>
   </div>
-</div>
+  <a class="button button-dark" href="https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new?template=submit-panel.yml">Share your design <span aria-hidden="true">↗</span></a>
+</section>
 
----
-
-<!-- CATEGORY_TABS_START -->
-<div id="gallery-root" aria-live="polite">Loading gallery...</div>
-
-<script>
-(() => {
-  const root = document.getElementById('gallery-root');
-  const stats = document.getElementById('gallery-stats');
-
-  const escapeHtml = (value) => String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-
-  const panelCard = (panel) => {
-    const title = escapeHtml(panel.title || panel.slug || 'Untitled Panel');
-    const panelUrl = escapeHtml(panel.panel_url || `panels/${panel.slug || ''}/index.html`);
-    const thumb = escapeHtml(panel.thumbnail || 'images/panels/placeholder.svg');
-    const description = escapeHtml(panel.description || '');
-    const buyUrl = (panel.buy_url || '').trim();
-    const buyBadge = buyUrl
-      ? `<a class="panel-card__buy" href="${escapeHtml(buyUrl)}" target="_blank" rel="noopener noreferrer">Buy Now</a>`
-      : '';
-
-    return `<div class="panel-card">
-      <a href="${panelUrl}" data-title="${title}"><img src="${thumb}" alt="${title}" /></a>
-      ${buyBadge}
-      <p>${description}</p>
-    </div>`;
-  };
-
-  const render = (panels) => {
-    const sortedPanels = [...panels].sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-    const categories = [...new Set(sortedPanels.map(p => p.category || 'Other'))].sort();
-    const tabNames = ['All', ...categories];
-
-    const radioInputs = tabNames
-      .map((name, index) => `<input ${index === 0 ? 'checked="checked" ' : ''}id="tab_${index + 1}" name="tabs" type="radio" />`)
-      .join('');
-
-    const labels = tabNames
-      .map((name, index) => `<label for="tab_${index + 1}">${escapeHtml(name)}</label>`)
-      .join('\n');
-
-    const allCards = sortedPanels.map(panelCard).join('\n');
-    const categoryBlocks = categories.map((category) => {
-      const cards = sortedPanels
-        .filter((panel) => (panel.category || 'Other') === category)
-        .map(panelCard)
-        .join('\n');
-      return `<div class="tabbed-block">${cards}</div>`;
-    }).join('\n');
-
-    root.innerHTML = `<div class="tabbed-set tabbed-alternate">\n${radioInputs}\n<div class="tabbed-labels">\n${labels}\n</div>\n<div class="tabbed-content">\n<div class="tabbed-block">${allCards}</div>\n${categoryBlocks}\n</div>\n</div>`;
-
-    if (stats) {
-      const contributors = new Set(sortedPanels.map((p) => p.contributor || 'Community'));
-      stats.innerHTML = `${sortedPanels.length} panels &middot; ${contributors.size} contributors &middot; ${categories.length} categories`;
-    }
-  };
-
-  fetch('./gallery.json', { cache: 'no-store' })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((payload) => {
-      const panels = Array.isArray(payload?.panels) ? payload.panels : [];
-      if (!panels.length) {
-        root.innerHTML = '<p>No panels available yet. Be the first to submit one!</p>';
-        if (stats) {
-          stats.textContent = '0 panels · 0 contributors · 0 categories';
-        }
-        return;
-      }
-      render(panels);
-    })
-    .catch((error) => {
-      console.error('Failed to load gallery.json:', error);
-      root.innerHTML = '<p>Unable to load gallery data right now. Please try again shortly.</p>';
-      if (stats) {
-        stats.textContent = 'Gallery data unavailable';
-      }
-    });
-})();
-</script>
-<!-- CATEGORY_TABS_END -->
-
-<div class="gallery-stats">
-  <span id="gallery-stats">Loading panel stats...</span>
-</div>
-
-**Questions?** 
-
-[Submit your panel](https://github.com/Ranch-Hand-Robotics/makerpanel/issues/new/choose) or ask on [GitHub Discussions](https://github.com/Ranch-Hand-Robotics/makerpanel/discussions).
+<form class="gallery-toolbar" id="gallery-filters" aria-label="Filter panels" hidden>
+  <label class="search-field"><span aria-hidden="true">⌕</span><input id="panel-search" type="search" name="q" aria-label="Search panels" placeholder="Search panels, ideas, components…" autocomplete="off"></label>
+  <label for="panel-category">Category<select id="panel-category" name="category" aria-label="Category"><option value="">All categories</option></select></label>
+  <label for="panel-sort">Sort by<select id="panel-sort" name="sort" aria-label="Sort by"><option value="title">Name: A–Z</option><option value="width">Width: smallest first</option></select></label>
+</form>
+<div class="gallery-summary"><span id="gallery-count" role="status" aria-live="polite">Opening the parts bin…</span><button class="clear-filters" id="clear-filters" type="button" hidden>Clear filters</button></div>
+<div id="gallery-root" aria-busy="true"><p>Loading panel designs…</p></div>
+<noscript><p>The searchable gallery needs JavaScript. You can still <a href="https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples">browse all panel designs and source files on GitHub</a>.</p></noscript>
+<div class="gallery-contribute">Don’t see the panel you need? That might be your next project. <a href="create-panel.html">Make the missing piece ↗</a></div>
+<script type="module" src="js/gallery.js"></script>

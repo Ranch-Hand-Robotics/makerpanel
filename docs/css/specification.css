@@ -1,0 +1,55 @@
+/* Inline SVG inherits both the system theme and the manual theme override. */
+.spec-diagram {
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  overflow: hidden;
+}
+.spec-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  color: var(--ink);
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.spec-diagram text {
+  fill: var(--ink);
+  stroke: none;
+  font: 18px 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+.spec-diagram .diagram-heading {
+  font: 14px var(--mono);
+  letter-spacing: 1px;
+  fill: var(--accent-dark);
+}
+.spec-diagram .diagram-value { font-weight: 650; }
+.spec-diagram .diagram-muted { fill: var(--muted); }
+.spec-diagram .diagram-panel { fill: var(--accent); stroke: #496316; }
+.spec-diagram .diagram-rail { fill: var(--surface-soft); }
+.spec-diagram .diagram-void { fill: var(--surface); }
+.spec-diagram .diagram-on-panel { fill: #202620; stroke: none; }
+.spec-diagram .diagram-detail { stroke: #202620; }
+.spec-diagram .diagram-dimension {
+  stroke: var(--accent-dark);
+  stroke-width: 1.5;
+}
+.spec-diagram .diagram-guide {
+  stroke: var(--muted);
+  stroke-dasharray: 5 5;
+  stroke-width: 1;
+}
+.spec-diagram figcaption {
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+  color: var(--body-text);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.spec-diagram figcaption strong { color: var(--ink); }
+@media print {
+  .spec-diagram { break-inside: avoid; }
+}

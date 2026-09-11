@@ -14,7 +14,7 @@ part = "assembly"; // [assembly, panel, bottom]
 verticalUnits = 3.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
 horizontalPitch = 43; // [16:1:80] Panel width (HP); adds 4HP flange margin
 tilt_angle = 15; // [0:1:25] positive raises the +Y edge
-module_type = "32_key"; // [6_key, 15_key, 32_key]
+module_type = "15_key"; // [6_key, 15_key, 32_key]
 
 /* [Hidden] */
 module hidden() {}
@@ -31,6 +31,12 @@ rear_flange_width = 9; // mm beyond each side of the sleeve
 rear_flange_depth = 3; // mm; flange mating face is always world Z=0
 rear_bolt_diameter = 3.2; // mm; four M3 through-bolts, not device screws
 rear_bolt_end_inset = 12; // mm from each end of a side flange
+// Measured approximately on the 15-key device; local device axes in mm.
+rear_tab_length = 5; // along each left/right edge (Y)
+rear_tab_width = 2; // inward from the device outer surface (X)
+rear_tab_drop = 5; // behind the device rear face (-Z)
+rear_tab_end_inset = 10; // tab centers from the top/bottom device edges
+rear_tab_clearance = 0.3; // extra clearance on each face of the tab
 epsilon = 0.01;
 
 // Provisional device dimensions; no scale is inferred from the reference DXF.
@@ -264,9 +270,27 @@ module streamdeck_rear_solid() {
 	}
 }
 
+// Four metal tabs: two on each side, flush with the device outer edges.
+// Caller supplies streamdeck_placement(); never cut the front/host panel.
+module streamdeck_rear_tab_clearance() {
+	if (module_type == "15_key")
+		for (side = [-1, 1], end = [-1, 1])
+			translate([
+				side*(module_width()/2 - rear_tab_width/2),
+				end*(module_height()/2 - rear_tab_end_inset),
+				-module_depth() - rear_tab_drop/2
+			])
+				cube([
+					rear_tab_width + 2*rear_tab_clearance,
+					rear_tab_length + 2*rear_tab_clearance,
+					rear_tab_drop + 2*rear_tab_clearance
+				], center=true);
+}
+
 module streamdeck_rear_subtractions() {
 	span = streamdeck_cut_span();
 	streamdeck_placement() {
+		streamdeck_rear_tab_clearance();
 		// Angled seating inset: leave a back plate at the device rear face.
 		translate([0, 0, (streamdeck_rear_seat_z() + span)/2])
 			cube([streamdeck_bore_width(), streamdeck_bore_height(),

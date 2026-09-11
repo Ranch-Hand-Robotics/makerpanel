@@ -1,0 +1,122 @@
+/* Semantic surfaces keep the artwork's physical material colors independent. */
+:root {
+  color-scheme: light;
+  --surface: #f7f6ef;
+  --surface-soft: #e7e9df;
+  --surface-tint: #e8ecdf;
+  --surface-hover: #e9ecdf;
+  --body-text: #4c5548;
+  --control-border: #adb5a1;
+  --button-bg: #202620;
+  --button-fg: #f3f1e9;
+  --button-hover: #3c4839;
+  --code-text: #202620;
+}
+
+/* No JavaScript is needed to follow the operating system's preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #171c18;
+    --ink: #f0f1e7;
+    --muted: #adb7a5;
+    --line: #3d493c;
+    --accent-dark: #b8e63e;
+    --surface: #202820;
+    --surface-soft: #283227;
+    --surface-tint: #253022;
+    --surface-hover: #303c2b;
+    --body-text: #c6cebe;
+    --control-border: #7e8d73;
+    --button-bg: #c6d3b6;
+    --button-fg: #171c18;
+    --button-hover: #dce8cb;
+    --code-text: #e4eadb;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #171c18;
+  --ink: #f0f1e7;
+  --muted: #adb7a5;
+  --line: #3d493c;
+  --accent-dark: #b8e63e;
+  --surface: #202820;
+  --surface-soft: #283227;
+  --surface-tint: #253022;
+  --surface-hover: #303c2b;
+  --body-text: #c6cebe;
+  --control-border: #7e8d73;
+  --button-bg: #c6d3b6;
+  --button-fg: #171c18;
+  --button-hover: #dce8cb;
+  --code-text: #e4eadb;
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--control-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--surface-hover); }
+.theme-icon--moon { display: none; }
+:root[data-theme="dark"] .theme-icon--sun { display: none; }
+:root[data-theme="dark"] .theme-icon--moon { display: block; }
+@media (forced-colors: active) {
+  .theme-toggle { border-color: ButtonText; }
+}
+.site-nav { gap: 18px; }
+@media (max-width: 1100px) {
+  .site-header__inner { flex-wrap: wrap; gap: 0; }
+  .site-nav { flex-basis: 100%; flex-wrap: wrap; padding: 0 0 16px; }
+  .nav-toggle:not([hidden]) { display: block; }
+  .nav-enhanced .site-nav { display: none; }
+  .nav-enhanced .site-nav.is-open { display: flex; }
+}
+
+.brand-panel { color: #202620; }
+.brand-panel::before, .brand-panel::after { background: #202620; }
+.skip-link, .button-dark, .error-page__button--primary {
+  background: var(--button-bg);
+  color: var(--button-fg);
+}
+.button-dark:hover { background: var(--button-hover); }
+.assembly-view { color: #f3f1e9; }
+.index-number { color: var(--muted); }
+.possibility-card, .panel-card { background: var(--surface); }
+.possibility-card--control, .possibility-card--field {
+  background: var(--surface-tint);
+}
+.possibility-caption p, .prose p, .prose li { color: var(--body-text); }
+.build-visual { border-color: var(--line); }
+.spec-sheet { background: var(--surface-tint); border-color: var(--line); }
+.spec-sheet-heading, .spec-sheet dt, .spec-sheet dd span {
+  color: var(--muted);
+}
+.spec-sheet dl > div, .spec-sheet > a { border-color: var(--line); }
+.dimension-panels { color: #202620; }
+.start-paths > a:hover { background: var(--surface-hover); }
+.manifesto { color: #202620; }
+.manifesto .button-dark { background: #202620; color: #f3f1e9; }
+.manifesto .button-dark:hover { background: #3c4839; }
+.manifesto :focus-visible { outline-color: #202620; }
+.prose th, pre, code { background: var(--surface-soft); color: var(--code-text); }
+pre { border-color: var(--line); }
+pre code { background: transparent; }
+blockquote, .tool-availability-notice { background: var(--surface-tint); }
+.creation-tool-status { background: var(--surface-soft); }
+.creation-tool-status--soon { background: var(--surface-tint); }
+.gallery-toolbar input, .gallery-toolbar select {
+  border-color: var(--control-border);
+}
+input::placeholder { color: var(--muted); opacity: 1; }
+/* Keep source images and the little blueprint readable in either theme. */
+.panel-card__image { color: #202620; }
+.panel-card__image:has(img) { background: var(--surface-tint); }

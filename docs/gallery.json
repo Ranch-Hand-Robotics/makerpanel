@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updated_at": "2026-08-11T01:01:08Z",
+  "updated_at": "2026-09-11T06:16:36Z",
   "panels": [
     {
       "slug": "Antenna",
       "title": "Antenna",
       "category": "Other",
-      "horizontalPitch": 35,
-      "verticalUnits": 0.375,
+      "horizontalPitch": 35.0,
+      "verticalUnits": 1.0,
       "contributor": "Ranch Hand Robotics",
       "description": "Makerpanel example design.",
       "thumbnail": "images/makerpanel.png",
@@ -18,7 +18,7 @@
       "scadAssets": [
         "antenna.panel_2d.svg"
       ],
-      "updated_at": "2026-08-10T14:40:34Z"
+      "updated_at": "2026-09-11T06:16:36Z"
     },
     {
       "slug": "iris_keyboard",
@@ -106,15 +106,15 @@
       "title": "MakerRail Panel",
       "category": "Other",
       "horizontalPitch": 35,
-      "verticalUnits": 0.25,
+      "verticalUnits": 2,
       "contributor": "Ranch Hand Robotics",
-      "description": "A configurable MakerPanel-sized T-slot rail for mounting panels and accessories.",
+      "description": "A full HP-by-U rack faceplate with integrated MakerRail slot rows and standard MakerPanel corner mounting holes.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/rail_panel",
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/rail_panel/RailPanel.scad",
-      "updated_at": "2026-08-11T01:01:08Z"
+      "updated_at": "2026-09-11T06:16:36Z"
     },
     {
       "slug": "measure",
@@ -135,8 +135,8 @@
       "slug": "monitor_panel",
       "title": "Monitor Panel",
       "category": "Other",
-      "horizontalPitch": 35,
-      "verticalUnits": 3,
+      "horizontalPitch": 35.0,
+      "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
       "description": "Makerpanel example design.",
       "thumbnail": "images/makerpanel.png",
@@ -144,7 +144,10 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/monitor_panel/monitor.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
+      "scadAssets": [
+        "monitor.brace_2d.svg"
+      ],
+      "updated_at": "2026-09-11T06:16:36Z"
     },
     {
       "slug": "mouse_panel",
@@ -162,6 +165,69 @@
       "updated_at": "2026-08-10T14:40:34Z"
     },
     {
+      "slug": "prime79_panel",
+      "title": "Prime79 Panel",
+      "category": "Other",
+      "horizontalPitch": 70.0,
+      "verticalUnits": 4.0,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/prime79_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/prime79_panel/prime97_panel.scad",
+      "updated_at": "2026-09-11T06:16:36Z"
+    },
+    {
+      "slug": "streamdeck_panel",
+      "title": "Streamdeck Panel",
+      "category": "Other",
+      "horizontalPitch": 43.0,
+      "verticalUnits": 3.5,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/streamdeck_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/streamdeck_panel/streamdeck_panel.scad",
+      "updated_at": "2026-09-11T06:16:36Z"
+    },
+    {
+      "slug": "switch_panel",
+      "title": "Switch Panel",
+      "category": "Other",
+      "horizontalPitch": 35.0,
+      "verticalUnits": 1.0,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/switch_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/switch_panel/switch_panel.scad",
+      "scadAssets": [
+        "switch_panel.panel_2d.svg"
+      ],
+      "updated_at": "2026-09-11T06:16:36Z"
+    },
+    {
+      "slug": "trackball_panel",
+      "title": "Trackball Panel",
+      "category": "Other",
+      "horizontalPitch": 18.0,
+      "verticalUnits": 4.0,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Makerpanel example design.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/trackball_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/trackball_panel/trackball_panel.scad",
+      "updated_at": "2026-09-11T06:16:36Z"
+    },
+    {
       "slug": "vent_panel",
       "title": "Vent Panel",
       "category": "Other",
@@ -174,7 +240,10 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/vent_panel/VentPanel.scad",
-      "updated_at": "2026-08-11T00:25:01Z"
+      "scadAssets": [
+        "VentPanel.panel_2d.svg"
+      ],
+      "updated_at": "2026-09-11T06:16:36Z"
     }
   ]
 }

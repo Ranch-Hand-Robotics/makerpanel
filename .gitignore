@@ -3,6 +3,9 @@ site/
 
 # Generated docs assets (OpenSCAD thumbnail pipeline)
 docs/generated/
+docs/images/panels/generated/
+.cache/
+node_modules/
 
 # Python
 __pycache__/
@@ -27,3 +30,7 @@ Thumbs.db
 **/*.stl
 **/*.svg
 **/*.glb
+
+# Hand-authored website artwork, not generated CAD exports.
+!docs/images/mark.svg
+!theme/assembly.svg

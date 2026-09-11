@@ -11,24 +11,34 @@
   {%- if page.canonical_url %}
   <link rel="canonical" href="{{ page.canonical_url }}">
   {%- endif %}
-  <link rel="icon" type="image/png" href="{{ base_url }}/images/makericon.png">
+  <meta name="theme-color" content="#f3f1e9">
+  <link rel="icon" type="image/svg+xml" href="{{ base_url }}/images/mark.svg">
   <title>
-    {%- if page and page.title and page.title | striptags | trim -%}
+    {%- if page.is_homepage -%}
+      {{ page.meta.title }} – {{ config.site_name }}
+    {%- elif page and page.title and page.title | striptags | trim -%}
       {{ page.title | striptags | trim }} – {{ config.site_name }}
     {%- else -%}
       {{ config.site_name }}
     {%- endif %}
   </title>
-  <link rel="stylesheet" href="{{ base_url }}/css/custom.css">
+  <script src="{{ 'js/theme.js' | url }}"></script>
+  <link rel="stylesheet" href="{{ base_url }}/css/site.css">
+  <link rel="stylesheet" href="{{ 'css/theme.css' | url }}">
+  {% if page.file.src_uri == 'specification.md' %}
+  <link rel="stylesheet" href="{{ 'css/specification.css' | url }}">
+  {% endif %}
+  <script src="{{ base_url }}/js/site.js" defer></script>
 </head>
-<body>
+<body{% if page.is_homepage %} class="home-page"{% elif page.file.src_uri == 'gallery.md' %} class="gallery-page"{% else %} class="docs-page"{% endif %}>
+  <a class="skip-link" href="#content">Skip to content</a>
   <header class="site-header" role="banner">
     <div class="site-header__inner">
       <a class="site-logo" href="{{ base_url }}/index.html" aria-label="{{ config.site_name }} home">
-        <img src="{{ base_url }}/images/makericon.png" alt="" aria-hidden="true" width="28" height="28">
-        <span>{{ config.site_name | upper }}</span>
+        {% include "wordmark.html" %}
       </a>
-      <nav class="site-nav" aria-label="Main navigation">
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" hidden>Menu <span aria-hidden="true">+</span></button>
+      <nav class="site-nav" id="main-nav" aria-label="Main navigation">
         {%- for item in nav %}
           {%- if item.children %}
             {%- for child in item.children %}
@@ -40,7 +50,7 @@
           {%- else %}
             {%- if item.url is defined and item.url %}
             <a class="site-nav__link{% if item.active %} is-active{% endif %}"
-               href="{{ item.url | url }}">{{ item.title }}</a>
+               href="{{ item.url | url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.title }}</a>
             {%- endif %}
           {%- endif %}
         {%- endfor %}
@@ -54,23 +64,42 @@
           </svg>
         </a>
         {%- endif %}
+        {% include "theme-switcher.html" %}
       </nav>
     </div>
   </header>
 
   <main class="page-main" id="content">
+    {% if page.is_homepage %}
+    {% include "home.html" %}
+    {% else %}
+    {% if page.file.src_uri != 'gallery.md' %}
+    <div class="docs-heading"><a href="{{ 'index.html' | url }}">MakerPanel</a><span>/</span><span>Field notes & documentation</span></div>
+    <div class="docs-layout">
+    <article class="prose">
+    {% endif %}
     {{ page.content }}
+    {% if page.file.src_uri != 'gallery.md' %}
+    </article>
+    <aside class="page-toc" aria-label="On this page">
+      <span class="eyebrow">On this page</span>
+      <ul>{% for item in page.toc %}{% for child in item.children %}<li><a href="{{ child.url }}">{{ child.title }}</a></li>{% endfor %}{% endfor %}</ul>
+      <a class="text-link" href="{{ 'create-panel.html' | url }}">Start making <span aria-hidden="true">↗</span></a>
+    </aside>
+    </div>
+    {% endif %}
+    {% endif %}
   </main>
 
   <footer class="site-footer" role="contentinfo">
     <div class="site-footer__inner">
-      <span>© {{ config.site_author }}</span>
-      <span class="dot" aria-hidden="true">·</span>
+      <div><a class="site-logo" href="{{ 'index.html' | url }}" aria-label="MakerPanel.tech home">{% include "wordmark.html" %}</a><p>Make it yours. Build it forward.</p></div>
+      <div class="footer-links"><a href="{{ 'specification.html' | url }}">Specification</a><a href="{{ 'create-panel.html' | url }}">Start building</a>
       {%- if config.repo_url %}
       <a href="{{ config.repo_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <span class="dot" aria-hidden="true">·</span>
       {%- endif %}
-      <span>Open Specification · MIT License</span>
+      </div>
+      <div class="footer-meta"><span>© {{ config.site_author }}</span><span>Open specification / MIT license</span></div>
     </div>
   </footer>
 
