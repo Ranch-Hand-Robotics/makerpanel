@@ -1,3 +1,6 @@
 [submodule "examples/vent_panel/IsoGridScad"]
 	path = examples/vent_panel/IsoGridScad
 	url = https://github.com/Ranch-Hand-Robotics/IsoGridScad.git
+[submodule "makerpanel/BOSL2"]
+	path = makerpanel/BOSL2
+	url = https://github.com/BelfrySCAD/BOSL2.git
