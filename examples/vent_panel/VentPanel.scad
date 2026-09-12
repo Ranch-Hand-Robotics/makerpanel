@@ -14,7 +14,7 @@ gridScale = 1; // [0.5:0.05:1.2] Vent opening scale
 fan = "None"; // [None, 40mm, 60mm, 80mm, 92mm, 120mm]
 
 /* [Finger Hole] */
-fingerHole = true;
+fingerHole = false;
 fingerHoleDiameter = 25; // [15:0.5:40] Bore diameter in millimeters
 fingerHoleAngle = 50; // [0:1:75] Degrees from the panel normal
 fingerHoleRingWidth = 3; // [0:0.5:10] Flush solid border in millimeters

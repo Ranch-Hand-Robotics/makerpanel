@@ -1,11 +1,14 @@
 """MkDocs hooks for dynamic gallery generation."""
 
 import json
+import math
 import os
 import re
 from pathlib import Path
 from collections import defaultdict
 from datetime import datetime, timezone
+
+import yaml
 
 
 EXAMPLES_DIR = Path('examples')
@@ -150,8 +153,57 @@ def _find_scad_dimensions(slug, scad_file):
     )
 
 
+def _read_example_metadata(slug):
+    """Read optional YAML front matter from an example's root README."""
+    directory = EXAMPLES_DIR / slug
+    if not directory.is_dir():
+        return {}
+    readmes = sorted(
+        p for p in directory.iterdir()
+        if p.is_file() and p.name.lower() == 'readme.md'
+    )
+    if not readmes:
+        return {}
+    filepath = readmes[0]
+    lines = filepath.read_text(encoding='utf-8-sig').splitlines()
+    if not lines or lines[0].strip() != '---':
+        return {}
+    end = next((i for i in range(1, len(lines))
+                if lines[i].strip() == '---'), None)
+    if end is None:
+        raise ValueError(f'{filepath}: missing closing front matter delimiter')
+    try:
+        metadata = yaml.safe_load('\n'.join(lines[1:end]))
+    except yaml.YAMLError as error:
+        raise ValueError(f'{filepath}: invalid YAML front matter: {error}') from error
+    if metadata is None:
+        return {}
+    if not isinstance(metadata, dict):
+        raise ValueError(f'{filepath}: front matter must be a YAML mapping')
+
+    result = {}
+    for key in ('title', 'description', 'category', 'contributor'):
+        value = metadata.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, str):
+            raise ValueError(f'{filepath}: {key} must be text')
+        if value.strip():
+            result[key] = value.strip()
+    for key in ('horizontalPitch', 'verticalUnits'):
+        value = metadata.get(key)
+        if value is None:
+            continue
+        if (isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or value <= 0):
+            raise ValueError(f'{filepath}: {key} must be a positive finite number')
+        result[key] = value
+    return result
+
+
 def _build_example_entry(slug, existing_entry=None):
-    override = EXAMPLE_OVERRIDES.get(slug, {})
+    override = {**EXAMPLE_OVERRIDES.get(slug, {}),
+                **_read_example_metadata(slug)}
     scad_file = override.get('scadFile') or _find_scad_url(slug)
     existing_entry = existing_entry if isinstance(existing_entry, dict) else {}
 
@@ -165,7 +217,7 @@ def _build_example_entry(slug, existing_entry=None):
         'category': override.get('category', 'Other'),
         'horizontalPitch': override.get('horizontalPitch', scad_hp),
         'verticalUnits': override.get('verticalUnits', scad_u),
-        'contributor': 'Ranch Hand Robotics',
+        'contributor': override.get('contributor', 'Ranch Hand Robotics'),
         'description': override.get('description', 'Makerpanel example design.'),
         'thumbnail': thumbnail,
         'panel_url': f'{EXAMPLE_PANEL_URL_PREFIX}{slug}',

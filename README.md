@@ -68,6 +68,44 @@ desktop/mobile navigation, the exploded view, gallery filters, and docs links.
 The home page and documentation work without JavaScript; the gallery includes
 a direct source-directory fallback. Generated `site/` files are not committed.
 
+### Example gallery metadata
+
+Add YAML front matter at the very beginning of `examples/<name>/README.md`
+(before the heading or any comments). For example:
+
+```yaml
+---
+title: Trackball Panel
+category: Digital I/O
+description: >-
+    Panel for an underside-mounted meishi trackball, with a rectangular
+    access opening and four module mounting points.
+contributor: Ranch Hand Robotics
+---
+```
+
+- Supported fields: `title`, `description`, `category`, `contributor`,
+    `horizontalPitch`, and `verticalUnits`. All are optional.
+- Text fields must be strings. Use `>-` for a folded multiline description;
+    descriptions are plain text, not rendered Markdown.
+- HP/U values must be positive YAML numbers, not quoted strings. Omit them
+    to keep existing defaults or automatic SCAD dimension discovery.
+- README values override the built-in metadata in `.github/hooks.py`.
+    Missing, null, or blank text fields retain the defaults. Examples without
+    front matter continue working unchanged; ordinary README prose is not parsed.
+- Only the example's root README is read (filename case is ignored). Other
+    front matter keys are ignored, so unrelated README metadata is allowed.
+- Malformed YAML or invalid supported values fail the build with the README
+    path in the error, rather than silently publishing an incorrect catalog.
+
+Run `npm run catalog` after editing metadata, or build the website; both
+extract it into `docs/gallery.json`. Do not hand-edit generated example entries.
+Thumbnail/source selection remains in `thumbnails.config.json`; README metadata
+does not change CAD geometry or thumbnail rendering settings.
+
+`npm test` includes the metadata tests and requires the Python dependencies
+from `requirements.txt`. Run only these tests with `npm run test:metadata`.
+
 ### Generate gallery thumbnails
 
 Thumbnail generation uses the Ranch Hand Robotics OpenSCAD WASM build, not

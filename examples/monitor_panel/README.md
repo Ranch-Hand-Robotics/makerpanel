@@ -1,3 +1,10 @@
+---
+title: Folding Monitor Mount
+category: Visual Feedback
+description: >-
+  Articulating Monitor mount that slides from flat stow to upright.
+---
+
 # Low slotted-block monitor mount: flat stow to 90 degrees
 
 ## Current revision: bottom-referenced VESA row

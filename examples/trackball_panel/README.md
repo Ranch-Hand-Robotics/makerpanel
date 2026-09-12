@@ -1,3 +1,10 @@
+---
+title: Trackball Panel
+category: Digital I/O
+description: >-
+  Meishi trackball MakerPanel
+---
+
 # Trackball MakerPanel
 
 A panel for an underside-mounted meishi trackball module. Four module

@@ -1,144 +1,15 @@
 {
   "version": 1,
-  "updated_at": "2026-09-11T06:16:36Z",
+  "updated_at": "2026-09-12T01:46:48Z",
   "panels": [
     {
-      "slug": "Antenna",
-      "title": "Antenna",
-      "category": "Other",
-      "horizontalPitch": 35.0,
-      "verticalUnits": 1.0,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/Antenna",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/Antenna/antenna.scad",
-      "scadAssets": [
-        "antenna.panel_2d.svg"
-      ],
-      "updated_at": "2026-09-11T06:16:36Z"
-    },
-    {
-      "slug": "iris_keyboard",
-      "title": "Iris Keyboard Panel",
-      "category": "Digital I/O",
-      "horizontalPitch": 35,
-      "verticalUnits": 4,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Panel for mounting an Iris split keyboard, with an SVG-based keyboard cutout and MakerPanel-compatible mounting.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/iris_keyboard",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
-      "scadAssets": [
-        "IrisCutout.svg"
-      ],
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
-      "slug": "joystick",
-      "title": "Joystick Panel",
-      "category": "Digital I/O",
-      "horizontalPitch": 17,
-      "verticalUnits": 2,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Panel with a circular cutout for a SaiDian 4-axis mini joystick module. Laser-cuttable or 3D printable, with four M3 mounting holes.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/joystick",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/joystick/design/joystick.scad",
-      "scadAssets": [
-        "design/joystick.panel_2d.svg"
-      ],
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
-      "slug": "keyboard",
-      "title": "Keyboard",
-      "category": "Other",
-      "horizontalPitch": null,
-      "verticalUnits": null,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/keyboard",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/keyboard/cmx.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
-      "slug": "lilygo_screen_4_7_s3",
-      "title": "LilyGo Screen 4.7\" S3 Panel",
-      "category": "Visual Feedback",
-      "horizontalPitch": 26,
-      "verticalUnits": 2,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Panel for the LilyGo 4.7\" S3 screen with a ribbon cable cutout for rear PCB/battery routing.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_screen_4_7_s3",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
-      "slug": "lilygo_t-encoder-pro",
-      "title": "LilyGo T-Encoder Pro Panel",
-      "category": "Analog Control",
-      "horizontalPitch": 9,
-      "verticalUnits": 1,
-      "contributor": "Ranch Hand Robotics",
-      "description": "Compact panel with a circular cutout for the LilyGo T-Encoder Pro rotary encoder.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
-      "slug": "rail_panel",
-      "title": "MakerRail Panel",
-      "category": "Other",
-      "horizontalPitch": 35,
-      "verticalUnits": 2,
-      "contributor": "Ranch Hand Robotics",
-      "description": "A full HP-by-U rack faceplate with integrated MakerRail slot rows and standard MakerPanel corner mounting holes.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/rail_panel",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/rail_panel/RailPanel.scad",
-      "updated_at": "2026-09-11T06:16:36Z"
-    },
-    {
-      "slug": "measure",
-      "title": "Measurement Gauge",
-      "category": "Tools",
-      "horizontalPitch": 35,
-      "verticalUnits": 4,
-      "contributor": "Ranch Hand Robotics",
-      "description": "3D-printable gauge for verifying MakerPanel dimensions, HP spacing, and rack measurements.",
-      "thumbnail": "images/makerpanel.png",
-      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/measure",
-      "buy_url": "",
-      "issue_number": 0,
-      "scadFile": "examples/measure/measure.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
-    },
-    {
       "slug": "monitor_panel",
-      "title": "Monitor Panel",
-      "category": "Other",
+      "title": "Folding Monitor Mount",
+      "category": "Visual Feedback",
       "horizontalPitch": 35.0,
       "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
+      "description": "Articulating Monitor mount that slides from flat stow to upright.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/monitor_panel",
       "buy_url": "",
@@ -147,61 +18,190 @@
       "scadAssets": [
         "monitor.brace_2d.svg"
       ],
-      "updated_at": "2026-09-11T06:16:36Z"
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "iris_keyboard",
+      "title": "Iris Keyboard Panel",
+      "category": "Digital I/O",
+      "horizontalPitch": 35,
+      "verticalUnits": 4,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Panel for an Iris split keyboard.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/iris_keyboard",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
+      "scadAssets": [
+        "IrisCutout.svg"
+      ],
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "joystick",
+      "title": "Joystick Control Panel",
+      "category": "Analog Control",
+      "horizontalPitch": 17,
+      "verticalUnits": 2,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Panel for one or more SaiDian 4 Axis Joystick Components.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/joystick",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/joystick/design/joystick.scad",
+      "scadAssets": [
+        "design/joystick.panel_2d.svg"
+      ],
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "keyboard",
+      "title": "Keyboard Layout Components",
+      "category": "Digital I/O",
+      "horizontalPitch": null,
+      "verticalUnits": null,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Cherry MX switch, stabilizer, and keycap geometry for keyboard layout prototyping, plus a Kinst MF34-inspired keycap arrangement.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/keyboard",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/keyboard/cmx.scad",
+      "updated_at": "2026-09-12T01:27:13Z"
+    },
+    {
+      "slug": "lilygo_screen_4_7_s3",
+      "title": "LilyGo 4.7-inch S3 Display Panel",
+      "category": "Visual Feedback",
+      "horizontalPitch": 26,
+      "verticalUnits": 2,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Mounting panel for a LilyGo 4.7-inch S3 display.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_screen_4_7_s3",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad",
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "lilygo_t-encoder-pro",
+      "title": "LilyGo T-Encoder Pro Panel",
+      "category": "Analog Control",
+      "horizontalPitch": 9,
+      "verticalUnits": 1,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Panel with aLilyGo T-Encoder Pro rotary encoder.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad",
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "rail_panel",
+      "title": "MakerRail Rack Faceplate",
+      "category": "Other",
+      "horizontalPitch": 35,
+      "verticalUnits": 2,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Mount MakerPanels to 10-inch or 19-inch racks.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/rail_panel",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/rail_panel/RailPanel.scad",
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "measure",
+      "title": "Measurement Gauge",
+      "category": "Tools",
+      "horizontalPitch": 35,
+      "verticalUnits": 4,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Printable MakerPanel, MakerRail, and rack measurement references with raised ticks and labels for checking dimensions and mounting positions.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/measure",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/measure/measure.scad",
+      "updated_at": "2026-09-12T01:27:13Z"
     },
     {
       "slug": "mouse_panel",
       "title": "Mouse Pad Panel",
-      "category": "Tools",
+      "category": "Digital I/O",
       "horizontalPitch": 35,
       "verticalUnits": 5,
       "contributor": "Ranch Hand Robotics",
-      "description": "Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.",
+      "description": "Flat MakerPanel surface for a mouse pad.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/mouse_panel",
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/mouse_panel/MousePadPanel.scad",
-      "updated_at": "2026-08-10T14:40:34Z"
+      "updated_at": "2026-09-12T01:46:48Z"
     },
     {
       "slug": "prime79_panel",
-      "title": "Prime79 Panel",
-      "category": "Other",
+      "title": "Prime79 Keyboard Panel",
+      "category": "Digital I/O",
       "horizontalPitch": 70.0,
       "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
+      "description": "Single-piece keyboard mounting panel with a Yushakobo Prime79 Mechanical Keyboard.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/prime79_panel",
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/prime79_panel/prime97_panel.scad",
-      "updated_at": "2026-09-11T06:16:36Z"
+      "updated_at": "2026-09-12T01:46:48Z"
+    },
+    {
+      "slug": "Antenna",
+      "title": "SDR Antenna Panel",
+      "category": "Connectivity",
+      "horizontalPitch": 35.0,
+      "verticalUnits": 1.0,
+      "contributor": "Ranch Hand Robotics",
+      "description": "SMA Antenna pass-through panel for SDR, WiFi, Bluetooth, Lora.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/Antenna",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/Antenna/antenna.scad",
+      "scadAssets": [
+        "antenna.panel_2d.svg"
+      ],
+      "updated_at": "2026-09-12T01:46:48Z"
     },
     {
       "slug": "streamdeck_panel",
-      "title": "Streamdeck Panel",
-      "category": "Other",
+      "title": "Stream Deck Module Panel",
+      "category": "Digital I/O",
       "horizontalPitch": 43.0,
       "verticalUnits": 3.5,
       "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
+      "description": "Tild MakerPanel mount for 6-, 15-, or 32-key Stream Deck OEM modules.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/streamdeck_panel",
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/streamdeck_panel/streamdeck_panel.scad",
-      "updated_at": "2026-09-11T06:16:36Z"
+      "updated_at": "2026-09-12T01:46:48Z"
     },
     {
       "slug": "switch_panel",
       "title": "Switch Panel",
-      "category": "Other",
+      "category": "Digital I/O",
       "horizontalPitch": 35.0,
       "verticalUnits": 1.0,
       "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
+      "description": "MakerPanel for Guarded Switchs.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/switch_panel",
       "buy_url": "",
@@ -210,31 +210,35 @@
       "scadAssets": [
         "switch_panel.panel_2d.svg"
       ],
-      "updated_at": "2026-09-11T06:16:36Z"
+      "updated_at": "2026-09-12T01:46:48Z"
     },
     {
       "slug": "trackball_panel",
       "title": "Trackball Panel",
-      "category": "Other",
+      "category": "Digital I/O",
       "horizontalPitch": 18.0,
       "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
-      "description": "Makerpanel example design.",
+      "description": "Meishi trackball MakerPanel",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/trackball_panel",
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/trackball_panel/trackball_panel.scad",
-      "updated_at": "2026-09-11T06:16:36Z"
+      "scadAssets": [
+        "trackball_panel.footprint.svg",
+        "trackball_panel.panel_2d.svg"
+      ],
+      "updated_at": "2026-09-12T01:46:48Z"
     },
     {
       "slug": "vent_panel",
-      "title": "Vent Panel",
+      "title": "Ventilation Panel",
       "category": "Other",
       "horizontalPitch": 35,
       "verticalUnits": 5,
       "contributor": "Ranch Hand Robotics",
-      "description": "Configurable ventilation panel with circular, honeycomb, and isogrid patterns.",
+      "description": "Ventilation MakerPanel.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/vent_panel",
       "buy_url": "",
@@ -243,7 +247,7 @@
       "scadAssets": [
         "VentPanel.panel_2d.svg"
       ],
-      "updated_at": "2026-09-11T06:16:36Z"
+      "updated_at": "2026-09-12T01:46:48Z"
     }
   ]
 }
