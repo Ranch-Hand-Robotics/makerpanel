@@ -2,6 +2,7 @@
 // This file builds one wide panel for an 80% Prime79 keyboard.
 // The supplied DXF describes the keyboard plate cutout and keyboard mounting
 // holes. MakerPanel supplies the actual panel boundary and rail mounting holes.
+// Reference: https://github.com/yushakobo/build-documents/tree/master/Primer79
 
 include <common.scad>
 include <makerpanel/panel.scad>
