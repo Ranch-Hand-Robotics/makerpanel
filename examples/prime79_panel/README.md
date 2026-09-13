@@ -1,6 +1,6 @@
 ---
 title: Prime79 Keyboard Panel
-category: Digital I/O
+category: Input
 description: >-
   Single-piece keyboard mounting panel with a Yushakobo Prime79 Mechanical Keyboard.
 ---

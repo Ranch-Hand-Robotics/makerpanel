@@ -195,7 +195,7 @@ Standard panel heights:
 
 Use the [MakerPanel / MakerRail measuring tool][measure-tool] to check panel
 and rail dimensions before fabrication or assembly. This printable OpenSCAD
-example provides panel and rail gauges; set `part` to `"panel"` or `"rail"`
+example provides panel and rail gauges; set `part` to `"makerpanel"` or `"rail"`
 and adjust `verticalUnits` and `horizontalPitch` for the size you need.
 
 [measure-tool]: https://github.com/Ranch-Hand-Robotics/makerpanel/blob/main/examples/measure/measure.scad

@@ -1,6 +1,6 @@
 ---
 title: Trackball Panel
-category: Digital I/O
+category: Input
 description: >-
   Meishi trackball MakerPanel
 ---
@@ -55,7 +55,7 @@ additional OpenSCAD library search path is required.
 - `openingInset`: distance inward from each mounting-hole center line to
   the corresponding rectangular opening edge. Default **5 mm** produces a
   centered **40.8 × 76.8 mm** opening, through the full panel thickness.
-- `part = "panel"`: printable/extrudable plate, with eight mounting holes
+- `part = "makerpanel"`: 3D mounting/measuring plate, with eight mounting holes
   and the rectangular through-opening.
 - `part = "panel_2d"`: the same profile for SVG/DXF laser-cutting export.
 - `part = "assembly"`: panel with a preview-only, 0.5 mm-thick footprint

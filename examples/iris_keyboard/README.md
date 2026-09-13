@@ -1,6 +1,6 @@
 ---
 title: Iris Keyboard Panel
-category: Digital I/O
+category: Input
 description: >-
   Panel for an Iris split keyboard.
 ---
@@ -12,6 +12,10 @@ a MakerPanel. The design provides flat cutting and extruded panel geometry.
 
 ## Customization
 
+- Select `part = "makerpanel"` for one 3D mounting/measuring panel,
+  `assembly` for the mirrored pair, or `iris_keyboard_laser` for 2D export.
+- The assembly's primary panel shares the standalone panel's origin. Its
+  mirrored companion is one panel width along +X; the pair is not centered.
 - Set `horizontalPitch` and `verticalUnits` for the surrounding panel.
 - Adjust `keyboard_cutout_offset_x` and `keyboard_cutout_offset_y` to position
   the keyboard opening.

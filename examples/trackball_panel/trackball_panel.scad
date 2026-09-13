@@ -6,7 +6,7 @@
 include <../../makerpanel/panel.scad>
 
 /* [Customization] */
-part = "panel"; // [panel, panel_2d, assembly, footprint]
+part = "makerpanel"; // [makerpanel, panel_2d, assembly, footprint]
 horizontalPitch = 18; // [12:1:40]
 verticalUnits = 4; // [2.5:0.5:6]
 panelThickness = 3; // [1.6:0.1:3]
@@ -118,7 +118,7 @@ module trackball_assembly() {
 			trackball_footprint_2d();
 }
 
-if (part == "panel") {
+if (part == "makerpanel") {
 	trackball_panel();
 } else if (part == "panel_2d") {
 	trackball_panel_2d();

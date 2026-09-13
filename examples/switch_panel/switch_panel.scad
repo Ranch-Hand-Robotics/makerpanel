@@ -6,7 +6,7 @@ include <common.scad>
 include <makerpanel/panel.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, panel, panel_2d]
+part = "assembly"; // [assembly, makerpanel, panel_2d]
 horizontalPitch = 35; // [15:10:80] MakerPanel horizontal pitch (HP) for panel width
 verticalUnits = 1; // [1:1:3] MakerPanel vertical units (U) for panel height
 switch_count = 6; // [1:1:20] Number of switch pass-through holes
@@ -45,7 +45,7 @@ module switch_panel() {
 
 if (part == "assembly") {
 	switch_panel();
-} else if (part == "panel") {
+} else if (part == "makerpanel") {
 	switch_panel();
 } else if (part == "panel_2d") {
 	switch_panel_2d();

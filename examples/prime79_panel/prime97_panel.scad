@@ -12,7 +12,7 @@ verticalUnits = 4; // [1:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 70; // [70:1:80] MakerPanel horizontal pitch (HP) for panel width
 
 // [Part Selection]
-part = "assembly"; // [assembly, prime79_keyboard, prime79_keyboard_laser]
+part = "assembly"; // [assembly, makerpanel, prime79_keyboard_laser]
 
 /* [Hidden] */
 keyboard_panel_depth = 3; // mm
@@ -52,7 +52,7 @@ module prime79_keyboard_assembly() {
 
 if (part == "assembly") {
 	prime79_keyboard_assembly();
-} else if (part == "prime79_keyboard") {
+} else if (part == "makerpanel") {
 	prime79_keyboard();
 } else if (part == "prime79_keyboard_laser") {
 	prime79_keyboard_laser();

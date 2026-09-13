@@ -62,7 +62,7 @@ verticalUnits = 1;   // [0.125:0.125:5]
 panelThickness = 3;  // [1:0.5:6]
 
 /* [Part Selection] */
-part = "panel_3d"; // [panel_3d, panel_2d]
+part = "makerpanel"; // [makerpanel, panel_2d]
 
 if (part == "panel_2d") {
     makerpanel_2d(horizontalPitch, verticalUnits);
@@ -74,9 +74,29 @@ if (part == "panel_2d") {
 Open the file in OpenSCAD, adjust the values in the Customizer, and render the
 selected part.
 
+### Mounting part and assembly preview
+
+Mounting examples expose the exact selector value `makerpanel` for the panel
+used for mounting and measuring. Select it to check the HP/U footprint and
+mounting-hole placement. The measurement gauge uses `makerpanel` for its panel
+gauge; helper-only examples such as the Cherry MX keyboard library do not
+represent a mounting panel and need not expose this selector.
+
+Where available, `assembly` previews the complete design, including attached
+components. Keep `makerpanel` and `assembly` in shared coordinates so the
+mounting panel occupies the same position in both views. Assembly overhang is
+not the mounting fit: a screen, keyboard, or other component may extend beyond
+the mounting panel. Measure mounting fit from `makerpanel`, and check assembly
+clearances separately.
+
+The gallery catalog derives its `scadParts` array from the primary SCAD file's
+`part` dropdown (or a literal `part`/`parts` string array). Keep the selector
+values in that source, not duplicated in README metadata. No `mountingPart`
+metadata is needed because `makerpanel` is the convention.
+
 ## Export files
 
-- Select `panel_3d`, render with **F6**, then use **File → Export → Export as
+- Select `makerpanel`, render with **F6**, then use **File → Export → Export as
   STL** for 3D printing.
 - Select `panel_2d`, render with **F6**, then export as **SVG** or **DXF** for
   laser cutting or import into another CAD package.

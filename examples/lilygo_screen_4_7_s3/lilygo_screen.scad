@@ -13,7 +13,7 @@
 include <panel.scad>
 
 /* [Part Selection] */
-part = "assembly"; // [assembly, lilygo_screen, lilygo_pcb, lilygo_panel]
+part = "assembly"; // [assembly, lilygo_screen, lilygo_pcb, makerpanel]
 
 /* [Parameters] */
 
@@ -66,7 +66,7 @@ if (part == "assembly") {
     lilygo_screen();
 } else if (part == "lilygo_pcb") {
     lilygo_pcb();
-} else if (part == "lilygo_panel") {
+} else if (part == "makerpanel") {
     // Just the panel with cutout
     lilygo_makerpanel();
 }

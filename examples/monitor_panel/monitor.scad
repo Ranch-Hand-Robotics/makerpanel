@@ -8,7 +8,7 @@ include <makerpanel/panel.scad>
 use <examples/vent_panel/IsoGridScad/isogrid.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, maker_panel, vesa_panel, brace, brace_2d]
+part = "assembly"; // [assembly, makerpanel, vesa_panel, brace, brace_2d]
 metal_thickness = 4; // [1:0.5:4]
 // Optional arm-pivot washers; zero omits them from the assembly.
 washer_thickness = 0; // [0:0.1:2]
@@ -717,7 +717,7 @@ if (part == "assembly") {
     for (i = [0:1:2])
         translate([i * max(monitor_width + 30, panel_width + 30), 0, 0])
             assembly(i / 2);
-} else if (part == "maker_panel") {
+} else if (part == "makerpanel") {
     maker_panel();
 } else if (part == "vesa_panel") {
     vesa_panel();

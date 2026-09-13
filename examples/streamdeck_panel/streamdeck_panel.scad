@@ -10,7 +10,7 @@ include <makerpanel/common.scad>
 include <makerpanel/panel.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, panel, bottom]
+part = "assembly"; // [assembly, makerpanel, bottom]
 verticalUnits = 3.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
 horizontalPitch = 43; // [16:1:80] Panel width (HP); adds 4HP flange margin
 tilt_angle = 15; // [0:1:25] positive raises the +Y edge
@@ -327,7 +327,7 @@ assert(rear_insert_clearance > 0 &&
 
 if (part == "assembly") {
 	streamdeck_assembly();
-} else if (part == "panel") {
+} else if (part == "makerpanel") {
 	streamdeck_panel();
 } else if (part == "bottom") {
 	streamdeck_rear();

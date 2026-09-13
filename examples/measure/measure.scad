@@ -19,7 +19,7 @@
 include <common.scad>
 
 /* [Part Selection] */
-part = "panel"; // [panel, rail, rack]
+part = "makerpanel"; // [makerpanel, rail, rack]
 
 /* [Parameters] */
 panel_thickness = 3; // mm
@@ -94,7 +94,7 @@ module panel_ruler() {
 }
 
 
-if (part == "panel") {
+if (part == "makerpanel") {
     panel_ruler();
 } else if (part == "rail") {
     rail_ruler();

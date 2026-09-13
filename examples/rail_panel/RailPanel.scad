@@ -4,7 +4,7 @@ include <makerpanel/common.scad>
 use <makerpanel/rack.scad>
 
 /* [Part Selection] */
-part = "rail_panel"; // [rail_panel, rail_panel_2d]
+part = "makerpanel"; // [makerpanel, rail_panel_2d]
 
 /* [Customization] */
 rackWidthInches = 10; // [10, 19] 10 inches (254 mm) or 19 inches (482.6 mm)
@@ -26,8 +26,8 @@ module rail_panel_2d() {
     );
     assert(panelThickness > 0, "Panel thickness must be positive.");
     assert(
-        part == "rail_panel" || part == "rail_panel_2d",
-        "Part must be rail_panel or rail_panel_2d."
+        part == "makerpanel" || part == "rail_panel_2d",
+        "Part must be makerpanel or rail_panel_2d."
     );
 
     if (is_single_rail()) {
@@ -53,6 +53,8 @@ module rail_panel(thickness=panelThickness) {
 
 if (part == "rail_panel_2d") {
     rail_panel_2d();
-} else {
+} else if (part == "makerpanel") {
     rail_panel();
+} else {
+    assert(false, str("Unknown part: ", part));
 }

@@ -9,7 +9,7 @@
 include <panel.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, panel, panel_2d]
+part = "assembly"; // [assembly, makerpanel, panel_2d]
 verticalUnits = 2; //[2:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [16:1:80] Minimum MakerPanel horizontal pitch (HP) for panel width
 joystickCount = 2; // [1:1:3] Number of joystick holes to generate
@@ -102,7 +102,7 @@ module joystick_panel() {
 
 if (part == "assembly") {
     joystick_panel();
-} else if (part == "panel") {
+} else if (part == "makerpanel") {
     joystick_panel();
 } else if (part == "panel_2d") {
     joystick_panel_2d();

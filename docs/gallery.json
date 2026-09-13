@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-09-12T01:46:48Z",
+  "updated_at": "2026-09-12T05:35:24Z",
   "panels": [
     {
       "slug": "monitor_panel",
@@ -15,15 +15,22 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/monitor_panel/monitor.scad",
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "vesa_panel",
+        "brace",
+        "brace_2d"
+      ],
       "scadAssets": [
         "monitor.brace_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "iris_keyboard",
       "title": "Iris Keyboard Panel",
-      "category": "Digital I/O",
+      "category": "Input",
       "horizontalPitch": 35,
       "verticalUnits": 4,
       "contributor": "Ranch Hand Robotics",
@@ -33,10 +40,15 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/iris_keyboard/IrisMakerPanel.scad",
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "iris_keyboard_laser"
+      ],
       "scadAssets": [
         "IrisCutout.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "joystick",
@@ -51,10 +63,15 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/joystick/design/joystick.scad",
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "panel_2d"
+      ],
       "scadAssets": [
         "design/joystick.panel_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "keyboard",
@@ -69,7 +86,18 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/keyboard/cmx.scad",
-      "updated_at": "2026-09-12T01:27:13Z"
+      "scadParts": [
+        "mx_footprint_2d",
+        "mx_footprint_3d",
+        "mx_footprint_stab_2d",
+        "mx_footprint_stab_3d",
+        "mx_stabilizer_foot_2d",
+        "mx_stabilizer_foot_3d",
+        "mx_switch_3d",
+        "mx_keycap_3d",
+        "mx_wide_keycap_3d"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "lilygo_screen_4_7_s3",
@@ -84,7 +112,13 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/lilygo_screen_4_7_s3/lilygo_screen.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadParts": [
+        "assembly",
+        "lilygo_screen",
+        "lilygo_pcb",
+        "makerpanel"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "lilygo_t-encoder-pro",
@@ -98,8 +132,11 @@
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/lilygo_t-encoder-pro",
       "buy_url": "",
       "issue_number": 0,
-      "scadFile": "examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadFile": "examples/lilygo_t-encoder-pro/design/lilygo_t-encoder-pro.scad",
+      "scadParts": [
+        "makerpanel"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "rail_panel",
@@ -114,7 +151,11 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/rail_panel/RailPanel.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadParts": [
+        "makerpanel",
+        "rail_panel_2d"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "measure",
@@ -129,14 +170,19 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/measure/measure.scad",
-      "updated_at": "2026-09-12T01:27:13Z"
+      "scadParts": [
+        "makerpanel",
+        "rail",
+        "rack"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "mouse_panel",
       "title": "Mouse Pad Panel",
-      "category": "Digital I/O",
+      "category": "Input",
       "horizontalPitch": 35,
-      "verticalUnits": 5,
+      "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
       "description": "Flat MakerPanel surface for a mouse pad.",
       "thumbnail": "images/makerpanel.png",
@@ -144,12 +190,17 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/mouse_panel/MousePadPanel.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadParts": [
+        "makerpanel",
+        "mousepad_panel_laser",
+        "assembly"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "prime79_panel",
       "title": "Prime79 Keyboard Panel",
-      "category": "Digital I/O",
+      "category": "Input",
       "horizontalPitch": 70.0,
       "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
@@ -159,7 +210,12 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/prime79_panel/prime97_panel.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "prime79_keyboard_laser"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "Antenna",
@@ -174,10 +230,15 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/Antenna/antenna.scad",
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "panel_2d"
+      ],
       "scadAssets": [
         "antenna.panel_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "streamdeck_panel",
@@ -192,7 +253,12 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/streamdeck_panel/streamdeck_panel.scad",
-      "updated_at": "2026-09-12T01:46:48Z"
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "bottom"
+      ],
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "switch_panel",
@@ -207,15 +273,20 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/switch_panel/switch_panel.scad",
+      "scadParts": [
+        "assembly",
+        "makerpanel",
+        "panel_2d"
+      ],
       "scadAssets": [
         "switch_panel.panel_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "trackball_panel",
       "title": "Trackball Panel",
-      "category": "Digital I/O",
+      "category": "Input",
       "horizontalPitch": 18.0,
       "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
@@ -225,18 +296,24 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/trackball_panel/trackball_panel.scad",
+      "scadParts": [
+        "makerpanel",
+        "panel_2d",
+        "assembly",
+        "footprint"
+      ],
       "scadAssets": [
         "trackball_panel.footprint.svg",
         "trackball_panel.panel_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     },
     {
       "slug": "vent_panel",
       "title": "Ventilation Panel",
       "category": "Other",
       "horizontalPitch": 35,
-      "verticalUnits": 5,
+      "verticalUnits": 4.0,
       "contributor": "Ranch Hand Robotics",
       "description": "Ventilation MakerPanel.",
       "thumbnail": "images/makerpanel.png",
@@ -244,10 +321,14 @@
       "buy_url": "",
       "issue_number": 0,
       "scadFile": "examples/vent_panel/VentPanel.scad",
+      "scadParts": [
+        "makerpanel",
+        "panel_2d"
+      ],
       "scadAssets": [
         "VentPanel.panel_2d.svg"
       ],
-      "updated_at": "2026-09-12T01:46:48Z"
+      "updated_at": "2026-09-12T05:35:24Z"
     }
   ]
 }

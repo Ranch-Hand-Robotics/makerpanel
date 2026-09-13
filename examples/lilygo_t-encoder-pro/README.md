@@ -12,6 +12,7 @@ an extruded panel with a central circular encoder opening.
 
 ## Customization
 
+- Use `part = "makerpanel"` (the default) for the 3D mounting/measuring panel.
 - Set `horizontalPitch` and `verticalUnits` for the panel size.
 - Review `lilygo_radius` against your encoder housing.
 - Review `panel_depth` for the intended material and mounting method.

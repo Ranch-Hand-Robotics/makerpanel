@@ -39,7 +39,7 @@ EXAMPLE_OVERRIDES = {
         'category': 'Analog Control',
         'horizontalPitch': 9,
         'verticalUnits': 1,
-        'scadFile': 'examples/lilygo_t-encoder-pro/lilygo_t-encoder-pro.scad',
+        'scadFile': 'examples/lilygo_t-encoder-pro/design/lilygo_t-encoder-pro.scad',
         'description': 'Compact panel with a circular cutout for the LilyGo T-Encoder Pro rotary encoder.'
     },
     'iris_keyboard': {
@@ -62,7 +62,6 @@ EXAMPLE_OVERRIDES = {
         'title': 'Mouse Pad Panel',
         'category': 'Tools',
         'horizontalPitch': 35,
-        'verticalUnits': 5,
         'scadFile': 'examples/mouse_panel/MousePadPanel.scad',
         'description': 'Flat mouse pad panel design for MakerPanel-compatible decks with laser-cut and 3D printable outputs.'
     },
@@ -81,7 +80,6 @@ EXAMPLE_OVERRIDES = {
         'title': 'Vent Panel',
         'category': 'Other',
         'horizontalPitch': 35,
-        'verticalUnits': 5,
         'scadFile': 'examples/vent_panel/VentPanel.scad',
         'description': 'Configurable ventilation panel with circular, honeycomb, and isogrid patterns.'
     }
@@ -151,6 +149,48 @@ def _find_scad_dimensions(slug, scad_file):
         read_number(('horizontalPitch', 'horizontal_pitch', 'panel_hp')),
         read_number(('verticalUnits', 'vertical_units', 'panel_u')),
     )
+
+
+def _find_scad_parts(scad_file):
+    """Derive selector values from the primary source, never README metadata."""
+    if not scad_file or not Path(scad_file).is_file():
+        return []
+
+    content = Path(scad_file).read_text(encoding='utf-8-sig')
+    # Preserve strings and dropdown line comments while masking block comments.
+    tokens = r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*[\s\S]*?\*/'
+    content = re.sub(
+        tokens,
+        lambda m: re.sub(r'[^\n]', ' ', m.group())
+        if m.group().startswith('/*') else m.group(),
+        content,
+    )
+    dropdown = re.search(
+        r'^[ \t]*part\s*=\s*"(?:\\.|[^"\\])*"[ \t]*;'
+        r'[ \t]*//[ \t]*\[([^\]\r\n]*)\]',
+        content, re.MULTILINE,
+    )
+    if dropdown:
+        parts = [item.split(':', 1)[0].strip().strip('"')
+                 for item in dropdown.group(1).split(',')]
+    else:
+        # Support literal string arrays without evaluating arbitrary SCAD.
+        content = re.sub(
+            tokens, lambda m: '' if m.group().startswith('//') else m.group(),
+            content,
+        )
+        array = re.search(r'^[ \t]*parts?\s*=\s*(\[[^;]*?\])\s*;',
+                          content, re.MULTILINE)
+        if not array:
+            return []
+        try:
+            parts = json.loads(array.group(1))
+        except json.JSONDecodeError:
+            return []
+        if not all(isinstance(part, str) for part in parts):
+            return []
+
+    return list(dict.fromkeys(part for part in parts if part))
 
 
 def _read_example_metadata(slug):
@@ -227,6 +267,10 @@ def _build_example_entry(slug, existing_entry=None):
 
     if scad_file:
         entry['scadFile'] = scad_file
+
+    scad_parts = _find_scad_parts(scad_file)
+    if scad_parts:
+        entry['scadParts'] = scad_parts
 
     scad_assets = _find_scad_assets(slug)
     if scad_assets:

@@ -576,13 +576,17 @@ Arm clevis gaps remain stock thickness plus two 1 mm washers.
 
 ## Exports and validation
 
-`part`: `assembly`, `poses` (0/45/90), `maker_panel`, `vesa_panel`,
+`part`: `assembly`, `poses` (0/45/90), `makerpanel`, `vesa_panel`,
 `brace`, `brace_2d`, `slider_bolt`, `slider_washer`, `slider_locknut`,
 `pivot_washer`, `rear_pad`, `stow_pad`. `slider_washer` exports one washer;
 assembly uses two. Shoe and motion-lock exports are removed. Hardware
 exports are references, not instructions to print metal substitutes.
 Existing user-created STL/GLB/SVG exports are untouched; they have not been
 regenerated from this revision.
+
+`part = "makerpanel"` selects only the 3D mounting/measuring base, in
+the same coordinates as the base in `assembly`. The implementation module
+remains `maker_panel()` to avoid colliding with the library's `makerpanel()`.
 
 `monitor.test.cjs` is absent from the current working tree. No deleted suite
 was restored or recreated, and no previous suite pass is claimed here.

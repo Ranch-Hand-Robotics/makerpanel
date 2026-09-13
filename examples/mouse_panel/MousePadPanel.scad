@@ -7,7 +7,7 @@ include <common.scad>
 include <makerpanel/panel.scad>
 
 // [Part Selection]
-parts = "mousepad_panel"; // [mousepad_panel, mousepad_panel_laser, assembly]
+part = "makerpanel"; // [makerpanel, mousepad_panel_laser, assembly]
 
 /* [Customization] */
 verticalUnits = 4; // [1:1:8] MakerPanel vertical units (U) for panel height
@@ -51,10 +51,10 @@ module mousepad_assembly() {
 // Output
 // ============================================
 
-if (parts == "mousepad_panel") {
+if (part == "makerpanel") {
 	mousepad_panel();
-} else if (parts == "mousepad_panel_laser") {
+} else if (part == "mousepad_panel_laser") {
 	mousepad_panel_laser();
-} else if (parts == "assembly") {
+} else if (part == "assembly") {
 	mousepad_assembly();
 }

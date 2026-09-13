@@ -7,7 +7,7 @@ include <makerpanel/panel.scad>
 use <examples/vent_panel/IsoGridScad/isogrid.scad>
 
 /* [Customization] */
-part = "assembly"; // [assembly, panel, panel_2d]
+part = "assembly"; // [assembly, makerpanel, panel_2d]
 
 horizontalPitch = 35; // [4:1:80] MakerPanel horizontal pitch (HP) for panel width
 verticalUnits = 1; // [1:.25:2] MakerPanel vertical units (U) for panel height
@@ -229,7 +229,7 @@ module antenna_maker_panel() {
 
 if (part == "assembly") {
 	antenna_maker_panel();
-} else if (part == "panel") {
+} else if (part == "makerpanel") {
 	antenna_maker_panel();
 } else if (part == "panel_2d") {
 	antenna_maker_panel_2d();

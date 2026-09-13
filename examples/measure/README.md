@@ -13,7 +13,10 @@ planning and checking modular panel assemblies.
 
 ## Customization
 
-- Select `part` as `panel`, `rail`, or `rack` for the required reference.
+- Select `part = "makerpanel"` for the 3D panel measuring reference,
+  or `part = "rail"` for the rail gauge.
+- The existing `rack` option is reserved but currently calls an undefined
+  `rack_ruler()` module; it does not produce a rack gauge.
 - Set `horizontalPitch` and `verticalUnits` for the desired span.
 - Review `rack_type` when generating a rack gauge.
 

@@ -1,6 +1,6 @@
 ---
 title: Mouse Pad Panel
-category: Digital I/O
+category: Input
 description: >-
   Flat MakerPanel surface for a mouse pad.
 ---
@@ -12,6 +12,8 @@ surface with MakerPanel mounting geometry, without component cutouts.
 
 ## Customization
 
+- Select `part = "makerpanel"` for the 3D mounting/measuring panel,
+  `mousepad_panel_laser` for 2D export, or `assembly` for the preview.
 - Set `horizontalPitch` and `verticalUnits` to fit the available space.
 - Review `mousepad_panel_depth` for the intended panel material.
 - Use the design's flat or extruded geometry for cutting or printing.

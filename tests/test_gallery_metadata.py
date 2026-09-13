@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -110,6 +111,115 @@ class GalleryMetadataTests(unittest.TestCase):
             entry = hooks._build_example_entry('sample')
         self.assertEqual(entry['horizontalPitch'], 12)
         self.assertEqual(entry['verticalUnits'], 3)
+
+    def test_parts_follow_primary_dropdown_not_metadata_or_helpers(self):
+        scad = self.example / 'sample.scad'
+        helper = self.example / 'helper.scad'
+        helper.write_text('part = "helper"; // [helper]\n', encoding='utf-8')
+        self.write('---\nscadParts: [stale]\nmountingPart: wrong\n---\n')
+        hooks.EXAMPLE_OVERRIDES['sample'] = {
+            'scadFile': str(scad), 'scadParts': ['stale'],
+        }
+        scad.write_text(
+            '// part = "wrong"; // [wrong]\n'
+            '/*\npart = "wrong"; // [wrong]\n*/\n'
+            'part = "assembly"; // [assembly: Preview, '
+            'makerpanel: Mounting panel, panel_2d, makerpanel]\n',
+            encoding='utf-8',
+        )
+        entry = hooks._build_example_entry('sample')
+        self.assertEqual(entry['scadParts'],
+                         ['assembly', 'makerpanel', 'panel_2d'])
+        self.assertNotIn('mountingPart', entry)
+        scad.write_text('part = "makerpanel"; // [makerpanel]\n',
+                        encoding='utf-8')
+        updated = hooks._build_example_entry('sample', entry)
+        self.assertEqual(updated['scadParts'], ['makerpanel'])
+        scad.write_text('cube(1);\n', encoding='utf-8')
+        self.assertNotIn('scadParts', hooks._build_example_entry('sample', updated))
+
+    def test_literal_part_arrays(self):
+        scad = self.example / 'sample.scad'
+        hooks.EXAMPLE_OVERRIDES['sample'] = {'scadFile': str(scad)}
+        for name in ('part', 'parts'):
+            with self.subTest(name=name):
+                scad.write_text(
+                    f'{name} = [\n"assembly", // Preview\n'
+                    '"makerpanel", /* Mount */ "assembly"\n];\n',
+                    encoding='utf-8',
+                )
+                self.assertEqual(hooks._build_example_entry('sample')['scadParts'],
+                                 ['assembly', 'makerpanel'])
+
+    def test_missing_or_unsupported_selectors_do_not_invent_parts(self):
+        scad = self.example / 'sample.scad'
+        hooks.EXAMPLE_OVERRIDES['sample'] = {'scadFile': str(scad)}
+        self.assertNotIn('scadParts', hooks._build_example_entry('sample'))
+        for source in ('cube(1);', 'part = "assembly";',
+                       'parts = [some_variable];', 'parts = [1, 2];',
+                       'parts = [];', '// parts = ["wrong"];'):
+            with self.subTest(source=source):
+                scad.write_text(source, encoding='utf-8')
+                self.assertNotIn('scadParts', hooks._build_example_entry('sample'))
+
+
+class BuiltInCatalogPartsTests(unittest.TestCase):
+    def test_actual_catalog_parts_and_idempotence(self):
+        previous_cwd = Path.cwd()
+        self.addCleanup(os.chdir, previous_cwd)
+        os.chdir(ROOT)
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(hooks, 'EXAMPLES_DIR', ROOT / 'examples'), \
+             patch.object(hooks, 'GALLERY_JSON_PATH',
+                          Path(directory) / 'gallery.json'), \
+             patch.object(hooks, '_iso_now', return_value='2026-01-01T00:00:00Z'):
+            hooks.sync_examples_into_gallery_json()
+            first = hooks.GALLERY_JSON_PATH.read_bytes()
+            entries = {p['slug']: p for p in json.loads(first)['panels']}
+            mounting_samples = {
+                'Antenna', 'iris_keyboard', 'joystick',
+                'lilygo_screen_4_7_s3', 'lilygo_t-encoder-pro', 'measure',
+                'monitor_panel', 'mouse_panel', 'prime79_panel', 'rail_panel',
+                'streamdeck_panel', 'switch_panel', 'trackball_panel', 'vent_panel',
+            }
+            self.assertEqual(set(entries), mounting_samples | {'keyboard'})
+            for slug in mounting_samples:
+                with self.subTest(slug=slug):
+                    self.assertIn('makerpanel', entries[slug]['scadParts'])
+                    self.assertNotIn('mountingPart', entries[slug])
+            self.assertNotIn('makerpanel', entries['keyboard']['scadParts'])
+            self.assertIn('mx_switch_3d', entries['keyboard']['scadParts'])
+            self.assertIn('assembly', entries['monitor_panel']['scadParts'])
+            encoder = entries['lilygo_t-encoder-pro']
+            self.assertEqual(encoder['scadFile'],
+                             'examples/lilygo_t-encoder-pro/design/'
+                             'lilygo_t-encoder-pro.scad')
+            self.assertTrue((ROOT / encoder['scadFile']).is_file())
+            with patch.object(hooks, '_iso_now',
+                              return_value='2026-01-02T00:00:00Z'):
+                hooks.sync_examples_into_gallery_json()
+            self.assertEqual(hooks.GALLERY_JSON_PATH.read_bytes(), first)
+
+
+class BuiltInPanelDefaultsTests(unittest.TestCase):
+    def test_mouse_and_vent_heights_follow_scad(self):
+        for slug in ('mouse_panel', 'vent_panel'):
+            with self.subTest(slug=slug):
+                override = hooks.EXAMPLE_OVERRIDES[slug]
+                self.assertNotIn('verticalUnits', override)
+                absolute_override = {
+                    **override,
+                    'scadFile': str(ROOT / override['scadFile']),
+                }
+                with patch.object(hooks, 'EXAMPLES_DIR', ROOT / 'examples'), \
+                     patch.dict(hooks.EXAMPLE_OVERRIDES,
+                                {slug: absolute_override}):
+                    entry = hooks._build_example_entry(slug)
+                    self.assertEqual(entry['verticalUnits'], 4)
+                    with patch.object(hooks, '_find_scad_dimensions',
+                                      return_value=(35, 6)):
+                        updated = hooks._build_example_entry(slug)
+                    self.assertEqual(updated['verticalUnits'], 6)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ faceplate or individual rail with rack mounting ears.
 - Set `rackWidthInches` to `10` or `19`.
 - Set `verticalUnits` for a multi-row faceplate, or `0` for one offset-ear
   rail. The source notes that its mate is rotated 180 degrees.
-- Select `part = "rail_panel"` for the extruded part or
+- Select `part = "makerpanel"` for the 3D mounting/measuring part or
   `part = "rail_panel_2d"` for a flat cutting profile.
 - Review `panelThickness` for the intended material.
 

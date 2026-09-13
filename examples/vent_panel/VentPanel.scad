@@ -24,7 +24,7 @@ fingerHoleXOffset = 20; // [0:0.5:400]
 fingerHoleYOffset = 55; // [0:0.5:400]
 
 /* [Part Selection] */
-part = "panel"; // [panel, panel_2d]
+part = "makerpanel"; // [makerpanel, panel_2d]
 
 /* [Hidden] */
 panelThickness = 3; // [1:0.5:6] Panel thickness in millimeters
@@ -404,6 +404,8 @@ module vent_panel(thickness=panelThickness) {
 
 if (part == "panel_2d") {
     vent_panel_2d();
-} else {
+} else if (part == "makerpanel") {
     vent_panel();
+} else {
+    assert(false, str("Unknown part: ", part));
 }

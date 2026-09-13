@@ -6,6 +6,7 @@
 include <panel.scad>
 
 /* [Customization] */
+part = "makerpanel"; // [makerpanel]
 verticalUnits = 1; //[1:1:8] MakerPanel vertical units (U) for panel height
 horizontalPitch = 35; // [4:1:40] MakerPanel horizontal pitch (HP) for panel width
 
@@ -29,4 +30,8 @@ module lilygo_panel() {
     }
 }
 
-lilygo_panel();
+if (part == "makerpanel") {
+    lilygo_panel();
+} else {
+    assert(false, str("Unknown part: ", part));
+}
