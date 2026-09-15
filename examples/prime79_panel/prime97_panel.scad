@@ -37,7 +37,8 @@ module prime79_keyboard(thickness=keyboard_panel_depth) {
 	// Standard MakerPanel body includes the panel mounting holes.
 	difference() {
 		color("grey")
-			makerpanel(horizontalPitch, verticalUnits, thickness=thickness);
+			makerpanel(horizontalPitch, verticalUnits,
+				thickness=thickness, chamfer_start=1.2);
 		translate([0, 0, -epsilon])
 			linear_extrude(height=max(keyboard_cutout_depth, thickness) + 2*epsilon)
 				prime79_outline_2d();

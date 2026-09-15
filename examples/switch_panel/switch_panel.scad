@@ -39,7 +39,9 @@ module switch_panel_2d() {
 }
 
 module switch_panel() {
-	linear_extrude(height=panel_depth)
+	panel_extrude(
+		[hp_to_mm(effective_horizontal_pitch()), u_to_mm(verticalUnits)],
+		panel_depth, chamfer_start=1.2)
 		switch_panel_2d();
 }
 

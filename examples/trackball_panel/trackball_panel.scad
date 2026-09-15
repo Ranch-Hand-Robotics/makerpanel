@@ -114,7 +114,8 @@ module trackball_panel_2d() {
 }
 
 module trackball_panel() {
-	linear_extrude(height = panelThickness)
+	panel_extrude([panel_width, panel_height], panelThickness,
+		chamfer_start = 1.2)
 		trackball_panel_2d();
 }
 

@@ -179,11 +179,10 @@ module rack_faceplate_2d(
 // ============================================
 // Rotate the second rail 180 degrees to place rail centerlines exactly 1U apart.
 
-module rack_single_rail_2d(
+// Hole-free orthogonal perimeter, also used by printed-panel bevel cutters.
+module rack_single_rail_outline_2d(
     outer_width,
-    hole_c2c,
     center_clearance,
-    rail_edge_margin=RACK_SUPPORT_WIDTH,
     rail_height=RACK_RAIL_HEIGHT
 ) {
     center_open_width = min(outer_width - 2 * RACK_SUPPORT_WIDTH, center_clearance);
@@ -193,14 +192,30 @@ module rack_single_rail_2d(
         + CENTER_CUTOUT_SIDE_MARGIN;
     ear_height = ear_top + rail_height/2;
 
+    union() {
+        square([outer_width, rail_height], center=true);
+        translate([-outer_width/2, -rail_height/2])
+            square([ear_width, ear_height]);
+        translate([center_open_width/2, -rail_height/2])
+            square([ear_width, ear_height]);
+    }
+}
+
+module rack_single_rail_2d(
+    outer_width,
+    hole_c2c,
+    center_clearance,
+    rail_edge_margin=RACK_SUPPORT_WIDTH,
+    rail_height=RACK_RAIL_HEIGHT
+) {
+    center_open_width = min(outer_width - 2 * RACK_SUPPORT_WIDTH, center_clearance);
+
     difference() {
-        union() {
-            square([outer_width, rail_height], center=true);
-            translate([-outer_width/2, -rail_height/2])
-                square([ear_width, ear_height]);
-            translate([center_open_width/2, -rail_height/2])
-                square([ear_width, ear_height]);
-        }
+        rack_single_rail_outline_2d(
+            outer_width=outer_width,
+            center_clearance=center_clearance,
+            rail_height=rail_height
+        );
 
         translate([-center_open_width/2, 0])
             maker_rail_2d(

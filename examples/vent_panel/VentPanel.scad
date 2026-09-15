@@ -394,7 +394,8 @@ module vent_panel_2d() {
 
 module vent_panel(thickness=panelThickness) {
     difference() {
-        linear_extrude(height=thickness)
+        panel_extrude([panel_width(), panel_height()], thickness,
+            chamfer_start=1.2)
             reinforced_vent_pattern_2d(thickness);
         if (fingerHole) {
             finger_hole_cutout(thickness);

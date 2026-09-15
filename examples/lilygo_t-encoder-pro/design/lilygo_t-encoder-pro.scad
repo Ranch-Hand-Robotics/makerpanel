@@ -3,7 +3,7 @@
 // The panel is a flat laser cuttable or 3d printable plate where the encoder can be mounted
 // while the panel can be installed in a MakerRail compatible case or cyberdeck.
 
-include <panel.scad>
+include <makerpanel/panel.scad>
 
 /* [Customization] */
 part = "makerpanel"; // [makerpanel]
@@ -20,7 +20,8 @@ lilygo_radius = 35.5/2; // mm, radius of the circular area for the encoder
 module lilygo_panel() {
     // 3D printable panel (same XY geometry as laser version, extruded in Z)
     difference() {
-        makerpanel(horizontalPitch, verticalUnits, thickness=panel_depth);
+        makerpanel(horizontalPitch, verticalUnits,
+            thickness=panel_depth, chamfer_start=1.2);
 
         // Cutout for the encoder
         translate([0, 0, -1])

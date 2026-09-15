@@ -248,11 +248,41 @@ test('wider VESA plates do not enlarge walls or the underside opening', () => {
         .split('module screw_paths()')[0];
     assert.doesNotMatch(walls, /\bface_(?:left|right|width)\b/);
     assert.match(source, /for \(x = \[wedge_left, cavity_right\]\)\s*rectangle/);
-    // Overhang thickness is the same single extrusion as the mounting face.
+    // Overhang uses the same beveled extrusion as the mounting face.
     const face = source.split('module inclined_face() {')[1]
         .split('module wedge_prism(')[0];
-    assert.match(face, /linear_extrude\(height=face_thickness\)/);
+    assert.match(face, /panel_extrude\(size=\[face_width, face_height\],\s*thickness=face_thickness, chamfer_start=1\.2\)/);
     assert.match(face, /rectangle\(\[face_left, 0\], \[face_right, face_height\]\)/);
+});
+
+test('panel bevels preserve the asymmetric face datum and finished profile', () => {
+    const face = source.split('module inclined_face() {')[1]
+        .split('module wedge_prism(')[0];
+    assert.match(source, /makerpanel\(horizontalPitch, verticalUnits,\s*thickness=panel_depth,\s*chamfer_start=1\.2\)/);
+    assert.match(face, /face_pose\(\) translate\(\[0, 0, -face_thickness\]\)\s*translate\(face_center\)\s*panel_extrude/);
+    assert.match(face, /translate\(-face_center\)\s*difference\(\)/);
+    assert.match(face, /if \(face_isogrid\)\s*grid_voids\(/);
+    assert.match(face, /face_keepouts\(\);/);
+    assert.doesNotMatch(face, /linear_extrude|scale\(/);
+    const centerExpression = face.match(/face_center\s*=\s*([^;]+);/)[1];
+    for (const offset of [-70, 0, 70]) for (const width of [0, 260]) {
+        for (const thickness of [1, 1.2, 3, 4, 6]) {
+            const c = dimensions({ monitor_offset_x: offset,
+                vesa_plate_width: width, face_thickness: thickness });
+            const center = vm.runInContext(centerExpression, c);
+            near(center[0] - c.face_width / 2, c.face_left);
+            near(center[0] + c.face_width / 2, c.face_right);
+            near(center[1] - c.face_height / 2, 0);
+            near(center[1] + c.face_height / 2, c.face_height);
+            near(center[2], 0);
+            // Helper Z is measured from this plate's actual local underside.
+            near(-thickness + center[2], -c.face_thickness);
+            near(-thickness + center[2] + thickness, 0);
+            const startZ = -thickness + 1.2;
+            const bevel = Math.max(0, thickness - 1.2);
+            near(bevel, Math.max(0, -startZ));
+        }
+    }
 });
 
 test('vertical offsets lift the full lip and wall roofs, not the panel', () => {

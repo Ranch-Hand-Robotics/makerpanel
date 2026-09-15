@@ -166,6 +166,16 @@ pot wipers, and an ADC that returns plausible but wrong data are not
 diagnosed by the communication-fault flag.
 
 Build with the existing Pico SDK CMake/Ninja project in `joystick/`.
+Run `node --test examples/joystick/firmware.test.cjs` from the repository
+root for source-contract checks. To also compile and run the firmware's
+host-mocked behavioral tests, set `CXX` to an absolute native `clang++` or
+`g++` executable path (a Windows `.exe` on Windows). Those tests cover
+enabled/disabled builds, ADC commands, signed sample decoding, button
+hysteresis/debounce, stop behavior, fault handling, and HID mapping.
+Without `CXX`, the behavioral test is explicitly skipped; passing source
+checks alone does not establish that the firmware compiles or runs.
+Host mocks also cannot validate physical I2C timing or electrical behavior.
+
 Before using the controller with any equipment, test with hazards disabled:
 
 1. Verify 3.3 V supplies, common ground, reference wiring, and I2C address.

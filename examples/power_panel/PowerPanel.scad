@@ -135,7 +135,8 @@ module power_panel_2d() {
 }
 
 module power_panel(thickness=panelThickness) {
-    linear_extrude(height=thickness)
+    panel_extrude([hp_to_mm(horizontalPitch), u_to_mm(verticalUnits)],
+        thickness, chamfer_start=1.2)
         power_panel_2d();
 }
 

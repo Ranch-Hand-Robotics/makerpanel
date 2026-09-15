@@ -213,7 +213,8 @@ module streamdeck_panel_solid() {
 	makerpanel(
 		effective_horizontal_pitch(),
 		effective_vertical_units(),
-		thickness=panel_depth
+		thickness=panel_depth,
+		chamfer_start=1.2
 	);
 }
 

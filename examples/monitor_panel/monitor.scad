@@ -205,7 +205,8 @@ module face_keepouts() {
 
 module base_skin() {
     difference() {
-        makerpanel(horizontalPitch, verticalUnits, thickness=panel_depth);
+        makerpanel(horizontalPitch, verticalUnits, thickness=panel_depth,
+            chamfer_start=1.2);
         // Independent of base_isogrid: there is NEVER a floor in the cavity.
         translate([cavity_left, cavity_front, -eps])
             cube([cavity_right - cavity_left, cavity_rear - cavity_front,
@@ -218,14 +219,19 @@ module base_skin() {
 }
 
 module inclined_face() {
+    face_center = [(face_left + face_right) / 2, face_height / 2, 0];
+    // Center only for the bevel envelope; keep local Z=-face_thickness..0.
     face_pose() translate([0, 0, -face_thickness])
-        linear_extrude(height=face_thickness)
-            difference() {
-                rectangle([face_left, 0], [face_right, face_height]);
-                if (face_isogrid)
-                    grid_voids([face_left, 0], [face_right, face_height])
-                        face_keepouts();
-            }
+        translate(face_center)
+            panel_extrude(size=[face_width, face_height],
+                thickness=face_thickness, chamfer_start=1.2)
+                translate(-face_center)
+                    difference() {
+                        rectangle([face_left, 0], [face_right, face_height]);
+                        if (face_isogrid)
+                            grid_voids([face_left, 0],
+                                [face_right, face_height]) face_keepouts();
+                    }
 }
 
 module wedge_prism(x, width) {

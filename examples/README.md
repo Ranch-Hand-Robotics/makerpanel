@@ -44,6 +44,30 @@ not mounting panels. They and vendored `vent_panel/IsoGridScad` are excluded.
 No HP/U dimensions, mounting holes, clearances, or fabrication geometry are
 redefined by this selector convention.
 
+## Printed outside-edge chamfers
+
+Printable panel plates have a **45° inward chamfer** around their outside
+perimeter, beginning **1.2 mm above each plate's underside**. The lower
+1.2 mm retains the original footprint. A 3 mm plate therefore has a 1.8 mm
+inset at its top edge; plates at or below 1.2 mm remain square-edged.
+
+The bevel applies to the panel body, including the monitor's separate VESA
+face and the rack rail's offset ears. Component openings, mounting holes,
+and internal grid edges are not individually chamfered. Existing 2D/laser
+outputs remain unchanged. Gauges, component references, tabs, support walls,
+and the Stream Deck rear retainer do not receive panel-edge bevels.
+
+The shared `makerpanel()` API enables this with `chamfer_start=1.2`; its
+default remains square-edged for other library callers. Examples with their
+own 2D cutouts use `panel_extrude()` to intersect the straight cutout profile
+with a beveled outside envelope.
+
+Check fastener bearing material before printing: the chamfer reduces upper
+edge land. Standard 3 mm plates retain approximately 1.95 mm between a
+3.5 mm rail hole and the top perimeter (slightly below the specification's
+2 mm guideline). At 6 mm thickness the requested 4.8 mm inset can open those
+bores into the outside edge. The bevel is not silently capped to avoid this.
+
 ## Source regression checks
 
 From the repository root, run `node.exe --test examples/part-selectors.test.cjs`.
@@ -51,3 +75,7 @@ These checks cover the complete sample inventory, defaults, Customizer options,
 base dispatch, retained outputs, and source-level assembly/base alignment.
 They do not compile SCAD or certify meshes, fit, or strength. Use the URDF
 renderer for screenshot and geometry validation when available.
+
+`node.exe --test tests/panel-chamfers.test.mjs` checks chamfer adoption and
+source-derived cross-section dimensions, including thin plates and the
+nonrectangular rack perimeter.

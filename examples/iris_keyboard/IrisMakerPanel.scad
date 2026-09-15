@@ -52,7 +52,8 @@ module iris_keyboard(thickness=keyboard_panel_depth) {
 	// 3D printable panel (same XY geometry as laser version, extruded in Z)
 	difference() {
 		color("grey")
-		makerpanel(horizontalPitch, verticalUnits, thickness=thickness);
+		makerpanel(horizontalPitch, verticalUnits,
+			thickness=thickness, chamfer_start=1.2);
 
 		translate([0, 0, -epsilon])
 			linear_extrude(height=max(keyboard_cutout_depth, thickness) + 2*epsilon)

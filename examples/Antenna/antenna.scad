@@ -221,7 +221,8 @@ module antenna_maker_panel_2d() {
 
 module antenna_maker_panel() {
 	difference() {
-		linear_extrude(height=panel_depth)
+		panel_extrude([panel_width_mm(), panel_height_mm()],
+			panel_depth, chamfer_start=1.2)
 			antenna_maker_panel_2d();
 		kerberos_mount_recesses_3d();
 	}

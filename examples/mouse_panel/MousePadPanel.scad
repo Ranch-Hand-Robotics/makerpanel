@@ -37,7 +37,8 @@ module mousepad_panel_laser() {
 
 module mousepad_panel(thickness = mousepad_panel_depth) {
 	// 3D printable panel - flat mousepad surface with T-slot mounting holes
-	makerpanel(horizontalPitch, verticalUnits, thickness=thickness);
+	makerpanel(horizontalPitch, verticalUnits,
+		thickness=thickness, chamfer_start=1.2);
 }
 
 module mousepad_assembly() {

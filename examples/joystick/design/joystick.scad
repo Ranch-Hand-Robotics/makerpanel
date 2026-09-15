@@ -6,7 +6,7 @@
 // The panel includes a cutout for the joystick and optional raised shapes for the buttons for visual
 // reference when the joystick is installed. The panel can be laser cut or 3D printed, and is designed to fit within the MakerPanel system. 
 
-include <panel.scad>
+include <makerpanel/panel.scad>
 
 /* [Customization] */
 part = "assembly"; // [assembly, makerpanel, panel_2d]
@@ -96,7 +96,8 @@ module joystick_panel_2d() {
 }
 
 module joystick_panel() {
-    linear_extrude(height=panel_depth)
+    panel_extrude([hp_to_mm(effectiveHorizontalPitch), u_to_mm(verticalUnits)],
+        panel_depth, chamfer_start=1.2)
         joystick_panel_2d();
 }
 

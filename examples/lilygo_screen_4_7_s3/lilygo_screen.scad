@@ -10,7 +10,7 @@
 // the ribbon cable is routed through a cutout in the panel, and the PCB/battery is 
 // mounted to the back of the panel with double stick tape.
 
-include <panel.scad>
+include <makerpanel/panel.scad>
 
 /* [Part Selection] */
 part = "assembly"; // [assembly, lilygo_screen, lilygo_pcb, makerpanel]
@@ -29,7 +29,8 @@ ribbon_cutout_offset_y = 0; // mm vertical offset of the ribbon cutout from the 
 module lilygo_makerpanel() {
     // 3D printable panel (same XY geometry as laser version, extruded in Z)
     difference() {
-        makerpanel(horizontalPitch, verticalUnits, thickness=screen_panel_depth);
+        makerpanel(horizontalPitch, verticalUnits,
+            thickness=screen_panel_depth, chamfer_start=1.2);
 
         offset_x_effective = hp_to_mm(horizontalPitch)/2 - ribbon_cutout_w/2 - ribbon_cutout_offset_x;
         // Cutout for the ribbon cable

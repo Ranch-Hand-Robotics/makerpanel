@@ -1,6 +1,7 @@
 // 10-inch or 19-inch rack faceplate with integrated MakerRail slot rows.
 
 include <makerpanel/common.scad>
+use <makerpanel/panel.scad>
 use <makerpanel/rack.scad>
 
 /* [Part Selection] */
@@ -47,8 +48,22 @@ module rail_panel_2d() {
 }
 
 module rail_panel(thickness=panelThickness) {
-    linear_extrude(height=thickness)
-        rail_panel_2d();
+    if (is_single_rail()) {
+        // The actual offset-ear outline replaces the rectangular envelope.
+        panel_extrude(size=[rack_outer_width(), RACK_RAIL_HEIGHT],
+            thickness=thickness, chamfer_start=1.2) {
+            rail_panel_2d();
+            rack_single_rail_outline_2d(
+                outer_width=rack_outer_width(),
+                center_clearance=center_clearance()
+            );
+        }
+    } else {
+        panel_extrude(size=[rack_outer_width(),
+            u_to_mm(effective_vertical_units())],
+            thickness=thickness, chamfer_start=1.2)
+            rail_panel_2d();
+    }
 }
 
 if (part == "rail_panel_2d") {
