@@ -16,6 +16,7 @@ the shared library already defines `makerpanel()`.
 | [Measurement gauge](measure/measure.scad) | `makerpanel` | `rail`, `rack` (not implemented) |
 | [Monitor](monitor_panel/monitor.scad) | `assembly` | `assembly`, `vesa_panel`, `brace`, `brace_2d` |
 | [Mouse pad](mouse_panel/MousePadPanel.scad) | `makerpanel` | `mousepad_panel_laser`, `assembly` |
+| [Power](power_panel/PowerPanel.scad) | `makerpanel` | `panel_2d` |
 | [Prime79](prime79_panel/prime97_panel.scad) | `assembly` | `assembly`, `prime79_keyboard_laser` |
 | [Rack faceplate](rail_panel/RailPanel.scad) | `makerpanel` | `rail_panel_2d` |
 | [Stream Deck](streamdeck_panel/streamdeck_panel.scad) | `assembly` | `assembly`, `bottom` |

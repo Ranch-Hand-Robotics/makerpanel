@@ -8,20 +8,20 @@ use <IsoGridScad/isogrid.scad>
 /* [Customization] */
 horizontalPitch = 35; // [4:1:80] MakerPanel width in HP
 verticalUnits = 4; // [1:1:8] MakerPanel height in U
-inset = 10; // [2:1:30] Solid border around the vents in millimeters
+inset = 15; // [2:1:30] Solid border around the vents in millimeters
 type = "Isogrid"; // [Holes, Honeycomb, Isogrid]
 gridScale = 1; // [0.5:0.05:1.2] Vent opening scale
 fan = "None"; // [None, 40mm, 60mm, 80mm, 92mm, 120mm]
 
 /* [Finger Hole] */
-fingerHole = false;
+fingerHole = true;
 fingerHoleDiameter = 25; // [15:0.5:40] Bore diameter in millimeters
 fingerHoleAngle = 50; // [0:1:75] Degrees from the panel normal
 fingerHoleRingWidth = 3; // [0:0.5:10] Flush solid border in millimeters
 // Top-face bore center, measured inward from the right (+X) edge.
-fingerHoleXOffset = 20; // [0:0.5:400]
+fingerHoleXOffset = 30; // [0:0.5:400]
 // Top-face bore center, measured inward from the rear (+Y) edge.
-fingerHoleYOffset = 55; // [0:0.5:400]
+fingerHoleYOffset = 70; // [0:0.5:400]
 
 /* [Part Selection] */
 part = "makerpanel"; // [makerpanel, panel_2d]
@@ -29,7 +29,7 @@ part = "makerpanel"; // [makerpanel, panel_2d]
 /* [Hidden] */
 panelThickness = 3; // [1:0.5:6] Panel thickness in millimeters
 holeSpacing = 12;
-isogridTriangleSize = 15;
+isogridTriangleSize = 25;
 isogridBaseHoleSize = 5;
 basePassthrough = 0.5;
 fanMountHoleDiameter = 5;

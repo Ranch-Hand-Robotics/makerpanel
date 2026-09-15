@@ -5,10 +5,37 @@
 #include "tusb.h"
 
 // I2C defines
-// This example uses I2C0 on GPIO8 (SDA) and GPIO9 (SCL) for Qwiic expansion.
+// SparkFun Pro Micro RP2350 onboard Qwiic: SDA=16, SCL=17 (I2C0).
+// For an externally wired connector, change these to match its wiring.
 #define I2C_PORT i2c0
-#define I2C_SDA 8
-#define I2C_SCL 9
+#define I2C_SDA 16
+#define I2C_SCL 17
+
+// ADS1219: three pots plus a button, all single-ended against AGND.
+// Requires REFP=pot supply=3V3 and REFN=AGND. See ../README.md.
+#ifndef ADS1219_ENABLED
+#define ADS1219_ENABLED 1
+#endif
+#define ADS1219_ADDRESS 0x40
+#define ADS1219_X_CHANNEL 0
+#define ADS1219_Y_CHANNEL 1
+#define ADS1219_YAW_CHANNEL 2
+#define ADS1219_BUTTON_CHANNEL 3
+#define ADS1219_I2C_TIMEOUT_US 2000
+#define ADS1219_CONVERSION_TIMEOUT_US 20000
+#define ADS1219_RETRY_US 1000000
+
+// Normalized 12-bit button levels: <=25% pressed, >=75% released.
+// AIN3 needs an EXTERNAL 4.7k pull-up to 3V3; switch shorts it to GND.
+#define ADS1219_BUTTON_PRESS_RAW 1024
+#define ADS1219_BUTTON_RELEASE_RAW 3072
+
+// Dedicated NC stop contact: GPIO3 -> NC contact -> GND; 4.7k to 3V3.
+// High/open means stopped (including a broken wire). USB indication only!
+#ifndef ESTOP_ENABLED
+#define ESTOP_ENABLED 1
+#endif
+#define ESTOP_PIN 3
 
 // ADC constants
 #define ADC_MAX_READING 4095u
@@ -61,6 +88,23 @@
 #define AXIS_YAW_CENTER_RAW 2048
 #define AXIS_YAW_MAX_RAW 4095
 
+// Independent calibration for joystick 2, after scaling ADS1219 to 0..4095.
+#define ADS1219_X_MIN_RAW 0
+#define ADS1219_X_CENTER_RAW 2048
+#define ADS1219_X_MAX_RAW 4095
+#define ADS1219_X_INVERT 0
+#define ADS1219_X_DEADZONE 6
+#define ADS1219_Y_MIN_RAW 0
+#define ADS1219_Y_CENTER_RAW 2048
+#define ADS1219_Y_MAX_RAW 4095
+#define ADS1219_Y_INVERT 1
+#define ADS1219_Y_DEADZONE 6
+#define ADS1219_YAW_MIN_RAW 0
+#define ADS1219_YAW_CENTER_RAW 2048
+#define ADS1219_YAW_MAX_RAW 4095
+#define ADS1219_YAW_INVERT 0
+#define ADS1219_YAW_DEADZONE 6
+
 struct AxisConfig {
     uint gpio;
     uint input;
@@ -91,6 +135,31 @@ struct JoystickState {
     AxisState y;
     AxisState yaw;
     ButtonState button;
+};
+
+enum class AdsPhase { Reset, Start, Wait };
+
+struct Ads1219State {
+    JoystickState joystick;
+    uint16_t pending[4];
+    uint8_t channel;
+    AdsPhase phase;
+    uint64_t next_action_us;
+    uint64_t conversion_started_us;
+    bool ready;
+};
+
+static const AxisCalibration ADS1219_X_CAL = {
+    ADS1219_X_MIN_RAW, ADS1219_X_CENTER_RAW, ADS1219_X_MAX_RAW,
+    ADS1219_X_INVERT != 0, ADS1219_X_DEADZONE
+};
+static const AxisCalibration ADS1219_Y_CAL = {
+    ADS1219_Y_MIN_RAW, ADS1219_Y_CENTER_RAW, ADS1219_Y_MAX_RAW,
+    ADS1219_Y_INVERT != 0, ADS1219_Y_DEADZONE
+};
+static const AxisCalibration ADS1219_YAW_CAL = {
+    ADS1219_YAW_MIN_RAW, ADS1219_YAW_CENTER_RAW, ADS1219_YAW_MAX_RAW,
+    ADS1219_YAW_INVERT != 0, ADS1219_YAW_DEADZONE
 };
 
 static const AxisConfig AXIS_X = {AXIS_X_ADC_GPIO, AXIS_X_ADC_INPUT};
@@ -228,9 +297,9 @@ static bool read_raw_button_pressed() {
 #endif
 }
 
-static bool update_button(ButtonState *button, uint64_t now_us) {
+static bool update_button(ButtonState *button, bool raw_pressed,
+                          uint64_t now_us) {
     // Returns true when the debounced state changed.
-    bool raw_pressed = read_raw_button_pressed();
     if (raw_pressed != button->raw_pressed) {
         button->raw_pressed = raw_pressed;
         button->last_change_time_us = now_us;
@@ -251,13 +320,163 @@ static void sample_joystick(JoystickState *js) {
     update_axis_state(&js->yaw, &AXIS_YAW, &AXIS_YAW_CAL);
 }
 
-static void send_hid_report(const JoystickState *js) {
+static void init_estop(ButtonState *stop) {
+#if ESTOP_ENABLED
+    gpio_init(ESTOP_PIN);
+    gpio_set_dir(ESTOP_PIN, GPIO_IN);
+    gpio_pull_up(ESTOP_PIN);
+    // Start stopped; require a stable closed contact before clearing.
+    *stop = {true, true, time_us_64()};
+#else
+    *stop = {};
+#endif
+}
+
+static void update_estop(ButtonState *stop, uint64_t now_us) {
+#if ESTOP_ENABLED
+    bool open = gpio_get(ESTOP_PIN) != 0;
+    update_button(stop, open, now_us);
+    // Assert immediately; debounce only the return to a closed contact.
+    if (open) stop->pressed = true;
+#endif
+}
+
+static bool ads1219_write(const uint8_t *data, size_t size) {
+    return i2c_write_timeout_us(I2C_PORT, ADS1219_ADDRESS, data, size,
+                               false, ADS1219_I2C_TIMEOUT_US) == (int)size;
+}
+
+static bool ads1219_read(uint8_t command, uint8_t *data, size_t size) {
+    // Commands are latched on the final ACK; STOP then read is supported.
+    return ads1219_write(&command, 1) &&
+        i2c_read_timeout_us(I2C_PORT, ADS1219_ADDRESS, data, size,
+                           false, ADS1219_I2C_TIMEOUT_US) == (int)size;
+}
+
+static uint16_t ads1219_normalize(const uint8_t *data) {
+    uint32_t code = ((uint32_t)data[0] << 16) |
+                    ((uint32_t)data[1] << 8) | data[2];
+    // Signed 24-bit result: negative noise near ground must not wrap high.
+    if (code & 0x800000u) return 0;
+    return (uint16_t)(code >> 11); // 0..0x7fffff -> 0..4095
+}
+
+static void update_external_axis(AxisState *axis, uint16_t raw,
+                                 const AxisCalibration *cal) {
+    axis->raw = raw;
+    axis->calibrated = calibrate_raw_to_axis(raw, cal);
+    axis->filtered = smooth_axis(axis->filtered, axis->calibrated);
+}
+
+static void ads1219_commit(Ads1219State *adc, uint64_t now_us) {
+    JoystickState *js = &adc->joystick;
+    update_external_axis(&js->x, adc->pending[ADS1219_X_CHANNEL],
+                         &ADS1219_X_CAL);
+    update_external_axis(&js->y, adc->pending[ADS1219_Y_CHANNEL],
+                         &ADS1219_Y_CAL);
+    update_external_axis(&js->yaw, adc->pending[ADS1219_YAW_CHANNEL],
+                         &ADS1219_YAW_CAL);
+    uint16_t raw = adc->pending[ADS1219_BUTTON_CHANNEL];
+    bool pressed = js->button.raw_pressed;
+    if (raw <= ADS1219_BUTTON_PRESS_RAW) pressed = true;
+    if (raw >= ADS1219_BUTTON_RELEASE_RAW) pressed = false;
+    update_button(&js->button, pressed, now_us);
+    adc->ready = true;
+}
+
+static void ads1219_failed(Ads1219State *adc, uint64_t now_us) {
+    // Never leave the host driving on stale axes or a stuck button.
+    adc->joystick = {};
+    adc->ready = false;
+    adc->channel = 0;
+    adc->phase = AdsPhase::Reset;
+    adc->next_action_us = now_us + ADS1219_RETRY_US;
+}
+
+static void poll_ads1219(Ads1219State *adc, uint64_t now_us) {
+#if ADS1219_ENABLED
+    if (now_us < adc->next_action_us) return;
+
+    if (adc->phase == AdsPhase::Reset) {
+        const uint8_t reset = 0x06;
+        if (!ads1219_write(&reset, 1)) {
+            ads1219_failed(adc, now_us);
+            return;
+        }
+        adc->channel = 0;
+        adc->phase = AdsPhase::Start;
+        adc->next_action_us = time_us_64() + 1000; // RESET recovery
+        return;
+    }
+
+    if (adc->phase == AdsPhase::Start) {
+        // MUX=011..110: AIN0..3 vs AGND; gain=1; DR=1000 SPS;
+        // CM=single-shot; VREF=external. Configs: 6D,8D,AD,CD.
+        const uint8_t config[] = {
+            0x40, (uint8_t)(((adc->channel + 3u) << 5) | 0x0du)
+        };
+        const uint8_t start = 0x08;
+        if (!ads1219_write(config, sizeof(config)) ||
+            !ads1219_write(&start, 1)) {
+            ads1219_failed(adc, now_us);
+            return;
+        }
+        adc->conversion_started_us = time_us_64();
+        adc->next_action_us = adc->conversion_started_us + 1000;
+        adc->phase = AdsPhase::Wait;
+        return;
+    }
+
+    if (now_us - adc->conversion_started_us >=
+        ADS1219_CONVERSION_TIMEOUT_US) {
+        ads1219_failed(adc, now_us);
+        return;
+    }
+    uint8_t status;
+    if (!ads1219_read(0x24, &status, 1)) {
+        ads1219_failed(adc, now_us);
+        return;
+    }
+    if (!(status & 0x80u)) return; // DRDY register bit: 1 = new data
+
+    uint8_t data[3];
+    if (!ads1219_read(0x10, data, sizeof(data))) {
+        ads1219_failed(adc, now_us);
+        return;
+    }
+    adc->pending[adc->channel] = ads1219_normalize(data);
+    if (++adc->channel == 4) {
+        // Publish only a complete scan; debounce only on fresh samples.
+        ads1219_commit(adc, time_us_64());
+        adc->channel = 0;
+    }
+    adc->phase = AdsPhase::Start;
+#endif
+}
+
+static void send_hid_report(const JoystickState *js,
+                            const Ads1219State *adc,
+                            const ButtonState *stop) {
     int8_t x = (int8_t)clamp_axis_value(js->x.filtered);
     int8_t y = (int8_t)clamp_axis_value(js->y.filtered);
     int8_t rz = (int8_t)clamp_axis_value(js->yaw.filtered);
     uint32_t buttons = js->button.pressed ? 0x01u : 0u;
+    int8_t rx = 0, ry = 0, z = 0;
+    if (ADS1219_ENABLED && adc->ready) {
+        rx = (int8_t)clamp_axis_value(adc->joystick.x.filtered);
+        ry = (int8_t)clamp_axis_value(adc->joystick.y.filtered);
+        z = (int8_t)clamp_axis_value(adc->joystick.yaw.filtered);
+        if (adc->joystick.button.pressed) buttons |= 0x02u;
+    } else if (ADS1219_ENABLED) {
+        buttons |= 0x08u; // Button 4: expansion unavailable
+    }
+    if (stop->pressed) {
+        x = y = z = rz = rx = ry = 0;
+        buttons = (buttons & ~0x03u) | 0x04u; // Button 3: stop
+    }
 
-    tud_hid_gamepad_report(0, x, y, 0, rz, 0, 0, GAMEPAD_HAT_CENTERED, buttons);
+    tud_hid_gamepad_report(0, x, y, z, rz, rx, ry,
+                           GAMEPAD_HAT_CENTERED, buttons);
 }
 
 extern "C" uint16_t tud_hid_get_report_cb(uint8_t instance,
@@ -291,7 +510,10 @@ int main() {
     init_i2c_qwiic_pins();
 
     JoystickState joystick = {};
+    Ads1219State expansion = {};
+    ButtonState estop = {};
     init_button(&joystick.button);
+    init_estop(&estop);
     init_axes();
 
     tusb_init();
@@ -302,14 +524,19 @@ int main() {
         tud_task();
 
         uint64_t now_us = time_us_64();
-        update_button(&joystick.button, now_us);
+        update_button(&joystick.button, read_raw_button_pressed(), now_us);
+        update_estop(&estop, now_us);
+        poll_ads1219(&expansion, now_us);
+        // Recheck after bounded I2C operations, before sending a report.
+        now_us = time_us_64();
+        update_estop(&estop, now_us);
 
         if ((now_us - last_report_us) >= (JOYSTICK_REPORT_MS * 1000ull)) {
             last_report_us = now_us;
             sample_joystick(&joystick);
 
             if (tud_mounted() && tud_hid_ready()) {
-                send_hid_report(&joystick);
+                send_hid_report(&joystick, &expansion, &estop);
             }
         }
 

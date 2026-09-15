@@ -21,11 +21,13 @@ const samples = [
     ['measure/measure.scad', 'makerpanel', ['rail', 'rack'],
         'panel_ruler', null],
     ['monitor_panel/monitor.scad', 'assembly',
-        ['assembly', 'vesa_panel', 'brace', 'brace_2d'],
+        ['assembly', 'vesa_panel'],
         'maker_panel', 'assembly'],
     ['mouse_panel/MousePadPanel.scad', 'makerpanel',
         ['mousepad_panel_laser', 'assembly'],
         'mousepad_panel', 'mousepad_assembly'],
+    ['power_panel/PowerPanel.scad', 'makerpanel', ['panel_2d'],
+        'power_panel', null],
     ['prime79_panel/prime97_panel.scad', 'assembly',
         ['assembly', 'prime79_keyboard_laser'],
         'prime79_keyboard', 'prime79_keyboard_assembly'],
@@ -144,15 +146,54 @@ test('trackball base has no assembly-only offset or rotation', () => {
     const body = block(source, /module trackball_assembly\(\)\s*\{/);
     assert.equal(body.replace(/\s+/g, ' '),
         'trackball_panel(); '
-        + '%translate([0, 0, -footprint_preview_thickness]) '
+        + '%translate([0, trackballOffsetY, -footprint_preview_thickness]) '
         + 'linear_extrude(height = footprint_preview_thickness) '
         + 'trackball_footprint_2d();');
 });
 
-test('monitor retains scripted fabrication and preview outputs', () => {
+test('trackball opening and module bolts move together within a fixed panel',
+    () => {
+        const source = uncomment(read('trackball_panel/trackball_panel.scad'));
+        const scalar = name => Number(source.match(
+            new RegExp(`\\b${name}\\s*=\\s*(-?[\\d.]+);`))[1]);
+        assert.equal(scalar('openingWidth'), 54);
+        assert.equal(scalar('openingInset'), 3);
+        assert.equal(scalar('trackballOffsetY'), 20);
+        assert.match(source, new RegExp(
+            'opening_size\\s*=\\s*\\[openingWidth,\\s*'
+            + 'trackball_hole_pitch\\.y\\s*-\\s*2\\s*\\*\\s*openingInset\\]'));
+        const pitch = source.match(
+            /trackball_hole_pitch\s*=\s*\[([\d.]+),\s*([\d.]+)\]/);
+        const rowPitch = Number(pitch[2]);
+        const height = rowPitch - 2 * scalar('openingInset');
+        const offset = scalar('trackballOffsetY');
+        const close = (actual, expected) =>
+            assert.ok(Math.abs(actual - expected) < 1e-9);
+        close(height, 80.8);
+        close(offset - height / 2, -20.4);
+        close(offset + height / 2, 60.4);
+        for (const sign of [-1, 1]) {
+            const rowY = offset + sign * rowPitch / 2;
+            const edgeY = offset + sign * height / 2;
+            close(Math.abs(rowY - edgeY), 3);
+            close(Math.abs(rowY - edgeY)
+                - scalar('trackball_hole_diameter') / 2, 1.9);
+        }
+        assert.match(source,
+            /trackball_offset\s*=\s*\[0,\s*trackballOffsetY\]/);
+        const panel = block(source, /module trackball_panel_2d\(\)\s*\{/);
+        assert.equal(panel.replace(/\s+/g, ' '),
+            'validate_trackball_panel() difference() { '
+            + 'makerpanel_2d(horizontalPitch, verticalUnits); '
+            + 'translate(trackball_offset) { trackball_mount_holes_2d(); '
+            + 'square(opening_size, center = true); } }');
+        assert.equal(branch(source, 'footprint'), 'trackball_footprint_2d();');
+    });
+
+test('monitor exposes separate fixed base and VESA plate plus preview', () => {
     const source = uncomment(read('monitor_panel/monitor.scad'));
-    for (const selector of ['poses', 'slider_bolt', 'slider_washer',
-        'slider_locknut', 'pivot_washer', 'rear_pad', 'stow_pad']) {
-        assert.ok(branch(source, selector).length > 0);
-    }
+    assert.deepEqual([...source.matchAll(/part == "([^"]+)"/g)]
+        .map(match => match[1]), ['assembly', 'makerpanel', 'vesa_panel']);
+    assert.doesNotMatch(source,
+        /\b(?:deployment|slider|brace|clevis|magnet|stow)\w*\b/);
 });

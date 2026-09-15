@@ -180,6 +180,7 @@ class BuiltInCatalogPartsTests(unittest.TestCase):
                 'Antenna', 'iris_keyboard', 'joystick',
                 'lilygo_screen_4_7_s3', 'lilygo_t-encoder-pro', 'measure',
                 'monitor_panel', 'mouse_panel', 'prime79_panel', 'rail_panel',
+                'power_panel',
                 'streamdeck_panel', 'switch_panel', 'trackball_panel', 'vent_panel',
             }
             self.assertEqual(set(entries), mounting_samples | {'keyboard'})
@@ -190,6 +191,13 @@ class BuiltInCatalogPartsTests(unittest.TestCase):
             self.assertNotIn('makerpanel', entries['keyboard']['scadParts'])
             self.assertIn('mx_switch_3d', entries['keyboard']['scadParts'])
             self.assertIn('assembly', entries['monitor_panel']['scadParts'])
+            power = entries['power_panel']
+            self.assertEqual(power['category'], 'Power')
+            self.assertEqual(power['horizontalPitch'], 20)
+            self.assertEqual(power['verticalUnits'], 1)
+            self.assertEqual(power['scadFile'],
+                             'examples/power_panel/PowerPanel.scad')
+            self.assertEqual(power['scadParts'], ['makerpanel', 'panel_2d'])
             encoder = entries['lilygo_t-encoder-pro']
             self.assertEqual(encoder['scadFile'],
                              'examples/lilygo_t-encoder-pro/design/'

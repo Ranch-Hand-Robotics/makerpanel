@@ -46,15 +46,20 @@ and a rounded rectangle rather than reproducing those small curve deviations.
 Open `trackball_panel.scad`. Includes are relative to this example, so no
 additional OpenSCAD library search path is required.
 
-- Default: **12 HP × 3U**, **60.96 × 133.35 × 3 mm**.
+- Default: **18 HP × 4U**, **91.44 × 177.8 × 3 mm**.
 - `horizontalPitch` and `verticalUnits`: panel dimensions using the library.
-  A compact **12 HP × 2.5U** option is 60.96 × 111.125 mm.
+  Smaller panels may require reducing the trackball's upward offset.
 - `panelThickness`: plate thickness; select suitable material and rigidity.
 - `holeClearance`: additional diameter for the four module holes only.
   Default zero preserves the PDF's 2.2 mm. It does not move their centers.
-- `openingInset`: distance inward from each mounting-hole center line to
-  the corresponding rectangular opening edge. Default **5 mm** produces a
-  centered **40.8 × 76.8 mm** opening, through the full panel thickness.
+- `openingWidth`: rectangular opening width, default **54 mm**.
+- `openingInset`: distance from the top and bottom bolt-row centerlines
+  inward to the opening edges. Default **3 mm** gives an **80.8 mm** height.
+- `trackballOffsetY`: moves the opening, four module mounting holes, and
+  assembly footprint **20 mm toward the panel top (+Y)** by default.
+  The panel outline and rail mounting holes remain fixed.
+  The **54 × 80.8 mm** through-opening spans X = −27…27 mm and
+  Y = −20.4…60.4 mm; the module bolt rows are at Y = −23.4 and 63.4 mm.
 - `part = "makerpanel"`: 3D mounting/measuring plate, with eight mounting holes
   and the rectangular through-opening.
 - `part = "panel_2d"`: the same profile for SVG/DXF laser-cutting export.
@@ -66,15 +71,17 @@ additional OpenSCAD library search path is required.
 Assertions reject panel sizes that leave less than 2 mm around the module,
 place its holes too close to a panel edge or rail hole, or obstruct rail holes
 with the module footprint. Actual screw-head/tool access depends on hardware.
-Opening checks require positive dimensions and keep each opening edge at
-least 2 mm inward from the corresponding mounting-hole edge.
+Opening checks require positive dimensions and material between the opening
+and the top/bottom bolt holes. The default 3 mm centerline setback leaves
+**1.9 mm** from the opening to each 2.2 mm hole edge; check screw-head support.
 
 ## Mounting assumptions
 
 The module mounts **under** the panel, using its four corner mounting points.
 The rectangular opening exposes its center while retaining all four mounts.
-Its 5 mm inset is measured from hole centers, not the exterior module outline
-or hole edges; this opening is a design choice, not a feature from the PDF.
+Its 3 mm vertical inset is measured from bolt-row centers, not the exterior
+module outline or hole edges. The 54 mm width is independent of the bolt
+spacing; this opening is a design choice, not a feature from the PDF.
 The full footprint is not subtracted: doing so would remove the supporting
 material at those mounting points. Check actual ball/housing clearance through
 the opening: the bottom drawing does not establish the upper housing profile.

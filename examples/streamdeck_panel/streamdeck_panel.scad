@@ -11,7 +11,7 @@ include <makerpanel/panel.scad>
 
 /* [Customization] */
 part = "assembly"; // [assembly, makerpanel, bottom]
-verticalUnits = 3.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
+verticalUnits = 2.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
 horizontalPitch = 43; // [16:1:80] Panel width (HP); adds 4HP flange margin
 tilt_angle = 15; // [0:1:25] positive raises the +Y edge
 module_type = "15_key"; // [6_key, 15_key, 32_key]
@@ -26,6 +26,7 @@ retention_lip = 2.5; // mm overlap onto device front perimeter
 rear_plate_depth = 3; // mm along the device axis
 rear_support_width = 6; // mm rear bearing rim around the cable opening
 rear_seat_clearance = 0.2; // mm axial play; adjust for a thin compliant pad
+rear_seat_recess = 3; // mm forward into the sleeve; bottom retainer only
 rear_insert_clearance = 0.3; // mm per side where retainer enters the sleeve
 rear_flange_width = 9; // mm beyond each side of the sleeve
 rear_flange_depth = 3; // mm; flange mating face is always world Z=0
@@ -36,7 +37,8 @@ rear_tab_length = 5; // along each left/right edge (Y)
 rear_tab_width = 2; // inward from the device outer surface (X)
 rear_tab_drop = 5; // behind the device rear face (-Z)
 rear_tab_end_inset = 10; // tab centers from the top/bottom device edges
-rear_tab_clearance = 0.3; // extra clearance on each face of the tab
+rear_tab_clearance = 0.3; // axial clearance at each end of the tab relief
+rear_tab_side_clearance = 2; // generous X/Y clearance on each tab face
 epsilon = 0.01;
 
 // Provisional device dimensions; no scale is inferred from the reference DXF.
@@ -89,7 +91,8 @@ function streamdeck_cut_span() =
 	hp_to_mm(effective_horizontal_pitch())
 	+ u_to_mm(effective_vertical_units())
 	+ module_depth() + streamdeck_seat_z() + rear_plate_depth;
-function streamdeck_rear_seat_z() = -module_depth() - rear_seat_clearance;
+function streamdeck_rear_seat_z() =
+	-module_depth() - rear_seat_clearance + rear_seat_recess;
 function streamdeck_bolt_x() =
 	streamdeck_outer_width()/2 + rear_flange_width/2;
 function streamdeck_bolt_y_offset() =
@@ -278,12 +281,13 @@ module streamdeck_rear_tab_clearance() {
 			translate([
 				side*(module_width()/2 - rear_tab_width/2),
 				end*(module_height()/2 - rear_tab_end_inset),
-				-module_depth() - rear_tab_drop/2
+				// Keep the old rear extent and open through the recessed seat.
+				-module_depth() + (rear_seat_recess - rear_tab_drop)/2
 			])
 				cube([
-					rear_tab_width + 2*rear_tab_clearance,
-					rear_tab_length + 2*rear_tab_clearance,
-					rear_tab_drop + 2*rear_tab_clearance
+					rear_tab_width + 2*rear_tab_side_clearance,
+					rear_tab_length + 2*rear_tab_side_clearance,
+					rear_tab_drop + rear_seat_recess + 2*rear_tab_clearance
 				], center=true);
 }
 
