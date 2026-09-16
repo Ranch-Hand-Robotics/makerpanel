@@ -22,6 +22,16 @@ or certify a safety circuit.
 
 ## USB firmware and pin assignments
 
+[Open the annotated wiring image](images/ads1219-wiring.png)
+([editable SVG](images/ads1219-wiring.svg)).
+
+![Both joystick connections, ADS1219 pads, button pull-up and capacitor](images/ads1219-wiring.png)
+
+The image uses a full-board photo of the SparkFun ADS1219 so its 3V3 and
+GND pads are visible. The two header rows are **not duplicate inputs**:
+use the outer row for AIN0..AIN3 and REFP/REFN. See
+[image attribution](images/README.md).
+
 `joystick/joystick.cpp` targets the **SparkFun Pro Micro RP2350** and
 supports two of the reference joysticks (three 10k potentiometers and one
 normally open top button each). The advertised fourth "axis" is a button,

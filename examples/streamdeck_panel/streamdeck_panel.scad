@@ -12,7 +12,7 @@ include <makerpanel/panel.scad>
 /* [Customization] */
 part = "assembly"; // [assembly, makerpanel, bottom]
 verticalUnits = 2.5; // [2:0.5:8] Panel height (U); adds 0.5U flange margin
-horizontalPitch = 43; // [16:1:80] Panel width (HP); adds 4HP flange margin
+horizontalPitch = 35; // [16:1:80] Panel width (HP); adds 4HP flange margin
 tilt_angle = 15; // [0:1:25] positive raises the +Y edge
 module_type = "15_key"; // [6_key, 15_key, 32_key]
 
