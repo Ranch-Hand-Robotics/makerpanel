@@ -1,5 +1,5 @@
 // PowerPanel
-// Adapted from deck_nomad/designs/cyberdeck.scad rear_interface geometry.
+// Adapted from rear-interface connector geometry; source credited in README.md.
 // SPDX-License-Identifier: CC-BY-NC-SA-4.0
 // See README.md for attribution, changes, and fabrication notes.
 

@@ -41,7 +41,7 @@ tab_length = 12;
 tab_depth = 8;
 tab_clearance = 0.3;
 socket_wall = 2;
-// McMaster-Carr 95893A189; adapted from cyberdeck bottom-skin/frame holes.
+// McMaster-Carr 95893A189 screw-for-plastic dimensions for the side joints.
 screw_hole_diameter = 2.5;
 screw_hole_taper_depth = 1.8;
 screw_hole_thread_depth = 7;
@@ -110,12 +110,12 @@ driver_reach = panel_height + monitor_height + face_height + face_origin_z;
 tab_rows = [cavity_front + (cavity_rear - cavity_front) * 0.58,
     cavity_front + (cavity_rear - cavity_front) * 0.85];
 socket_width = tab_thickness + 2 * tab_clearance + socket_wall;
-// Match cyberdeck_screw_holes_perimeter: straight receiving bore.
+// Straight receiving bore in each tab, with a blind end.
 side_pilot_depth = max(0, screw_hole_taper_depth)
     + max(0, screw_hole_thread_depth);
 side_clearance_d = screw_hole_diameter + side_screw_thread_clearance;
 side_head_d = screw_head_diameter + side_screw_head_clearance;
-// Match bottom_skin_screw_holes_3d: depth-driven cone, limited to wall.
+// Depth-driven head-entry cone, limited to the wedge wall.
 side_taper_h = min(max(0, screw_hole_taper_depth
     + side_screw_head_recess_extra), max(0, wall_thickness));
 
@@ -286,7 +286,7 @@ module side_screw_pose(side, y, inset=0) {
 }
 
 module side_wall_screw_holes() {
-    // Adapted from cyberdeck bottom_skin_screw_holes_3d, rotated sideways.
+    // Horizontal wall clearance bores with outward-facing tapered entries.
     // Clearance belongs only in the wedge wall, never in the receiving tab.
     for (side = [-1, 1], y = tab_rows)
         side_screw_pose(side, y) {

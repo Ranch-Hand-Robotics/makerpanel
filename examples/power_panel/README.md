@@ -3,16 +3,16 @@ title: Power Panel
 category: Power
 description: >-
   MakerPanel with selectable paired powerCON, IEC C14, or keyed Anderson
-  Powerpole cutouts, adapted from the Nomad rear interface.
+  Powerpole cutouts, adapted from rear-interface connector geometry.
 ---
 
 # Power Panel
 
-[PowerPanel.scad](PowerPanel.scad) adapts the `rear_interface` connector
-designs from `deck_nomad/designs/cyberdeck.scad` into a flat MakerPanel.
+[PowerPanel.scad](PowerPanel.scad) adapts rear-interface connector designs
+into a flat MakerPanel; see the source credit below.
 It follows the [vent panel](../vent_panel/README.md) example structure and
 uses the shared MakerPanel outline and mounting holes. No deck geometry,
-rear rail, or dependency on the `deck_nomad` checkout is included.
+rear rail, or dependency on an external deck checkout is included.
 
 ## Customization
 
@@ -60,8 +60,8 @@ retention; assess retention and electrical safety for the intended use.
 
 ## Attribution and license
 
-Connector geometry is adapted from Ranch Hand Robotics' [Nomad cyberdeck
-project](https://github.com/Ranch-Hand-Robotics/deck_nomad), specifically
+Connector geometry is adapted from Ranch Hand Robotics'
+[source project](https://github.com/Ranch-Hand-Robotics/deck_nomad), specifically
 the `designs/cyberdeck.scad` rear-interface modules. Changes replace the deck's
 rear wall and placement transforms with an HP/U MakerPanel and expose
 the extracted dimensions through the Customizer.

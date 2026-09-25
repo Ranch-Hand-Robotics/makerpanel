@@ -389,7 +389,7 @@ test('separate parts use outside clearance and blind receiving pilots', () => {
     assert.match(source, /if \(part == "vesa_panel"\)\s*\{\s*vesa_panel\(\);/);
 });
 
-test('cyberdeck hole dimensions retain clearance and blind pilot depth', () => {
+test('side-joint hole dimensions retain clearance and blind pilot depth', () => {
     const c = dimensions();
     near(c.screw_hole_diameter, 2.5);
     near(c.screw_hole_taper_depth, 1.8);

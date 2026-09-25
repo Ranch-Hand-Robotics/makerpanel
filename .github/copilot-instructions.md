@@ -42,12 +42,6 @@ mkdocs build  # Generates static site in ./site/
 
 ## Project-Specific Conventions
 
-### Cyberdeck host interfaces
-
-For deck Customizer, printer, rail-material, and export changes, read
-[shared cyberdeck conventions](../docs/cyberdeck-conventions.md).
-Consuming decks should link to this canonical guide, not copy its rules.
-
 ### Specification & Standards
 
 The **Makerpanel Specification** defines universal mechanical/electrical standards:

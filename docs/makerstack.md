@@ -17,8 +17,8 @@ manufacturing-ready claim is implied.
    An optional bonded metal top reinforces, rather than replaces, the printed
    slotted backing. Upper supports include columns; the base includes feet.
   Loads between tiers pass through supports and columns, not loose panels.
-- **Hard Case Stack** combines MakerStack with case-conforming adapters
-  and peripheral bridges. It does not redefine the panel interface.
+- **Case adapters** can combine MakerStack with case-conforming supports
+   and peripheral bridges without redefining the panel interface.
 
 Multiple panel rows in one plane are not multiple stack tiers. Stacking
 also does not imply telescoping, collapse, or independent middle-tier removal.
@@ -26,8 +26,7 @@ The implemented standalone arrangement uses aligned, equal-footprint tiers.
 
 ## Quick start
 
-Open `makerpanel/makerstack.scad` in the MakerPanel repository. In the
-Riptide checkout, it is `designs/makerpanel/makerpanel/makerstack.scad`.
+Open `makerpanel/makerstack.scad` in the MakerPanel repository.
 See [OpenSCAD models](openscad.md) for general modeling and export guidance.
 Keep `common.scad`, `rails.scad`, and `panel.scad` alongside the entrypoint.
 
@@ -375,10 +374,10 @@ Inner screw heads pass through rail slots and 6.5 mm floor access holes;
 outer screws need unobstructed access beside the frame.
 The bonded variant has unperforated pads; upper tiers remain removable.
 
-Hard Case Stack instead uses a low case-conforming base without these
-outboard feet and merges peripheral bridges into upper supports. Its case
-records, first-interval options, and export datums belong to that adapter,
-not this standalone entrypoint. In Riptide, see `docs/hard_case_stack.md`.
+An application-specific case adapter can use a low case-conforming base
+without outboard feet and merge peripheral bridges into upper supports.
+Its case records, first-interval options, and export datums belong to the
+application, not this standalone entrypoint.
 Putting ordinary feet inside a case does not make them contour-conforming.
 Wall clearance is not a fastening method or proof of lateral support.
 

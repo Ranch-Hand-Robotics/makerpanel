@@ -34,7 +34,7 @@ layer_pitch_u = 1; // [1:0.5:3]
 rail_metal_thickness = 0; // [0, 1, 1.5, 2]
 
 /* [Under-rail nut channel] */
-// Rounded U-profile adapted from Nomad's t_slot_channel_profile_2d().
+// Rounded U-profile for the local under-rail nut channel.
 // Width/depth/radius describe the cavity, not a guaranteed hardware fit.
 nut_channel_width = 11;
 nut_channel_depth = 7;
@@ -122,7 +122,7 @@ function makerstack_rail_total_t(full_t = 3, metal_t = 0,
 	max(0, full_t, max(0, metal_t) + max(0, printed_min_t));
 
 // Cross-section coordinates: X across the rail, Y downward from its back.
-// Like Nomad: straight opening, rounded bottom corners, optional flat floor.
+// Straight opening, rounded bottom corners, optional flat floor.
 // A radius of width/2 gives a semicircular bottom if depth accommodates it.
 function makerstack_nut_channel_profile(width = nut_channel_width,
 	depth = nut_channel_depth, radius = nut_channel_radius) =

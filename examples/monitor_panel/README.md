@@ -156,24 +156,23 @@ suitable. In particular, narrow panels and high screw rows need redesign.
 ### Outside screw geometry
 
 The four side joints use the supplied **McMaster-Carr 95893A189** screw-for-
-plastic dimensions, adapted from `deck_nomad/designs/cyberdeck.scad`:
+plastic dimensions:
 
-- `bottom_skin_screw_holes_3d`: the wedge wall has a **5.45 mm to 2.75 mm
+- The wedge wall has a **5.45 mm to 2.75 mm
   tapered entry, 2.2 mm deep**, followed by clearance through the rest of
   the 4 mm wall. Both entries face outward.
-- `cyberdeck_screw_holes_perimeter`: the receiving tab has a **straight
+- The receiving tab has a **straight
   2.5 mm blind pilot, 8.8 mm deep** (1.8 + 7), not a head recess or an
   enlarged clearance bore. The 11 mm tab leaves 2.2 mm of closed-end material.
-- As in those active cyberdeck cutters, the cone is specified by diameters
-  and depth. The cyberdeck's `screw_hole_taper_angle` is unused there; this
-  is **not an exact 90° countersink**. Its path inset and spacing controls
-  do not apply to this four-tab pattern and are not imported.
+- The cone is specified by diameters and depth, not an angle parameter;
+  this is **not an exact 90° countersink**. Local tab positions define
+  this four-tab pattern without external path inset or spacing controls.
 
 The tabs and sockets grow inward only. No nuts or threaded inserts are
 needed. The original VESA and rail fastening holes are unchanged. The model
 uses the supplied dimensions, not independently verified supplier data:
 check actual screw length, thread diameter, head fit, and printed pilot fit.
-The 0.25 mm clearance increment is inherited from the deck; increase it if
+The wall-hole diameter includes a 0.25 mm clearance increment; increase it if
 the screw threads do not pass freely through the wedge wall.
 
 ### Assembly order

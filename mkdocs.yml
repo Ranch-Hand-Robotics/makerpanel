@@ -43,7 +43,6 @@ not_in_nav: |
   openscad.md
   freecad.md
   fusion360.md
-  cyberdeck-conventions.md
 
 hooks:
   - .github/hooks.py

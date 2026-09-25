@@ -202,7 +202,7 @@
       "horizontalPitch": 20.0,
       "verticalUnits": 1.0,
       "contributor": "Ranch Hand Robotics",
-      "description": "MakerPanel with selectable paired powerCON, IEC C14, or keyed Anderson Powerpole cutouts, adapted from the Nomad rear interface.",
+      "description": "MakerPanel with selectable paired powerCON, IEC C14, or keyed Anderson Powerpole cutouts, adapted from rear-interface connector geometry.",
       "thumbnail": "images/makerpanel.png",
       "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/power_panel",
       "buy_url": "",
