@@ -39,13 +39,17 @@ To view the documentation locally:
 python -m pip install -r requirements.txt
 
 # Serve locally
-python -m mkdocs serve
+npm run dev
 
 # Build static site
 python -m mkdocs build --strict
 ```
 
-Open the local address printed by MkDocs.
+Open the local address printed by MkDocs (normally `http://127.0.0.1:8000`).
+`npm run dev` builds the site, serves it with live reload, and watches the
+documentation and custom theme. It uses the Python dependencies installed
+above; thumbnail generation remains a separate step. Pass server options with
+`npm run dev -- --dev-addr 127.0.0.1:8001` to use a different port.
 
 ### Working on the website
 
@@ -118,7 +122,7 @@ out submodules (`git submodule update --init --recursive`). Then run:
     `thumbnails.config.json`.
 4. `npm run thumbnails` syncs the catalog through the existing MkDocs hook and
     generates both light and dark 800×520 PNGs.
-5. `python -m mkdocs serve` previews the result, or `npm run build` generates
+5. `npm run dev` previews the result, or `npm run build` generates
     thumbnails and builds the strict production site.
 
 To use your own WASM build instead of downloading one, pass its directory:

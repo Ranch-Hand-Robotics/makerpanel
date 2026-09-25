@@ -11,6 +11,7 @@ nav:
   - Home: index.md
   - Explore panels: gallery.md
   - The standard: specification.md
+  - MakerStack: makerstack.md
   - Start building: create-panel.md
   - About: about.md
 
@@ -42,6 +43,7 @@ not_in_nav: |
   openscad.md
   freecad.md
   fusion360.md
+  cyberdeck-conventions.md
 
 hooks:
   - .github/hooks.py

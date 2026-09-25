@@ -130,6 +130,12 @@ control_panel();
 | `makerpanel/rails.scad` | MakerRail profiles and extrusions |
 | `makerpanel/rack.scad` | 10-inch, 19-inch, and custom rack geometry |
 
+For vertically stacked MakerRail hosts, see the
+[MakerStack guide](makerstack.md).
+It covers reusable flat MakerPanels, tier spacing, top-down fastener access,
+and the `makerpanel/makerstack.scad` configuration and exports. Check equipment
+clearances and keep the driver paths accessible when planning each tier.
+
 Browse the repository's [`examples/`](https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples)
 directory for complete designs with Customizer controls and part selectors.
 

@@ -4,6 +4,7 @@
   "type": "module",
   "engines": { "node": ">=22" },
   "scripts": {
+    "dev": "python -m mkdocs serve --watch theme",
     "catalog": "python -c \"import runpy; runpy.run_path('.github/hooks.py')['sync_examples_into_gallery_json']()\"",
     "thumbnails:setup": "node scripts/thumbnails/setup.mjs",
     "thumbnails": "npm run catalog && node scripts/thumbnails/generate.mjs",
