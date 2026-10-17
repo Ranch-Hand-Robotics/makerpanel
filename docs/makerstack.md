@@ -15,7 +15,7 @@ manufacturing-ready claim is implied.
   Its flat through-slots are not an aluminum extrusion's undercut channel.
 - **MakerStack** merges the slotted rails into a printed perimeter support.
    An optional bonded metal top reinforces, rather than replaces, the printed
-   slotted backing. Upper supports include columns; the base includes feet.
+   slotted backing. Upper supports include columns; the base sits flat.
   Loads between tiers pass through supports and columns, not loose panels.
 - **Case adapters** can combine MakerStack with case-conforming supports
    and peripheral bridges without redefining the panel interface.
@@ -35,7 +35,7 @@ Keep `common.scad`, `rails.scad`, and `panel.scad` alongside the entrypoint.
    saved Customizer values may override them.
 2. Select `panels="none"` to inspect the host, or `panels="top"` to show
    the sample 16HP panel. Sample panels are not equipment-clearance checks.
-3. Choose `foot_style="screw"` or `"bond"` for the mounting surface.
+3. Choose `base_stance="flat"`, `"bumper"`, or `"screw"` for the base.
    Decide whether the lowest channels should remain open underneath.
 4. Inspect `part="joint"` with hardware and driver envelopes visible.
    Check the real screw, nut, and driver before committing to full frames.
@@ -71,8 +71,8 @@ is that span minus one nominal rail width: `panel_height_u * U - 11`.
 | Support and cap strip width | 15 |
 | Ring outside, X by Y | 258.84 by 137.35 |
 | Central opening, X by Y | 228.84 by 107.35 |
-| Complete base width, including feet | 275.84 |
-| Base seating plane above mounting surface | 25 |
+| Complete base width, no outboard features | 258.84 |
+| Base seating plane above mounting surface | 15 |
 | Upper column shoulder height | 29.45 |
 | Seating-plane interval, 1U | 44.45 |
 
@@ -84,7 +84,7 @@ The cap and support share the same inner and outer ring outlines.
 ### Printed rails and optional metal
 
 The default rail is fully printed: the slotted top occupies Z=-3 to 0 and
-is unioned with its support ring and feet or columns as one physical part.
+is unioned with its support ring and columns as one physical part.
 Nut-channel cutters apply only below the backing, preserving slot lips and
 ribs. The two printed regions share their exact face, without overlap shims.
 
@@ -143,8 +143,8 @@ and supports together after updates; recheck panel-hole versus rib alignment.
 `layer_pitch_u * U` is the Z distance between corresponding seating planes.
 Panel span along Y and tier pitch along Z are independent dimensions.
 The standalone seating height for zero-based tier `i` is
-`foot_seat_height + frame_depth + i * layer_pitch_u * U`.
-At the defaults, the two planes are Z=25 and Z=69.45.
+`frame_depth + i * layer_pitch_u * U`.
+At the defaults, the two planes are Z=15 and Z=59.45.
 
 Where equipment footprints overlap, available clearance is `P - a - b`:
 `P` is pitch, `a` is intrusion above the lower plane, and `b` is intrusion
@@ -172,7 +172,7 @@ controls and shared constants rather than separate configuration choices.
 | `explode_gap` | 12 | Separation used by `exploded` |
 | `show_hardware` | `true` | Illustrative joint screws and nuts |
 | `show_driver` | `true` | Driver envelope in `joint` only |
-| `base_support` | `false` | Footed variant for `support` output |
+| `base_support` | `false` | Base variant for `support` output |
 | `frame_width_hp` | 48 | X rail-center spacing in HP |
 | `panel_height_u` | 3 | Outer panel Y span in U |
 | `layers` | 2 | Tier count including base; floored, minimum 1 |
@@ -207,7 +207,7 @@ internally to cavity depth and half-width; that does not establish fit.
 Key depth is `T_SLOT_HEIGHT - 2 * fit_clearance`, or 6.4 mm.
 Keep useful floor, wall, and screw-seat material when customizing.
 
-### Hardware envelopes and base feet
+### Hardware envelopes and base stance
 
 | Parameter | Default | Purpose |
 | --- | --- | --- |
@@ -217,11 +217,35 @@ Keep useful floor, wall, and screw-seat material when customizing.
 | `nut_length` / `nut_width` / `nut_thickness` | 5 / 8 / 2 | Nut envelope |
 | `nut_guide_length` | 8 | Local anti-rotation guide length |
 | `driver_diameter` / `driver_reach` | 4 / 60 | Display-only tool envelope |
-| `foot_style` | `"screw"` | `screw` or unperforated `bond` pad |
-| `foot_width` / `foot_thickness` | 32 / 4 | Pad X span and thickness |
-| `foot_seat_height` | 10 | Surface to support-ring underside |
-| `foot_hole_diameter` / `foot_hole_spacing` | 4.5 / 22 | Flange holes |
-| `foot_access_diameter` | 6.5 | Inner screw-head access through floor |
+| `base_stance` | `"flat"` | `flat`, `bumper`, or `screw` underside |
+| `bumper_diameter` / `bumper_depth` | 12 / 1.2 | Stick-on foot recess |
+| `mount_hole_diameter` | 4.5 | Screw-down hole through the rail floor |
+| `mount_hole_inset` | 16 | Hole inset from each corner along X |
+
+The base has no pads, stems, or outboard tabs: its ring underside is the
+whole sitting surface. `screw` heads land inside the nut channel and are
+driven through the rail slot above, so they must clear the 6.9 mm opening.
+Screw-down bases keep a local floor saddle under each mount hole, even with
+`base_open_channels=true`.
+
+### Base mounting grid
+
+| Parameter | Default | Purpose |
+| --- | --- | --- |
+| `base_grid` | `false` | Plate closing the lowest tier's bottom opening |
+| `base_grid_thickness` | 3 | Plate thickness, flush with the ring underside |
+| `base_grid_pitch` | 12.7 | Hole pitch; 0.25/0.5/1 in or 10/20/25 mm |
+| `base_grid_hole_diameter` | 3.4 | Through hole for standoff screws |
+| `base_grid_margin` | 6 | Border between outer holes and the ring |
+| `base_grid_sbc` | `"none"` | Jetson Nano, Raspberry Pi, LattePanda, or all |
+| `base_grid_standoff_height` | 6 | Printed pillar height above the plate |
+| `base_grid_standoff_diameter` | 7 | Pillar outside diameter |
+| `base_grid_standoff_relief` | 0.4 | Pilot bore = board screw diameter minus this |
+
+Board patterns are centered on the plate and grid holes are suppressed
+around each pillar. Verify any pattern against the exact board revision.
+Pitches below 0.25 in are omitted: a 3.4 mm hole leaves no usable web at
+0.1 in centers, and standoff bodies cannot land on adjacent holes anyway.
 
 The nut envelope is not a specified commercial part. External nut fit and
 thread size are separate requirements. Do not treat M3, M5, and M6 hardware
@@ -235,13 +259,12 @@ Changing a displayed screw envelope does not resize the independent bore.
 | `assembly` | Complete stack, optional sample panels and hardware |
 | `exploded` | Separated assembly for understanding the part relationships |
 | `frame` | Upper printed rail/support with optional metal reinforcement |
-| `base` | Footed printed rail/support with optional metal reinforcement |
-| `support` | One print including rails; `base_support` selects feet/columns |
+| `base` | Base printed rail/support with optional metal reinforcement |
+| `support` | One print including rails; `base_support` selects base/upper |
 | `top` | Optional metal outline, matching slots, for SVG/DXF export |
 | `joint` | Actual two-tier joint cutaway with optional hardware and driver |
 | `section` | 40 mm ordinary rail/channel inspection cutaway |
 | `column` | Manual selector: standalone fit coupon, not a detachable post |
-| `foot` | Manual selector: foot coupon, not a bolt-on production foot |
 | `parts` | Manual selector: sample frame and coupons, not a complete kit |
 
 Print one base support and `layers - 1` upper supports. Each includes its
@@ -338,8 +361,8 @@ thickness, which is not included in the modeled stack.
 
 1. Test the hardware and full driver path in the integral printed rails.
    If using metal reinforcement, bond it and let it cure before loading.
-2. Secure the footed base to its substrate. Keep inside and outside flange
-   screw paths accessible, or qualify the selected base-pad adhesive.
+2. Secure the base to its substrate with `base_stance="screw"`, driving
+   each mount screw through the rail slot above its hole.
 3. Insert each lower-tier nut lengthwise through a slot beside its guide.
    Rotate it across the slot in the wider pocket, then slide into the guide.
    A point 9.5 mm inward along X from the post axis is the default loading
@@ -357,10 +380,10 @@ Disassemble top-down. Remove loose nuts from each newly exposed rail before
 using its shafts to reach the next screws. A loaded middle tier cannot be
 removed independently. Support equipment and disconnect cables as needed.
 
-## Open channels, feet, and case adapters
+## Open channels, base stance, and case adapters
 
 The lowest tier defaults to open-bottom channel spans, retaining local
-14 mm foot/nut saddles. Upper tiers retain their rounded-pocket floors.
+14 mm post/nut saddles. Upper tiers retain their rounded-pocket floors.
 Set `base_open_channels=false` for closed lowest pockets. Top-slot ribs
 remain in either version; an attached screw cannot slide through those ribs.
 
@@ -368,17 +391,17 @@ Open spans do not retain loose nuts underneath. Use a temporary screw while
 loading and turning a nut, then slide it onto its saddle before releasing it.
 Neither the 11 mm cavity width nor a successful render proves this path fits.
 
-Standalone pads measure 32 by 15 mm, with 14 mm stems. They project 8.5 mm
-beyond each X side of the ring. Flange holes are 22 mm apart along X.
-Inner screw heads pass through rail slots and 6.5 mm floor access holes;
-outer screws need unobstructed access beside the frame.
-The bonded variant has unperforated pads; upper tiers remain removable.
+The standalone base has a flat underside with no pads, stems, or outboard
+tabs, so its outline matches the ring exactly. `bumper` adds 12 mm recesses
+at the corner axes for stick-on rubber feet. `screw` adds 4.5 mm holes
+16 mm inboard of each corner along X; heads seat inside the nut channel and
+are driven through the slot above, and each hole keeps its own floor saddle.
 
 An application-specific case adapter can use a low case-conforming base
-without outboard feet and merge peripheral bridges into upper supports.
+and merge peripheral bridges into upper supports.
 Its case records, first-interval options, and export datums belong to the
 application, not this standalone entrypoint.
-Putting ordinary feet inside a case does not make them contour-conforming.
+Putting a flat standalone base inside a case does not make it conforming.
 Wall clearance is not a fastening method or proof of lateral support.
 
 ## Qualification checklist

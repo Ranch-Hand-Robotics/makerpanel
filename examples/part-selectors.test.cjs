@@ -7,6 +7,8 @@ const { test } = require('node:test');
 // [path, default, other Customizer options, base module, assembly module]
 // A null assembly module means the assembly dispatch calls the base directly.
 const samples = [
+    ['grid_plate/GridPlate.scad', 'makerpanel', ['panel_2d'],
+        'grid_plate', null],
     ['Antenna/antenna.scad', 'assembly', ['assembly', 'panel_2d'],
         'antenna_maker_panel', null],
     ['iris_keyboard/IrisMakerPanel.scad', 'assembly',

@@ -9,6 +9,7 @@ the shared library already defines `makerpanel()`.
 | Sample | Default | Other Customizer outputs (unchanged) |
 | --- | --- | --- |
 | [Antenna](Antenna/antenna.scad) | `assembly` | `assembly`, `panel_2d` |
+| [Grid plate](grid_plate/GridPlate.scad) | `makerpanel` | `panel_2d` |
 | [Iris](iris_keyboard/IrisMakerPanel.scad) | `assembly` | `assembly`, `iris_keyboard_laser` |
 | [Joystick](joystick/design/joystick.scad) | `assembly` | `assembly`, `panel_2d` |
 | [LilyGo screen](lilygo_screen_4_7_s3/lilygo_screen.scad) | `assembly` | `assembly`, `lilygo_screen`, `lilygo_pcb` |

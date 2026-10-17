@@ -21,6 +21,7 @@ const direct = [
     'streamdeck_panel/streamdeck_panel.scad',
 ];
 const extruded = [
+    ['grid_plate/GridPlate.scad', 'grid_plate_2d'],
     ['Antenna/antenna.scad', 'antenna_maker_panel_2d'],
     ['joystick/design/joystick.scad', 'joystick_panel_2d'],
     ['power_panel/PowerPanel.scad', 'power_panel_2d'],

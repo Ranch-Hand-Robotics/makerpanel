@@ -17,7 +17,7 @@ explode_gap = 12; // [6:1:30]
 show_hardware = true;
 // Display-only driver envelope in the joint cutaway.
 show_driver = true;
-// For part="support": lowest support has integrated mounting feet.
+// For part="support": lowest support omits columns and sits flat.
 base_support = false;
 
 /* [Stack] */
@@ -41,7 +41,7 @@ nut_channel_depth = 7;
 nut_channel_radius = 5;
 // Material on each side of the channel; cap and support grow together.
 nut_channel_wall = 2;
-// Lowest tier only: open underside between localized foot/nut saddles.
+// Lowest tier only: open underside between localized post/nut saddles.
 base_open_channels = true;
 
 /* [Top-down column joint - prototype dimensions] */
@@ -71,16 +71,33 @@ nut_guide_length = 8;
 driver_diameter = 4;
 driver_reach = 60;
 
-/* [Base feet] */
-foot_style = "screw"; // [screw, bond]
-foot_width = 32;
-foot_thickness = 4;
-// Base surface to underside of the lowest frame's support ring.
-foot_seat_height = 10;
-foot_hole_diameter = 4.5;
-foot_hole_spacing = 22;
-// Base screw heads must also pass through the 6.9 mm rail opening.
-foot_access_diameter = 6.5;
+/* [Base stance] */
+// Flat underside; no pads, stems, or outboard tabs anywhere on the base.
+base_stance = "flat"; // [flat, bumper, screw]
+// bumper: shallow recesses at the corner axes for stick-on rubber feet.
+bumper_diameter = 12;
+bumper_depth = 1.2;
+// screw: holes through the X-rail floor, inset from each corner.
+// Heads land inside the nut channel, so they must clear the 6.9 mm slot.
+mount_hole_diameter = 4.5;
+mount_hole_inset = 16;
+
+/* [Base mounting grid] */
+// Lowest tier only: plate closing the bottom opening, opposite the rails.
+base_grid = false;
+base_grid_thickness = 3; // [2:0.5:6]
+// Standoff grid pitch. Imperial steps stay on a 0.25 in lattice.
+base_grid_pitch = 12.7; // [6.35:0.25in, 12.7:0.5in, 25.4:1in, 10:10mm, 20:20mm, 25:25mm]
+// Through holes for screws into off-the-shelf standoffs.
+base_grid_hole_diameter = 3.4;
+// Clear border between the outermost grid holes and the support ring.
+base_grid_margin = 6;
+// Dedicated printed standoffs for common SBCs, centered on the plate.
+base_grid_sbc = "none"; // [none:None, nano:Jetson Nano, pi:Raspberry Pi, latte:LattePanda, all:All]
+base_grid_standoff_height = 6; // [3:1:15]
+base_grid_standoff_diameter = 7;
+// Pilot bore = board screw diameter minus this relief; test before use.
+base_grid_standoff_relief = 0.4;
 
 /* [Preview panel] */
 // Default 16HP panel holes clear the default 48HP rail's slots.
@@ -100,7 +117,7 @@ rail_spacing = panel_height - rail_width;
 layer_pitch = u_to_mm(layer_pitch_u);
 layer_count = max(1, floor(layers));
 column_height = layer_pitch - frame_depth;
-base_plane_z = foot_seat_height + frame_depth;
+base_plane_z = frame_depth;
 channel_support_width = nut_channel_width + 2 * nut_channel_wall;
 key_depth = T_SLOT_HEIGHT - 2 * fit_clearance;
 // Shared with case adapters: exact intersections of the rail centerlines.
@@ -112,7 +129,7 @@ post_x = makerstack_post_x(frame_width, rail_width);
 // - screw head < access_diameter < T_SLOT_HEIGHT; allow real fit tolerance.
 // - key_length < rail_thickness; nut must insert, turn, and resist spinning.
 // - frame_depth > rail_thickness + nut_channel_depth for a closed floor.
-// - Foot screw/tool paths need a clear rail slot or unobstructed outer access.
+// - Mount screw heads and drivers need a clear rail slot above each hole.
 // - Keep reserved post slots clear of panels, electronics, and panel nuts.
 
 // Finished slotted rail thickness, including optional metal reinforcement.
@@ -120,6 +137,12 @@ post_x = makerstack_post_x(frame_width, rail_width);
 function makerstack_rail_total_t(full_t = 3, metal_t = 0,
 	printed_min_t = 2) =
 	max(0, full_t, max(0, metal_t) + max(0, printed_min_t));
+
+// Corner axes plus, for screw-down bases, the inset mount hole axes.
+function makerstack_floor_points(x = post_x, spacing = rail_spacing,
+	inset = 0) =
+	[for (sx = [-1, 1], sy = [-1, 1])
+		[sx * (x - inset), sy * spacing / 2]];
 
 // Cross-section coordinates: X across the rail, Y downward from its back.
 // Straight opening, rounded bottom corners, optional flat floor.
@@ -172,14 +195,18 @@ module makerstack_nut_channels(frame = frame_width, spacing = rail_spacing,
 
 // Open the underside, retaining finite saddles for post loads and loose nuts.
 // These local connections do not close the full rail run with a bottom web.
+// Screw-down bases keep an extra saddle under each mount hole.
 module makerstack_bottom_openings(frame, spacing, rail, width, depth, cap,
-	saddle_width = 14, saddle_depth = 14) {
+	saddle_width = 14, saddle_depth = 14, inset = 0) {
+	x = makerstack_post_x(frame, rail);
 	difference() {
 		makerstack_nut_channels(frame, spacing, rail, width,
 			depth - cap + 0.02, 0, cap);
-		makerstack_posts(makerstack_post_x(frame, rail), spacing)
-			translate([0, 0, -depth / 2])
-				cube([saddle_width, saddle_depth, depth + 0.04], center = true);
+		for (p = concat(makerstack_floor_points(x, spacing),
+			inset > 0 ? makerstack_floor_points(x, spacing, inset) : []))
+			translate([p[0], p[1], -depth / 2])
+				cube([saddle_width, saddle_depth, depth + 0.04],
+					center = true);
 	}
 }
 
@@ -196,6 +223,93 @@ module makerstack_nut_guides(frame = frame_width, spacing = rail_spacing,
 			translate([-length / 2,
 				sy > 0 ? gap / 2 : -support / 2, -depth])
 				cube([length, wall, depth - cap]);
+}
+
+// [key, name, width, depth, holes from the board corner, screw diameter].
+// Verify each pattern against the exact board revision before printing.
+function makerstack_sbc_specs() = [
+	["nano", "Jetson Nano", 100, 80,
+		[[5, 5], [95, 5], [95, 75], [5, 75]], 2.5],
+	["pi", "Raspberry Pi", 85.6, 56,
+		[[13.8, 3.5], [71.8, 3.5], [71.8, 52.5], [13.8, 52.5]], 2.5],
+	["latte", "LattePanda Alpha/Beta", 125, 82,
+		[[8.5, 4], [116.5, 4], [116.5, 78], [8.5, 78]], 3]
+];
+
+function makerstack_sbc_selected(key = base_grid_sbc) =
+	key == "none" ? [] :
+	key == "all" ? makerstack_sbc_specs() :
+	[for (s = makerstack_sbc_specs()) if (s[0] == key) s];
+
+// Board holes as plate coordinates; every pattern shares the plate center.
+function makerstack_sbc_mount_2d(spec) =
+	[for (p = spec[4]) [p[0] - spec[2] / 2, p[1] - spec[3] / 2]];
+
+function makerstack_sbc_points(key = base_grid_sbc) =
+	[for (spec = makerstack_sbc_selected(key))
+		for (p = makerstack_sbc_mount_2d(spec)) p];
+
+// Symmetric rows centered on the plate; a short span yields no holes.
+function makerstack_grid_axis(span, pitch) =
+	let(n = pitch > 0 ? floor(span / pitch) : -1)
+	n < 1 ? [] : [for (i = [0:1:n]) (i - n / 2) * pitch];
+
+function makerstack_grid_clear(p, keepouts, clear) =
+	len([for (k = keepouts) if (norm(p - k) < clear) 1]) == 0;
+
+function makerstack_grid_points(inner, pitch = base_grid_pitch,
+	margin = base_grid_margin, keepouts = [], clear = 0) =
+	let(
+		xs = makerstack_grid_axis(inner[0] - 2 * margin, pitch),
+		ys = makerstack_grid_axis(inner[1] - 2 * margin, pitch)
+	)
+	[for (x = xs, y = ys)
+		if (makerstack_grid_clear([x, y], keepouts, clear)) [x, y]];
+
+// Blind pillars printed with the plate; bore stops at the plate face.
+module makerstack_sbc_standoffs(key = base_grid_sbc,
+	height = base_grid_standoff_height, od = base_grid_standoff_diameter,
+	relief = base_grid_standoff_relief) {
+	for (spec = makerstack_sbc_selected(key))
+		for (p = makerstack_sbc_mount_2d(spec))
+			translate([p[0], p[1], 0])
+				difference() {
+					cylinder(d = od, h = height);
+					translate([0, 0, -cut_epsilon])
+						cylinder(d = max(1, spec[5] - relief),
+							h = height + cut_epsilon);
+				}
+}
+
+// Plate spans the bottom opening and laps onto the ring up to the channel.
+// Grid holes are a generic standoff field; SBC pillars replace them locally.
+// standoff=[height, outside diameter, pilot relief].
+module makerstack_base_grid(frame = frame_width, spacing = rail_spacing,
+	support = channel_support_width, depth = frame_depth,
+	channel = nut_channel_width, thickness = base_grid_thickness,
+	pitch = base_grid_pitch, hole = base_grid_hole_diameter,
+	margin = base_grid_margin, key = base_grid_sbc,
+	standoff = [base_grid_standoff_height, base_grid_standoff_diameter,
+		base_grid_standoff_relief]) {
+	lap = max(0, (support - channel) / 2);
+	t = min(max(0, thickness), depth);
+	inner = [frame - support, spacing - support];
+	keepouts = makerstack_sbc_points(key);
+	clear = (standoff[1] + hole) / 2 + 1;
+	translate([0, 0, -depth]) {
+		difference() {
+			linear_extrude(t)
+				square([inner[0] + 2 * lap, inner[1] + 2 * lap],
+					center = true);
+			for (p = makerstack_grid_points(inner, pitch, margin,
+				keepouts, clear))
+				translate([p[0], p[1], -cut_epsilon])
+					cylinder(d = hole, h = t + 2 * cut_epsilon);
+		}
+		translate([0, 0, t])
+			makerstack_sbc_standoffs(key, standoff[0], standoff[1],
+				standoff[2]);
+	}
 }
 
 // Keep the rail argument for callers; joint axes no longer depend on slots.
@@ -259,7 +373,7 @@ module makerstack_top_2d(frame = frame_width, spacing = rail_spacing,
 // Z=0 is the finished seating plane; columns land at Z=-layer_pitch.
 // cap is TOTAL slotted thickness; metal is only the optional bonded sheet.
 // Supply cap via makerstack_rail_total_t() to retain printable backing.
-// The base replaces tall columns with integral low feet (no lower T-nuts).
+// The base omits columns; its ring underside is the whole sitting surface.
 // channel=[width,depth,radius,wall]; nut=[width,clearance,guide length].
 // post=[width,depth,seat,bore,hole,key X,Y,Z].
 module makerstack_support(base = false, frame = frame_width,
@@ -285,10 +399,11 @@ module makerstack_support(base = false, frame = frame_width,
 				translate([0, 0, -depth])
 					linear_extrude(depth - cap)
 						makerstack_ring_2d(w, frame, spacing);
-				makerstack_posts(x, spacing)
-					if (base)
-						translate([0, 0, -base_plane_z]) makerstack_foot();
-					else
+				if (base && base_grid)
+					makerstack_base_grid(frame, spacing, w, depth,
+						channel[0]);
+				if (!base)
+					makerstack_posts(x, spacing)
 						translate([0, 0, -pitch])
 							makerstack_column(pitch - depth, post[0], post[1],
 								post[2], post[3], post[4],
@@ -302,19 +417,23 @@ module makerstack_support(base = false, frame = frame_width,
 			}
 			if (base && base_open_channels)
 				makerstack_bottom_openings(frame, spacing, RACK_RAIL_HEIGHT,
-					channel[0], depth, cap, post[0], post[1]);
+					channel[0], depth, cap, post[0], post[1],
+					base_stance == "screw" ? mount_hole_inset : 0);
 			// Continue the shaft through the floor to the existing top slot.
 			if (!base)
 				makerstack_posts(x, spacing)
 					translate([0, 0, -pitch + post[2]])
 						cylinder(d = post[3], h = pitch - post[2] + eps);
-			if (base && foot_style == "screw")
+			// Heads seat on the channel floor, clear of the corner joint axes.
+			if (base && base_stance == "screw")
+				for (p = makerstack_floor_points(x, spacing, mount_hole_inset))
+					translate([p[0], p[1], -depth - eps])
+						cylinder(d = mount_hole_diameter,
+							h = depth - cap + 2 * eps);
+			if (base && base_stance == "bumper")
 				makerstack_posts(x, spacing)
-					for (sx = [-1, 1])
-						translate([sx * foot_hole_spacing / 2, 0,
-							-depth - eps])
-							cylinder(d = foot_access_diameter,
-								h = depth + 2 * eps);
+					translate([0, 0, -depth - eps])
+						cylinder(d = bumper_diameter, h = bumper_depth + eps);
 		}
 	}
 }
@@ -369,28 +488,6 @@ module makerstack_column(height = column_height, width = column_width,
 			cylinder(d = hole, h = key[2] + seat + 2 * eps);
 		translate([0, 0, seat])
 			cylinder(d = bore, h = height - seat + eps);
-	}
-}
-
-// Base at Z=0; stem joins the bottom support ring directly, without a bolt.
-// Bond variant retains a flat, unperforated pad; adhesive is not modeled.
-module makerstack_foot() {
-	difference() {
-		union() {
-			linear_extrude(foot_thickness)
-				offset(r = 2)
-					square([foot_width - 4, channel_support_width - 4],
-						center = true);
-			translate([-column_width / 2, -column_depth / 2,
-				foot_thickness])
-				cube([column_width, column_depth,
-					foot_seat_height - foot_thickness]);
-		}
-		if (foot_style == "screw")
-			for (sx = [-1, 1])
-				translate([sx * foot_hole_spacing / 2, 0, -cut_epsilon])
-					cylinder(d = foot_hole_diameter,
-						h = foot_thickness + 2 * cut_epsilon);
 	}
 }
 
@@ -456,7 +553,7 @@ module makerstack_assembly(explode = 0) {
 }
 
 // Part selectors put the selected physical part's lowest surface at Z=0.
-// "column" and "foot" are inspection coupons, not separate assembly parts.
+// "column" is an inspection coupon, not a separate assembly part.
 // "parts" is a sample layout; manual selector strings also remain available.
 // "top" is the optional metal reinforcement outline for SVG/DXF export.
 if (part == "assembly")
@@ -480,13 +577,9 @@ else if (part == "top")
 	makerstack_top_2d();
 else if (part == "column")
 	translate([0, 0, key_length]) makerstack_column();
-else if (part == "foot")
-	makerstack_foot();
 else if (part == "parts") {
 	translate([0, 0, layer_pitch + key_length])
 		makerstack_frame(metal = rail_metal_thickness);
 	translate([frame_width / 2 + 30, -25, key_length])
 		makerstack_column();
-	translate([frame_width / 2 + 30, 20, 0])
-		makerstack_foot();
 }

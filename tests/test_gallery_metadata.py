@@ -177,7 +177,7 @@ class BuiltInCatalogPartsTests(unittest.TestCase):
             first = hooks.GALLERY_JSON_PATH.read_bytes()
             entries = {p['slug']: p for p in json.loads(first)['panels']}
             mounting_samples = {
-                'Antenna', 'iris_keyboard', 'joystick',
+                'Antenna', 'grid_plate', 'iris_keyboard', 'joystick',
                 'lilygo_screen_4_7_s3', 'lilygo_t-encoder-pro', 'measure',
                 'monitor_panel', 'mouse_panel', 'prime79_panel', 'rail_panel',
                 'power_panel',
@@ -198,6 +198,13 @@ class BuiltInCatalogPartsTests(unittest.TestCase):
             self.assertEqual(power['scadFile'],
                              'examples/power_panel/PowerPanel.scad')
             self.assertEqual(power['scadParts'], ['makerpanel', 'panel_2d'])
+            grid = entries['grid_plate']
+            self.assertEqual(grid['title'], 'Grid Plate MakerPanel')
+            self.assertEqual(grid['horizontalPitch'], 35)
+            self.assertEqual(grid['verticalUnits'], 3)
+            self.assertEqual(grid['scadFile'],
+                             'examples/grid_plate/GridPlate.scad')
+            self.assertEqual(grid['scadParts'], ['makerpanel', 'panel_2d'])
             encoder = entries['lilygo_t-encoder-pro']
             self.assertEqual(encoder['scadFile'],
                              'examples/lilygo_t-encoder-pro/design/'

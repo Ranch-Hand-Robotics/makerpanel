@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated_at": "2026-09-15T19:30:49Z",
+  "updated_at": "2026-10-01T04:15:46Z",
   "panels": [
     {
       "slug": "monitor_panel",
@@ -24,6 +24,25 @@
         "monitor.brace_2d.svg"
       ],
       "updated_at": "2026-09-12T05:35:24Z"
+    },
+    {
+      "slug": "grid_plate",
+      "title": "Grid Plate MakerPanel",
+      "category": "Other",
+      "horizontalPitch": 35.0,
+      "verticalUnits": 3.0,
+      "contributor": "Ranch Hand Robotics",
+      "description": "Perforated equipment carrier with configurable grid spacing and optional Jetson Nano, Raspberry Pi, and LattePanda mounting patterns.",
+      "thumbnail": "images/makerpanel.png",
+      "panel_url": "https://github.com/Ranch-Hand-Robotics/makerpanel/tree/main/examples/grid_plate",
+      "buy_url": "",
+      "issue_number": 0,
+      "scadFile": "examples/grid_plate/GridPlate.scad",
+      "scadParts": [
+        "makerpanel",
+        "panel_2d"
+      ],
+      "updated_at": "2026-09-30T00:00:00Z"
     },
     {
       "slug": "iris_keyboard",
