@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1800" height="1660" viewBox="0 0 1800 1660">
+  <title>Two-joystick wiring: SparkFun Pro Micro RP2350 and ADS1219</title>
+  <desc>Annotated front-board photograph. ADS1219 outer row left to right:
+    AIN3 Y, AIN2 twist, REFN ground, REFP 3.3 volts, AIN1 button, AIN0 X.
+    AIN1 has a 4.7 kilohm pull-up to REFP (3.3 volts), a normally open button to
+    ground and an optional 100 nanofarad capacitor to ground. All power
+    and ground labels refer to shared nets. Inner row is not duplicate IO.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7"
+            refY="4" orient="auto-start-reverse">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#334155"/>
+    </marker>
+    <g id="ground" fill="none" stroke="#334155" stroke-width="4">
+      <path d="M0 0 V12 M-19 12 H19 M-12 20 H12 M-5 28 H5"/>
+    </g>
+    <g id="stick">
+      <ellipse cx="0" cy="36" rx="48" ry="17" fill="#d9e6f0"
+               stroke="#334155" stroke-width="3"/>
+      <path d="M0 32 V-12" stroke="#334155" stroke-width="13"/>
+      <rect x="-23" y="-68" width="46" height="65" rx="18"
+            fill="#334155"/>
+      <ellipse cx="0" cy="-65" rx="13" ry="6" fill="#d946a4"/>
+    </g>
+  </defs>
+  <rect width="1800" height="1660" fill="#f1f5f9"/>
+  <g font-family="Segoe UI,Arial,sans-serif" fill="#172638">
+    <rect x="0" y="0" width="1800" height="140" fill="#172638"/>
+    <text x="48" y="65" font-size="37" font-weight="700" fill="white">
+      TWO JOYSTICKS · ADS1219 WIRING MAP
+    </text>
+    <text x="50" y="108" font-size="23" fill="#c8ec89">
+      3.3 V only • I2C address 0x40 • matches the current joystick firmware
+    </text>
+
+    <rect x="40" y="165" width="760" height="1250" rx="20" fill="white"/>
+    <text x="70" y="210" font-size="25" font-weight="700">
+      1 / EXISTING JOYSTICK → MAIN BOARD
+    </text>
+    <use xlink:href="#stick" transform="translate(148 312)"/>
+    <text x="240" y="265" font-size="22">X wiper → A0 / GPIO26</text>
+    <text x="240" y="302" font-size="22">Y wiper → A1 / GPIO27</text>
+    <text x="240" y="339" font-size="22">Twist wiper → A2 / GPIO28</text>
+    <text x="240" y="376" font-size="22">Top button → GPIO2 and GND</text>
+    <text x="80" y="423" font-size="21" fill="#475569">
+      Each pot: outer terminals to 3V3 and GND.
+    </text>
+    <text x="80" y="454" font-size="21" fill="#475569">
+      GPIO2 uses the firmware's internal pull-up.
+    </text>
+    <path d="M70 480 H770" stroke="#dbe3eb" stroke-width="2"/>
+    <text x="70" y="522" font-size="25" font-weight="700">
+      2 / ADS1219 · FRONT VIEW
+    </text>
+    <text x="70" y="554" font-size="19" fill="#475569">
+      Colored wires terminate on the OUTER (top) row.
+    </text>
+
+    <image x="90" y="640" width="650" height="643.158"
+           xlink:href="ads1219-board.jpg"/>
+    <!-- Crop: x=160,y=275,w=950,h=940 of the official front/back image. -->
+    <!-- Actual outer pad centers in the source: 395,490,585,680,775,870. -->
+    <g fill="none" stroke-width="5" stroke-linecap="round">
+      <path d="M251 622 V669" stroke="#4b7e16"/>
+      <path d="M316 622 V669" stroke="#7c3aed"/>
+      <path d="M381 622 V669" stroke="#334155"/>
+      <path d="M446 622 V669" stroke="#d22d43"/>
+      <path d="M511 622 V669" stroke="#b32386"/>
+      <path d="M576 622 V669" stroke="#2563eb"/>
+    </g>
+    <g font-size="17" font-weight="700" text-anchor="middle">
+      <g fill="#4b7e16"><text x="251" y="584">Y</text>
+        <text x="251" y="612">AIN3</text></g>
+      <g fill="#7c3aed"><text x="316" y="584">TWIST</text>
+        <text x="316" y="612">AIN2</text></g>
+      <g fill="#334155"><text x="381" y="584">GND</text>
+        <text x="381" y="612">REFN</text></g>
+      <g fill="#d22d43"><text x="446" y="584">3V3</text>
+        <text x="446" y="612">REFP</text></g>
+      <g fill="#b32386"><text x="511" y="584">BUTTON</text>
+        <text x="511" y="612">AIN1</text></g>
+      <g fill="#2563eb"><text x="576" y="584">X</text>
+        <text x="576" y="612">AIN0</text></g>
+    </g>
+    <g fill="none" stroke-width="4">
+      <circle cx="251" cy="669" r="14" stroke="#4b7e16"/>
+      <circle cx="316" cy="669" r="14" stroke="#7c3aed"/>
+      <circle cx="381" cy="669" r="14" stroke="#334155"/>
+      <circle cx="446" cy="669" r="14" stroke="#d22d43"/>
+      <circle cx="511" cy="669" r="14" stroke="#b32386"/>
+      <circle cx="576" cy="669" r="14" stroke="#2563eb"/>
+    </g>
+    <!-- Power pads at bottom, not invented pads on the cropped top edge. -->
+    <g fill="none" stroke-width="5">
+      <path d="M251 1250 V1302 H170" stroke="#334155"/>
+      <path d="M316 1250 V1335 H420" stroke="#d22d43"/>
+      <circle cx="251" cy="1250" r="14" stroke="#334155"/>
+      <circle cx="316" cy="1250" r="14" stroke="#d22d43"/>
+    </g>
+    <text x="92" y="1309" font-size="22" font-weight="700">GND</text>
+    <text x="435" y="1342" font-size="22" font-weight="700" fill="#d22d43">
+      3V3 for pots + pull-up + REFP
+    </text>
+    <rect x="445" y="1010" width="307" height="83" rx="10"
+          fill="white" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="462" y="1043" font-size="19" font-weight="700">Either Qwiic socket</text>
+    <text x="462" y="1072" font-size="18">→ main-board Qwiic</text>
+    <path d="M625 1010 L685 962" stroke="#334155" stroke-width="3"
+          fill="none" marker-end="url(#arrow)"/>
+    <text x="70" y="1384" font-size="19" font-weight="700">
+      Inner row ≠ duplicate inputs. Do not bridge the two rows!
+    </text>
+
+    <rect x="830" y="165" width="930" height="580" rx="20" fill="white"/>
+    <text x="860" y="210" font-size="25" font-weight="700">
+      JOYSTICK 2 · THREE 10 kΩ POTS
+    </text>
+    <text x="860" y="244" font-size="20" fill="#475569">
+      These are the three potentiometers inside the second joystick.
+    </text>
+    <!-- Three pot symbols. Center arrows are wipers, not outer terminals. -->
+    <g fill="none" stroke-width="4" stroke-linecap="round">
+      <path d="M1040 305 H1240 M1360 305 H1585" stroke="#334155"/>
+      <rect x="1240" y="293" width="120" height="24" stroke="#334155"/>
+      <path d="M1300 371 V326" stroke="#2563eb"/>
+      <path d="M1292 336 L1300 324 L1308 336" stroke="#2563eb"/>
+      <path d="M1040 475 H1240 M1360 475 H1585" stroke="#334155"/>
+      <rect x="1240" y="463" width="120" height="24" stroke="#334155"/>
+      <path d="M1300 541 V496" stroke="#4b7e16"/>
+      <path d="M1292 506 L1300 494 L1308 506" stroke="#4b7e16"/>
+      <path d="M1040 645 H1240 M1360 645 H1585" stroke="#334155"/>
+      <rect x="1240" y="633" width="120" height="24" stroke="#334155"/>
+      <path d="M1300 711 V666" stroke="#7c3aed"/>
+      <path d="M1292 676 L1300 664 L1308 676" stroke="#7c3aed"/>
+    </g>
+    <g font-size="23" font-weight="700">
+      <text x="869" y="313" fill="#2563eb">X</text>
+      <text x="869" y="483" fill="#4b7e16">Y</text>
+      <text x="869" y="653" fill="#7c3aed">TWIST</text>
+      <text x="970" y="313" fill="#d22d43">3V3</text>
+      <text x="970" y="483" fill="#d22d43">3V3</text>
+      <text x="970" y="653" fill="#d22d43">3V3</text>
+      <text x="1600" y="313">GND</text>
+      <text x="1600" y="483">GND</text>
+      <text x="1600" y="653">GND</text>
+      <text x="1320" y="381" fill="#2563eb">wiper → AIN0</text>
+      <text x="1320" y="551" fill="#4b7e16">wiper → AIN3</text>
+      <text x="1320" y="721" fill="#7c3aed">wiper → AIN2</text>
+    </g>
+    <g text-anchor="middle" font-size="19" fill="#475569">
+      <text x="1300" y="282">10 kΩ</text>
+      <text x="1300" y="452">10 kΩ</text>
+      <text x="1300" y="622">10 kΩ</text>
+    </g>
+
+    <rect x="830" y="770" width="930" height="645" rx="20" fill="white"/>
+    <text x="860" y="818" font-size="25" font-weight="700">
+      JOYSTICK 2 · TOP BUTTON + FILTER
+    </text>
+    <text x="1015" y="868" font-size="23" font-weight="700" fill="#d22d43">
+      REFP (3V3)
+    </text>
+    <path d="M1040 880 V904" stroke="#d22d43" stroke-width="4"/>
+    <rect x="1028" y="904" width="24" height="72" fill="#fce7f3"
+          stroke="#334155" stroke-width="4"/>
+    <text x="1080" y="935" font-size="23" font-weight="700">R1 · 4.7 kΩ</text>
+    <text x="1080" y="965" font-size="20" fill="#475569">Required pull-up</text>
+    <path d="M1040 976 V1015 M940 1015 H1560" stroke="#b32386"
+          stroke-width="5" fill="none"/>
+    <g fill="#b32386">
+      <circle cx="1040" cy="1015" r="7"/>
+      <circle cx="1310" cy="1015" r="7"/>
+      <circle cx="1560" cy="1015" r="7"/>
+    </g>
+    <text x="858" y="1023" font-size="24" font-weight="700" fill="#b32386">
+      AIN1
+    </text>
+    <text x="880" y="1065" font-size="18" fill="#475569">Same node as</text>
+    <text x="880" y="1091" font-size="18" fill="#475569">R1, C1 and switch</text>
+    <!-- Capacitor is parallel with the normally open switch, not series. -->
+    <g stroke="#334155" stroke-width="4" fill="none">
+      <path d="M1310 1015 V1060 M1280 1060 H1340
+               M1280 1078 H1340 M1310 1078 V1140"/>
+      <path d="M1560 1015 V1050 M1560 1104 V1140
+               M1560 1104 L1590 1054"/>
+      <circle cx="1560" cy="1050" r="5" fill="white"/>
+      <circle cx="1560" cy="1104" r="5" fill="white"/>
+    </g>
+    <use xlink:href="#ground" x="1310" y="1140"/>
+    <use xlink:href="#ground" x="1560" y="1140"/>
+    <text x="1150" y="1110" font-size="20" font-weight="700">C1 · 100 nF</text>
+    <text x="1150" y="1138" font-size="19" fill="#475569">Optional ceramic</text>
+    <text x="1602" y="1069" font-size="19" font-weight="700">Top button</text>
+    <text x="1602" y="1098" font-size="18">Normally</text>
+    <text x="1602" y="1124" font-size="18">open (NO)</text>
+    <text x="1288" y="1197" font-size="19">GND</text>
+    <text x="1538" y="1197" font-size="19">GND</text>
+    <rect x="860" y="1223" width="870" height="160" rx="12" fill="#edf5df"/>
+    <text x="882" y="1257" font-size="21" font-weight="700">
+      Released ≈ 3.3 V • Pressed ≈ 0 V
+    </text>
+    <text x="882" y="1292" font-size="20">
+      Put R1 and C1 near the ADC. Neither part has polarity.
+    </text>
+    <text x="882" y="1324" font-size="20">
+      One capacitor is shown: C1 filters the button, not the axes.
+    </text>
+    <text x="882" y="1356" font-size="20">
+      Do not bridge AIN1 directly to REFP: use the 4.7 kΩ resistor.
+    </text>
+
+    <rect x="40" y="1435" width="1720" height="138" rx="16" fill="#172638"/>
+    <text x="65" y="1474" font-size="22" font-weight="700" fill="#c8ec89">
+      IMPORTANT CONNECTIONS
+    </text>
+    <text x="65" y="1512" font-size="21" fill="white">
+      All 3V3 labels connect together; all GND symbols connect together. REFP → 3V3; REFN → GND.
+    </text>
+    <text x="65" y="1548" font-size="21" fill="white">
+      Software Stop: GPIO3 → NC switch → GND; add 4.7 kΩ from GPIO3 to 3V3. Not a hardware safety stop.
+    </text>
+    <text x="50" y="1607" font-size="18" fill="#475569">
+      Leave the breakout's 3V3–VDDA jumper closed for this 3.3 V design. Power off before soldering. Verify pad labels.
+    </text>
+    <text x="50" y="1638" font-size="16" fill="#475569">
+      Photo: SparkFun Electronics, cropped from Qwiic_ADC_AS1219-Annotated.jpg. Wiring annotations added. CC BY-SA 4.0.
+    </text>
+  </g>
+</svg>

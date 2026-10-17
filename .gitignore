@@ -34,3 +34,6 @@ Thumbs.db
 # Hand-authored website artwork, not generated CAD exports.
 !docs/images/mark.svg
 !theme/assembly.svg
+
+# Hand-authored wiring diagrams, not generated CAD exports.
+!examples/joystick/images/*-wiring.svg

@@ -27,7 +27,7 @@ test('source contract: schematic pins and address do not collide', () => {
     assert.equal(new Set(pins).size, pins.length);
     const channels = ['X', 'Y', 'YAW', 'BUTTON'].map(
         axis => define(`ADS1219_${axis}_CHANNEL`));
-    assert.deepEqual(channels, [0, 1, 2, 3]);
+    assert.deepEqual(channels, [0, 3, 2, 1]);
 });
 
 test('source contract: wiring guide matches button and stop defaults', () => {
@@ -42,6 +42,71 @@ test('source contract: wiring guide matches button and stop defaults', () => {
         'normally closed', 'not a safety-rated', 'manual-reset/rearm']) {
         assert.ok(readme.includes(term), `Missing wiring guidance: ${term}`);
     }
+    assert.match(readme, /Joystick 2 Y wiper \| ADS1219 AIN3 \| Rx/);
+    assert.match(readme, /Joystick 2 top button \| ADS1219 AIN1/);
+    assert.ok(readme.includes('REFP (tied to 3V3) to AIN1'));
+    assert.ok(readme.includes('Do not directly bridge AIN1 to REFP'));
+    const diagram = fs.readFileSync(
+        path.join(__dirname, 'images', 'ads1219-wiring.svg'), 'utf8');
+    assert.match(diagram, /AIN3 Y,.*AIN1 button, AIN0 X/);
+    assert.ok(diagram.includes('wiper → AIN3'));
+    assert.ok(diagram.includes('Do not bridge AIN1 directly to REFP'));
+});
+
+test('source contract: composite diagram matches firmware inputs', () => {
+    const diagram = fs.readFileSync(
+        path.join(__dirname, 'images', 'controller-wiring.svg'), 'utf8');
+    const gpioSignals = {
+        J1_X: 'AXIS_X_ADC_GPIO', J1_Y: 'AXIS_Y_ADC_GPIO',
+        J1_TWIST: 'AXIS_YAW_ADC_GPIO', J1_BTN: 'BUTTON_PIN',
+        STOP: 'ESTOP_PIN', SDA: 'I2C_SDA', SCL: 'I2C_SCL'
+    };
+    for (const [signal, name] of Object.entries(gpioSignals)) {
+        assert.ok(diagram.includes(
+            `data-signal="${signal}" data-gpio="${define(name)}"`), name);
+    }
+    for (const [signal, axis] of Object.entries({
+        J2_X: 'X', J2_Y: 'Y', J2_TWIST: 'YAW', J2_BTN: 'BUTTON'
+    })) {
+        const channel = define(`ADS1219_${axis}_CHANNEL`);
+        assert.ok(diagram.includes(
+            `data-signal="${signal}" data-ain="${channel}"`), signal);
+    }
+    for (const term of ['SparkFun Pro Micro RP2350', 'REFP → 3V3',
+        'REFN → GND', 'R1 · 4.7 kΩ', 'R2 · 4.7 kΩ', 'C1 · 100 nF',
+        'Do not bridge AIN1 directly to REFP',
+        'Not a safety-rated emergency stop']) {
+        assert.ok(diagram.includes(term), `Missing diagram guidance: ${term}`);
+    }
+    assert.ok(readme.includes('images/controller-wiring.png'));
+    assert.ok(readme.includes('images/controller-wiring.svg'));
+});
+
+test('source contract: rotate both USB stick pairs, not their wiring', () => {
+    for (const [output, input] of [
+        ['x', 'js->y.filtered'], ['y', '-js->x.filtered'],
+        ['rx', '-adc->joystick.y.filtered'],
+        ['ry', '-adc->joystick.x.filtered'],
+        ['z', 'js->yaw.filtered'], ['rz', 'adc->joystick.yaw.filtered']
+    ]) {
+        assert.ok(source.includes(
+            `${output} = (int8_t)clamp_axis_value(${input});`), output);
+    }
+    assert.ok(readme.includes('new X = old Y, new Y = -old X'));
+    assert.ok(readme.includes('Rx = -old Y, Ry = -old X'));
+    assert.match(readme, /Joystick 1 twist wiper \| A2 \/ GPIO28 \/ ADC2 \| Z \|/);
+    assert.match(readme, /Joystick 2 twist wiper \| ADS1219 AIN2 \| Rz/);
+});
+
+test('source contract: stop only adds Button 3 without masking inputs', () => {
+    const stopBranch = source.match(/if \(stop->pressed\) \{([^}]+)\}/);
+    assert.ok(stopBranch, 'Missing stop status reporting');
+    assert.equal(stopBranch[1].replace(/\/\/[^\n]*/g, '').trim(),
+        'buttons |= 0x04u;');
+    assert.ok(readme.includes('**status-only**'));
+    const diagram = fs.readFileSync(
+        path.join(__dirname, 'images', 'controller-wiring.svg'), 'utf8');
+    assert.ok(diagram.includes('Axes and top buttons keep reporting'));
 });
 
 test('source contract: retain HID descriptor and disable USB stdio', () => {
@@ -142,23 +207,43 @@ int main() {
     assert(calibrate_raw_to_axis(4095, &ADS1219_X_CAL) == 127);
     assert(calibrate_raw_to_axis(4095, &ADS1219_Y_CAL) == -127);
 
+    // Physical AIN1 is the button; AIN3 now independently supplies Y.
+    Ads1219State mapping = {};
+    mapping.pending[0] = 1024;
+    mapping.pending[1] = 4095;
+    mapping.pending[2] = 2048;
+    mapping.pending[3] = 0;
+    ads1219_commit(&mapping, 0);
+    ads1219_commit(&mapping, 25000);
+    assert(mapping.joystick.x.raw == 1024);
+    assert(mapping.joystick.y.raw == 0);
+    assert(mapping.joystick.yaw.raw == 2048);
+    assert(!mapping.joystick.button.pressed);
+    mapping.pending[1] = 0;
+    mapping.pending[3] = 4095;
+    ads1219_commit(&mapping, 30000);
+    ads1219_commit(&mapping, 55000);
+    assert(mapping.joystick.y.raw == 4095);
+    assert(mapping.joystick.y.calibrated == -127);
+    assert(mapping.joystick.button.pressed);
+
     // Analog hysteresis and 25ms debounce operate on fresh samples only.
     Ads1219State button = {};
-    button.pending[3] = 4095;
+    button.pending[ADS1219_BUTTON_CHANNEL] = 4095;
     ads1219_commit(&button, 0);
-    button.pending[3] = 1024;
+    button.pending[ADS1219_BUTTON_CHANNEL] = 1024;
     ads1219_commit(&button, 1000);
     assert(!button.joystick.button.pressed);
-    button.pending[3] = 2000; // hysteresis retains pressed candidate
+    button.pending[ADS1219_BUTTON_CHANNEL] = 2000; // retain candidate
     ads1219_commit(&button, 25999);
     assert(!button.joystick.button.pressed);
     ads1219_commit(&button, 26000);
     assert(button.joystick.button.pressed);
-    button.pending[3] = 3072;
+    button.pending[ADS1219_BUTTON_CHANNEL] = 3072;
     ads1219_commit(&button, 27000);
-    button.pending[3] = 0; // bounce cancels release
+    button.pending[ADS1219_BUTTON_CHANNEL] = 0; // bounce cancels release
     ads1219_commit(&button, 30000);
-    button.pending[3] = 4095;
+    button.pending[ADS1219_BUTTON_CHANNEL] = 4095;
     ads1219_commit(&button, 32000);
     ads1219_commit(&button, 56999);
     assert(button.joystick.button.pressed);
@@ -169,7 +254,7 @@ int main() {
     clock_us = 0;
     init_estop(&stop);
 #if ESTOP_ENABLED
-    assert(stop.pressed); // boot stopped even with a closed contact
+    assert(stop.pressed); // boot status asserted even with a closed contact
     levels[ESTOP_PIN] = false;
     update_estop(&stop, 1000);
     update_estop(&stop, 25999);
@@ -269,22 +354,135 @@ int main() {
     adc.joystick.yaw.filtered = 23; adc.joystick.button.pressed = true;
     stop.pressed = false;
     send_hid_report(&primary, &adc, &stop);
-    assert(axes[0] == 11 && axes[1] == 12 && axes[3] == 13);
+    assert(axes[0] == 12 && axes[1] == -11 && axes[2] == 13);
 #if ADS1219_ENABLED
-    assert(axes[2] == 23 && axes[4] == 21 && axes[5] == 22);
+    assert(axes[3] == 23 && axes[4] == -22 && axes[5] == -21);
     assert(hid_buttons == 3);
 #else
-    assert(axes[2] == 0 && axes[4] == 0 && axes[5] == 0);
+    assert(axes[3] == 0 && axes[4] == 0 && axes[5] == 0);
     assert(hid_buttons == 1);
 #endif
     adc.ready = false;
     send_hid_report(&primary, &adc, &stop);
     assert(hid_buttons == (ADS1219_ENABLED ? 9u : 1u));
-    assert(axes[2] == 0 && axes[4] == 0 && axes[5] == 0);
+    assert(axes[0] == 12 && axes[1] == -11 && axes[2] == 13);
+    assert(axes[3] == 0 && axes[4] == 0 && axes[5] == 0);
     stop.pressed = true;
     send_hid_report(&primary, &adc, &stop);
-    for (int8_t value : axes) assert(value == 0);
-    assert(hid_buttons == (ADS1219_ENABLED ? 12u : 4u));
+    assert(axes[0] == 12 && axes[1] == -11 && axes[2] == 13);
+    assert(axes[3] == 0 && axes[4] == 0 && axes[5] == 0);
+    assert(hid_buttons == (ADS1219_ENABLED ? 13u : 5u));
+
+    // Stop changes only bit 2, for every top-button combination and
+    // expansion readiness state. Reports also keep updating while held.
+    for (bool ready : {false, true}) {
+        adc.ready = ready;
+        for (unsigned pressed = 0; pressed < 4; ++pressed) {
+            primary.button.pressed = (pressed & 1u) != 0;
+            adc.joystick.button.pressed = (pressed & 2u) != 0;
+            stop.pressed = false;
+            send_hid_report(&primary, &adc, &stop);
+            const std::vector<int8_t> before(axes, axes + 6);
+            const uint32_t buttons_before = hid_buttons;
+            stop.pressed = true;
+            send_hid_report(&primary, &adc, &stop);
+            assert(std::vector<int8_t>(axes, axes + 6) == before);
+            assert(hid_buttons == (buttons_before | 0x04u));
+            primary.y.filtered = -12;
+            send_hid_report(&primary, &adc, &stop);
+            assert(axes[0] == -12); // Not frozen at the pre-stop value.
+            primary.y.filtered = 12;
+            stop.pressed = false;
+            send_hid_report(&primary, &adc, &stop);
+            assert(hid_buttons == buttons_before);
+            assert(std::vector<int8_t>(axes, axes + 6) == before);
+        }
+    }
+
+        // Rotation plus ADS-only horizontal reversal; vertical is unchanged.
+        // Include center and diagonal travel; twist and buttons stay unchanged.
+        const int16_t directions[][4] = {
+        {0, -127, -127, 0}, {0, 127, 127, 0},
+        {127, 0, 0, -127}, {-127, 0, 0, 127},
+        {0, 0, 0, 0}, {127, -127, -127, -127},
+        {-127, 127, 127, 127}
+        };
+        stop.pressed = false;
+        adc.ready = true;
+        for (const auto &direction : directions) {
+        primary.x.filtered = adc.joystick.x.filtered = direction[0];
+        primary.y.filtered = adc.joystick.y.filtered = direction[1];
+        send_hid_report(&primary, &adc, &stop);
+        assert(axes[0] == direction[2] && axes[1] == direction[3]);
+        assert(axes[2] == 13);
+    #if ADS1219_ENABLED
+        assert(axes[4] == -direction[2] && axes[5] == direction[3]);
+        assert(axes[3] == 23 && hid_buttons == 3);
+    #else
+        assert(axes[4] == 0 && axes[5] == 0 && axes[3] == 0);
+        assert(hid_buttons == 1);
+    #endif
+        stop.pressed = true;
+        send_hid_report(&primary, &adc, &stop);
+        assert(axes[0] == direction[2] && axes[1] == direction[3]);
+        assert(axes[2] == 13);
+    #if ADS1219_ENABLED
+        assert(axes[4] == -direction[2] && axes[5] == direction[3]);
+        assert(axes[3] == 23 && hid_buttons == 7);
+    #else
+        assert(axes[4] == 0 && axes[5] == 0 && axes[3] == 0);
+        assert(hid_buttons == 5);
+    #endif
+        stop.pressed = false;
+        }
+
+    // AIN2 -> normalized raw -> calibration -> smoothing -> signed HID Rz.
+    // Clamping negative ADC noise to raw zero must still produce negative Rz.
+    const uint8_t twist_samples[][3] = {
+        {0, 0, 0}, {0x40, 0, 0}, {0x7f, 0xff, 0xff}, {0xff, 0xff, 0xff}
+    };
+    const int16_t twist_expected[] = {-127, 0, 127, -127};
+    for (unsigned i = 0; i < 4; ++i) {
+        Ads1219State twist = {};
+        twist.pending[ADS1219_X_CHANNEL] = 2048;
+        twist.pending[ADS1219_Y_CHANNEL] = 2048;
+        twist.pending[ADS1219_BUTTON_CHANNEL] = 4095;
+        twist.pending[ADS1219_YAW_CHANNEL] =
+            ads1219_normalize(twist_samples[i]);
+        for (unsigned sample = 0; sample < 64; ++sample) {
+            ads1219_commit(&twist, sample * 10000ull);
+        }
+        assert(twist.joystick.yaw.calibrated == twist_expected[i]);
+        send_hid_report(&primary, &twist, &stop);
+#if ADS1219_ENABLED
+        assert(axes[3] == twist.joystick.yaw.filtered);
+        if (twist_expected[i] < 0) assert(axes[3] < 0);
+        else if (twist_expected[i] > 0) assert(axes[3] > 0);
+        else assert(axes[3] == 0);
+#else
+        assert(axes[3] == 0);
+#endif
+        assert(axes[2] == 13); // Primary twist is independent.
+        assert(axes[4] == 0 && axes[5] == 0);
+    }
+
+    // Swapping Z/Rz must not invert either twist or couple their values.
+    for (int16_t rp_twist : {-127, 0, 127}) {
+        for (int16_t ads_twist : {-127, 0, 127}) {
+            primary.yaw.filtered = rp_twist;
+            adc.joystick.yaw.filtered = ads_twist;
+            for (bool ready : {false, true}) {
+                adc.ready = ready;
+                for (bool active : {false, true}) {
+                    stop.pressed = active;
+                    send_hid_report(&primary, &adc, &stop);
+                    assert(axes[2] == rp_twist);
+                    assert(axes[3] ==
+                        (ADS1219_ENABLED && ready ? ads_twist : 0));
+                }
+            }
+        }
+    }
     return 0;
 }
 `;

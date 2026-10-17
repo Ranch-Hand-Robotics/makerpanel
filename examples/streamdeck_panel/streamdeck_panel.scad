@@ -30,6 +30,7 @@ rear_seat_recess = 3; // mm forward into the sleeve; bottom retainer only
 rear_insert_clearance = 0.3; // mm per side where retainer enters the sleeve
 rear_flange_width = 9; // mm beyond each side of the sleeve
 rear_flange_depth = 3; // mm; flange mating face is always world Z=0
+rear_rail_trim = 2; // mm removed from each +/-Y end of the rear retainer
 rear_bolt_diameter = 3.2; // mm; four M3 through-bolts, not device screws
 rear_bolt_end_inset = 12; // mm from each end of a side flange
 // Measured approximately on the 15-key device; local device axes in mm.
@@ -70,16 +71,21 @@ function streamdeck_outer_height() = streamdeck_bore_height() + 2*tray_wall;
 // At zero tilt the seat and the rear flange mating faces are all world Z=0.
 function streamdeck_seat_z() =
 	streamdeck_outer_height()/2 * sin(tilt_angle);
+// Center the sleeve at the panel underside, not at its raised front face.
+function streamdeck_seat_y() = -streamdeck_seat_z() * tan(tilt_angle);
 // Intersection of the straight, tilted sleeve with the flat panel plane.
-function streamdeck_foot_y() = streamdeck_seat_z() * tan(tilt_angle);
+function streamdeck_foot_y() =
+	streamdeck_seat_y() + streamdeck_seat_z() * tan(tilt_angle);
 function streamdeck_foot_depth() =
 	streamdeck_outer_height() / cos(tilt_angle);
+function streamdeck_rear_depth() =
+	streamdeck_foot_depth() - 2*rear_rail_trim;
 function minimum_horizontal_pitch() =
 	// Reserve side flanges plus a separate rail-mounting strip on each side.
 	ceil((streamdeck_outer_width() + 2*rear_flange_width
 		+ 2*RACK_RAIL_HEIGHT) / HP);
 function minimum_vertical_units() =
-	// Include the shifted sleeve footprint; round up in half-U increments.
+	// Reserve rail strips around the footprint; round up in half-U increments.
 	ceil(4*(abs(streamdeck_foot_y()) + streamdeck_foot_depth()/2
 		+ RACK_RAIL_HEIGHT) / U) / 2;
 function effective_horizontal_pitch() =
@@ -99,7 +105,7 @@ function streamdeck_bolt_y_offset() =
 	streamdeck_foot_depth()/2 - rear_bolt_end_inset;
 
 module streamdeck_placement() {
-	translate([0, 0, streamdeck_seat_z()])
+	translate([0, streamdeck_seat_y(), streamdeck_seat_z()])
 		rotate([tilt_angle, 0, 0]) children();
 }
 
@@ -309,7 +315,14 @@ module streamdeck_rear_subtractions() {
 
 module streamdeck_rear() {
 	difference() {
-		streamdeck_rear_solid();
+		// Clip the cup and flange ends together, in the flat panel axes.
+		// Leave the front sleeve, loading bore, and bolt pattern unchanged.
+		intersection() {
+			streamdeck_rear_solid();
+			translate([0, streamdeck_foot_y(), 0])
+				cube([2*streamdeck_cut_span(), streamdeck_rear_depth(),
+					2*streamdeck_cut_span()], center=true);
+		}
 		streamdeck_rear_subtractions();
 	}
 }

@@ -22,7 +22,18 @@ or certify a safety circuit.
 
 ## USB firmware and pin assignments
 
-[Open the annotated wiring image](images/ads1219-wiring.png)
+[Open the complete controller wiring diagram](images/controller-wiring.png)
+([zoomable SVG](images/controller-wiring.svg)).
+
+![SparkFun Pro Micro RP2350, Qwiic ADS1219, both joysticks and stop wiring](images/controller-wiring.png)
+
+The composite shows the **SparkFun Pro Micro RP2350**, component-side with
+USB-C at the top, not a generic Raspberry Pi Pico. Matching signal labels
+connect the board maps to the joystick circuits; all 3V3 and GND labels are
+shared nets. The Qwiic cable carries power, ground, SDA and SCL. Board
+drawings are simplified: verify silkscreen labels before soldering.
+
+[Open the ADS1219 photo wiring detail](images/ads1219-wiring.png)
 ([editable SVG](images/ads1219-wiring.svg)).
 
 ![Both joystick connections, ADS1219 pads, button pull-up and capacitor](images/ads1219-wiring.png)
@@ -45,26 +56,88 @@ both boards, all pots, and all switches. Identify the wiper by its changing
 resistance to either outer terminal; the resistance between outer terminals
 stays approximately 10k. Identify the switch pair by continuity on press.
 
-| Control | Connection | USB HID mapping |
+The X/Y wiper names below and in the diagrams refer to the **original,
+unrotated potentiometers**. Keep their wiring unchanged when rotating the
+joysticks; the firmware remaps their USB axes for the new mounting.
+
+| Control | Connection | USB HID mapping after rotation |
 | --- | --- | --- |
-| Joystick 1 X wiper | A0 / GPIO26 / ADC0 | X |
-| Joystick 1 Y wiper | A1 / GPIO27 / ADC1 | Y |
-| Joystick 1 twist wiper | A2 / GPIO28 / ADC2 | Rz |
+| Joystick 1 X wiper | A0 / GPIO26 / ADC0 | Y (negated old X) |
+| Joystick 1 Y wiper | A1 / GPIO27 / ADC1 | X (old Y) |
+| Joystick 1 twist wiper | A2 / GPIO28 / ADC2 | Z |
 | Joystick 1 top button | GPIO2 to GND, normally open | Button 1 |
-| Joystick 2 X wiper | ADS1219 AIN0 | Rx |
-| Joystick 2 Y wiper | ADS1219 AIN1 | Ry |
-| Joystick 2 twist wiper | ADS1219 AIN2 | Z |
-| Joystick 2 top button | ADS1219 AIN3, circuit below | Button 2 |
+| Joystick 2 X wiper | ADS1219 AIN0 | Ry (negated old X) |
+| Joystick 2 Y wiper | ADS1219 AIN3 | Rx (negated old Y) |
+| Joystick 2 twist wiper | ADS1219 AIN2 | Rz (Z Rotation) |
+| Joystick 2 top button | ADS1219 AIN1, circuit below | Button 2 |
 | Stop auxiliary contact | GPIO3 to GND, normally closed | Button 3 |
 | ADS1219 unavailable | Firmware-generated status, no pin | Button 4 |
 
-These are six axes on **one USB gamepad**, not two USB devices. The original
-joystick's mapping and USB descriptor remain unchanged. Y is inverted on
-both joysticks by default. The second joystick has independent
+Compared with the previous wiring, swap joystick 2's Y wiper and button
+connections: Y moves from AIN1 to AIN3, and the button from AIN3 to AIN1.
+Move the button's pull-up and optional filter capacitor to AIN1 as well.
+
+These are six axes on **one USB gamepad**, not two USB devices. The USB
+descriptor remains unchanged. The original Y pot is inverted on both
+joysticks by default, before the mounting rotation below. Joystick 2 has
+independent
 `ADS1219_{X,Y,YAW}_{MIN_RAW,CENTER_RAW,MAX_RAW,INVERT,DEADZONE}` settings.
 Its signed 24-bit ADC samples are clamped at zero and scaled to 0..4095
 before the existing calibration, inversion, deadzone, and smoothing stages.
 Tune calibration to the actual travel and resting positions of each pot.
+
+### Both joysticks mounted 90 degrees to the right
+
+Joystick 1 uses **new X = old Y, new Y = -old X**. Joystick 2 adds an
+ADS-only horizontal polarity correction: **Rx = -old Y, Ry = -old X**.
+This reverses only the ADS stick's reported horizontal axis relative to the
+initial rotation firmware; its vertical axis and twist polarity are unchanged.
+Directions refer to the original calibrated USB axes before rotation, with
+up/left negative and down/right positive:
+
+| Previous direction | Joystick 1 | Joystick 2 (ADS) |
+| --- | --- | --- |
+| Up | Left | Right |
+| Down | Right | Left |
+| Right | Up | Up |
+| Left | Down | Down |
+
+Rotation is applied after calibration, inversion, deadzone and smoothing.
+Keep the calibration settings and diagram wire labels associated with their
+original pots; **do not also swap wires or add another inversion**.
+Rotation does not change twist polarity, top buttons, stop behavior, or
+missing-ADS1219 handling. Twist HID assignments are described below.
+The main USB Y axis now comes from **A0 / GPIO26**, and main USB X from
+**A1 / GPIO27**. Joystick 2 Ry comes from AIN0, and Rx from AIN3.
+
+### Twist assignments and checking the ADS range
+
+Joystick 1 (RP) twist is **HID Z from GPIO28 / ADC2**. Joystick 2 (ADS)
+twist is **HID Rz (Z Rotation) from AIN2**. These two USB assignments are
+swapped from earlier firmware; neither twist direction is inverted.
+The diagram's twist labels describe unchanged physical wiring, not HID
+axis names. Calibration remains attached to its original pot:
+`AXIS_YAW_*` for RP, `ADS1219_YAW_*` for ADS. If ADS is unavailable,
+only Rx/Ry/Rz become neutral; RP X/Y/Z remain live.
+
+This reporting swap does not fix an off-center or restricted ADS reading.
+All six HID axes are signed, with a declared range of -127..127. A tester
+may display a rescaled unsigned range instead, so compare against its
+midpoint rather than assuming the displayed number must be negative.
+
+The default `ADS1219_YAW_*` calibration maps normalized raw 0 to -127,
+2048 to 0, and 4095 to +127 before smoothing. Clamping negative ADC noise
+to raw zero does **not** clamp USB Rz to zero; raw zero maps to negative Rz.
+Smoothing and limited mechanical pot travel can reduce the observed range.
+
+If ADS Rz is off-center or only moves on one side, record its released
+center and both twist endpoints, along with the tester name. Check AIN2
+wiper voltage relative to GND at those same positions; with the default
+calibration, center corresponds to about half of REFP (1.65 V for 3.3 V).
+Verify the pot's outer terminals are 3V3/GND and its wiper is AIN2 before
+adjusting `ADS1219_YAW_MIN_RAW`, `ADS1219_YAW_CENTER_RAW`, and
+`ADS1219_YAW_MAX_RAW` to measured travel. Do not infer the center from a
+single unknown stick position or hide a wiring fault with calibration.
 
 ### ADS1219 Qwiic connection and reference
 
@@ -103,18 +176,23 @@ the status register. Keep address selection at `0x40`. On a bare IC,
 address-select pins A0 and A1 go to DGND; these are **not** AIN0/AIN1.
 Follow the datasheet's supply/reference decoupling requirements.
 
-### Reliably reading the second joystick's button through AIN3
+### Reliably reading the second joystick's button through AIN1
 
 The ADS1219 has no digital GPIO mode or internal button pull-up. Use this
 external network, mounted near the ADC:
 
-- **4.7 kohm** resistor from **3V3 to AIN3**.
-- Normally open joystick switch between **AIN3 and GND**.
-- Optional **100 nF** capacitor from **AIN3 to GND** for noise filtering.
+- **4.7 kohm** resistor from **REFP (tied to 3V3) to AIN1**.
+- Normally open joystick switch between **AIN1 and GND**.
+- Optional **100 nF** capacitor from **AIN1 to GND** for noise filtering.
+
+The adjacent REFP pad provides a convenient connection to the 3V3 net
+for the resistor. **Do not directly bridge AIN1 to REFP**: pressing the
+button would short the reference and 3V3 supply to ground. REFP must remain
+connected directly to 3V3; the resistor goes only in the branch to AIN1.
 
 Released is approximately 3.3 V (raw 4095); pressed is approximately 0 V
 (raw 0), drawing about 0.7 mA through the resistor. Never connect the
-switch directly between 3V3 and GND, and never leave AIN3 floating.
+switch directly between 3V3 and GND, and never leave AIN1 floating.
 The pull-up is needed even when the optional capacitor is fitted.
 
 Firmware asserts the raw button state at or below 1024 (about 0.825 V),
@@ -146,20 +224,23 @@ For a low-voltage **auxiliary/status contact** on a latching stop button:
 `ESTOP_ENABLED` defaults to `1`, with `ESTOP_PIN=3`. Set
 `ESTOP_ENABLED=0` and rebuild for a panel intentionally lacking a stop
 switch; leaving an enabled input unconnected deliberately reports stop.
-At boot, firmware starts stopped until the contact is stably closed for
-25 ms. An open contact asserts stop on the next loop observation without
-press debounce; reclosure must remain stable for 25 ms. While stopped,
-reports center all six axes and suppress Buttons 1/2, preserving the fault
-status in Button 4. USB reports are scheduled every 10 ms, not in real time.
+At boot, firmware asserts Button 3 until the contact is stably closed for
+25 ms. An open contact asserts Button 3 on the next loop observation
+without press debounce; reclosure must remain stable for 25 ms.
+The contact is **status-only**: all six axes and Buttons 1/2 keep reporting
+normally while Button 3 is asserted, including at boot or with an open
+wire. It does not freeze, center, or suppress joystick input. The ADS fault
+status in Button 4 remains independent. USB reports are scheduled every
+10 ms, not in real time.
 
-**This is not a safety-rated emergency-stop system.** Neither a USB HID
-button nor centered axes can guarantee removal of hazardous energy. Use
+**This is not a safety-rated emergency-stop system.** A USB HID status
+button cannot guarantee removal of hazardous energy. Use
 an appropriately designed independent safety circuit/safety relay to stop
 the machinery; this input may only monitor an isolated auxiliary contact.
 Never connect mains, motor power, or an industrial 24 V loop to these pins.
 A short to ground can mask a stop, and MCU/USB/host failures can prevent
-delivery. Firmware does not latch or implement a manual-reset/rearm
-interlock: inputs resume after stable contact reclosure. The safety system
+delivery. Firmware does not inhibit controls, latch, or implement a
+manual-reset/rearm interlock. The safety system
 and controlling application must prevent automatic restart and require
 deliberate rearming. Have a qualified person validate any hazardous system.
 
@@ -192,7 +273,9 @@ Before using the controller with any equipment, test with hazards disabled:
 2. In a USB gamepad tester, check all six axes independently through full
   travel and verify both top buttons register once per press/release.
 3. Press the stop, boot with it pressed, and disconnect its NC wire:
-  each should report Button 3 and neutral axes. Verify release behavior.
+  each should report Button 3 while axes and top buttons remain responsive.
+  Verify Button 3 clears after stable contact reclosure and Button 4 still
+  reflects ADS availability independently.
 4. With power off, disconnect the ADC; reboot and confirm Button 4 while
   joystick 1 and the stop input remain responsive. Reconnect with power
   off and verify recovery. Do not assume the breakout is hot-plug safe.

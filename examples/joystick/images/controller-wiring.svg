@@ -1,0 +1,316 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2600" height="2100"
+     viewBox="0 0 2600 2100" role="img" aria-labelledby="title desc">
+  <title id="title">Complete joystick controller wiring — SparkFun Pro Micro RP2350</title>
+  <desc id="desc">USB-powered SparkFun Pro Micro RP2350 with two joysticks,
+    a Qwiic ADS1219 and a normally closed auxiliary stop contact. Joystick 1:
+    X=GPIO26, Y=GPIO27, twist=GPIO28, button=GPIO2. Joystick 2:
+    X=AIN0, Y=AIN3, twist=AIN2, button=AIN1. A 4.7 kohm resistor connects
+    REFP (3V3) to AIN1; the button and optional 100 nF capacitor connect
+    AIN1 to ground. Stop uses GPIO3 with a 4.7 kohm pull-up to 3V3.
+    Qwiic uses GPIO16 SDA and GPIO17 SCL, 3V3 and GND. Matching net labels
+    connect electrically. X/Y labels identify original wired pots, not the
+    rotated USB axes: joystick 1 X = old Y, Y = -old X;
+    joystick 2 Rx = -old Y, Ry = -old X (ADS horizontal correction).
+    Board drawings are simplified, not to scale.</desc>
+  <defs>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #172638; }
+      .title { font-size: 40px; font-weight: 700; fill: white; }
+      .heading { font-size: 28px; font-weight: 700; }
+      .label { font-size: 23px; font-weight: 600; }
+      .body { font-size: 22px; }
+      .note { font-size: 20px; fill: #475569; }
+      .small { font-size: 18px; fill: #475569; }
+      .silk, .silk text { font-size: 19px; fill: white; font-weight: 600; }
+      .card { fill: white; stroke: #dbe3eb; stroke-width: 2; }
+      .wire { fill: none; stroke-width: 5; stroke-linejoin: round;
+              stroke-linecap: round; }
+      .x { stroke: #2563eb; } .y { stroke: #4b7e16; }
+      .twist { stroke: #7c3aed; } .button { stroke: #b32386; }
+      .power { stroke: #d22d43; } .ground { stroke: #334155; }
+      .stop { stroke: #526475; }
+    </style>
+    <g id="pad">
+      <circle r="11" fill="#f1f5f9" stroke="#d3bd7a" stroke-width="5"/>
+    </g>
+    <g id="gnd" fill="none" stroke="#334155" stroke-width="4">
+      <path d="M0 0 V12 M-20 12 H20 M-13 21 H13 M-6 30 H6"/>
+    </g>
+    <!-- Pot terminals: left/right are supply/ground; lower arrow is wiper. -->
+    <g id="pot" fill="none" stroke="#334155" stroke-width="4">
+      <path d="M-130 0 H-65 M65 0 H130 M0 75 V23"/>
+      <rect x="-65" y="-13" width="130" height="26"/>
+      <path d="M-9 35 L0 21 L9 35"/>
+    </g>
+    <g id="no-switch" fill="none" stroke="#334155" stroke-width="4">
+      <path d="M0 0 V25 M0 80 V110 M0 80 L30 30"/>
+      <circle cy="25" r="5" fill="white"/>
+      <circle cy="80" r="5" fill="white"/>
+    </g>
+  </defs>
+  <rect width="2600" height="2100" fill="#f1f5f9"/>
+  <rect width="2600" height="140" fill="#172638"/>
+  <text x="45" y="62" class="title">TWO JOYSTICKS · COMPLETE CONTROLLER WIRING</text>
+  <text x="48" y="110" font-size="25" style="fill:#c8ec89">
+    SparkFun Pro Micro RP2350 + SparkFun Qwiic ADS1219 · 3.3 V signals only
+  </text>
+
+  <!-- MCU: physical front-view header order, USB-C at the top. -->
+  <rect x="40" y="170" width="1250" height="850" rx="20" class="card"/>
+  <text x="70" y="218" class="heading">1 / SPARKFUN PRO MICRO RP2350</text>
+  <text x="70" y="250" class="note">Component side · USB-C at top · not the Raspberry Pi Pico pinout</text>
+  <rect x="540" y="330" width="360" height="590" rx="17"
+        fill="#ac2436" stroke="#7c1827" stroke-width="3"/>
+  <rect x="647" y="306" width="146" height="94" rx="17"
+        fill="#cbd5e1" stroke="#334155" stroke-width="4"/>
+  <rect x="668" y="316" width="104" height="21" rx="10" fill="#334155"/>
+  <text x="720" y="377" text-anchor="middle" class="label">USB-C</text>
+  <path d="M720 306 V273" class="wire ground"/>
+  <text x="760" y="290" class="small">To PC: USB data + power</text>
+    <rect x="663" y="548" width="90" height="108" rx="7" fill="#172638"/>
+    <text x="708" y="610" text-anchor="middle" class="silk">RP2350</text>
+    <rect x="650" y="839" width="40" height="33" rx="5" fill="#94a3b8"/>
+    <rect x="700" y="839" width="40" height="33" rx="5" fill="#94a3b8"/>
+    <text x="670" y="897" text-anchor="middle" font-size="12"
+      style="fill:white">BOOT</text>
+    <text x="720" y="897" text-anchor="middle" font-size="12"
+      style="fill:white">RESET</text>
+
+  <g class="silk">
+    <use href="#pad" x="570" y="400"/><text x="591" y="407">TX / 0</text>
+    <use href="#pad" x="570" y="444"/><text x="591" y="451">RX / 1</text>
+    <use href="#pad" x="570" y="488"/><text x="591" y="495">GND</text>
+    <use href="#pad" x="570" y="532"/><text x="591" y="539">GND</text>
+    <g data-signal="J1_BTN" data-gpio="2">
+      <use href="#pad" x="570" y="576"/><text x="591" y="583">2</text>
+    </g>
+    <g data-signal="STOP" data-gpio="3">
+      <use href="#pad" x="570" y="620"/><text x="591" y="627">3</text>
+    </g>
+    <use href="#pad" x="570" y="664"/><text x="591" y="671">4</text>
+    <use href="#pad" x="570" y="708"/><text x="591" y="715">5</text>
+    <use href="#pad" x="570" y="752"/><text x="591" y="759">6</text>
+    <use href="#pad" x="570" y="796"/><text x="591" y="803">7</text>
+    <use href="#pad" x="570" y="840"/><text x="591" y="847">8</text>
+    <use href="#pad" x="570" y="884"/><text x="591" y="891">9</text>
+  </g>
+  <g text-anchor="end" class="silk">
+    <use href="#pad" x="870" y="400"/><text x="849" y="407">RAW</text>
+    <use href="#pad" x="870" y="444"/><text x="849" y="451">GND</text>
+    <use href="#pad" x="870" y="488"/><text x="849" y="495">RST</text>
+    <use href="#pad" x="870" y="532"/><text x="849" y="539">3V3</text>
+    <use href="#pad" x="870" y="576"/><text x="849" y="583">A3 / 29</text>
+    <g data-signal="J1_TWIST" data-gpio="28">
+      <use href="#pad" x="870" y="620"/><text x="849" y="627">A2 / 28</text>
+    </g>
+    <g data-signal="J1_Y" data-gpio="27">
+      <use href="#pad" x="870" y="664"/><text x="849" y="671">A1 / 27</text>
+    </g>
+    <g data-signal="J1_X" data-gpio="26">
+      <use href="#pad" x="870" y="708"/><text x="849" y="715">A0 / 26</text>
+    </g>
+    <use href="#pad" x="870" y="752"/><text x="849" y="759">SCK / 22</text>
+    <use href="#pad" x="870" y="796"/><text x="849" y="803">POCI / 20</text>
+    <use href="#pad" x="870" y="840"/><text x="849" y="847">PICO / 23</text>
+    <use href="#pad" x="870" y="884"/><text x="849" y="891">CS / 21</text>
+  </g>
+  <g class="wire">
+    <path d="M559 488 H290" class="ground"/>
+    <path d="M559 576 H290" class="button"/>
+    <path d="M559 620 H290" class="stop"/>
+    <path d="M881 532 H1225" class="power"/>
+    <path d="M881 620 H1225" class="twist"/>
+    <path d="M881 664 H1225" class="y"/>
+    <path d="M881 708 H1225" class="x"/>
+  </g>
+  <text x="85" y="496" class="label">GND</text>
+  <text x="85" y="584" class="label">J1_BTN</text>
+  <text x="85" y="628" class="label">STOP</text>
+  <text x="980" y="519" class="label">3V3 · shared supply</text>
+  <text x="980" y="607" class="label">J1_TWIST</text>
+  <text x="980" y="651" class="label">J1_Y</text>
+  <text x="980" y="695" class="label">J1_X</text>
+  <text x="85" y="707" class="note">GPIO2: internal pull-up</text>
+  <text x="85" y="739" class="note">GPIO3: see stop circuit</text>
+  <text x="980" y="422" class="note">RAW: leave unused</text>
+  <text x="980" y="457" class="note">for this USB-powered build</text>
+  <text x="70" y="960" class="note">Only labeled signal leads are used. Other GPIO and A3 remain unconnected.</text>
+  <text x="70" y="990" class="note">All GND pads are common. Drawing is simplified; confirm the silkscreen before soldering.</text>
+
+  <!-- Qwiic connector positions are illustrative; cable is keyed. -->
+  <rect x="815" y="345" width="63" height="35" rx="4"
+        fill="white" stroke="#334155" stroke-width="3"/>
+  <text x="846" y="369" font-size="17" text-anchor="middle">Qwiic</text>
+  <path d="M878 361 H1310 V300 H1370 V770 H1550"
+        fill="none" stroke="#334155" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M878 361 H1310 V300 H1370 V770 H1550"
+        fill="none" stroke="#c8ec89" stroke-width="7" stroke-linejoin="round"/>
+
+  <rect x="1410" y="170" width="1150" height="850" rx="20" class="card"/>
+  <text x="1440" y="218" class="heading">2 / SPARKFUN QWIIC ADS1219</text>
+  <text x="1440" y="250" class="note">Front-view connection map · address 0x40 · outer header row only</text>
+  <rect x="1490" y="279" width="1015" height="92" rx="12" fill="#edf5df"/>
+  <text x="1515" y="315" class="label">One Qwiic cable carries all four connections:</text>
+  <text x="1515" y="349" class="body" data-signal="SDA" data-gpio="16">3V3 + GND + SDA (GPIO16) + SCL (GPIO17)</text>
+  <g data-signal="SCL" data-gpio="17"/>
+  <rect x="1550" y="510" width="880" height="325" rx="18"
+        fill="#ac2436" stroke="#7c1827" stroke-width="3"/>
+  <text x="1990" y="682" text-anchor="middle" class="silk">ADS1219 · 24-BIT ADC</text>
+  <text x="1990" y="716" text-anchor="middle" class="silk">Simplified board view — not to scale</text>
+  <rect x="1534" y="743" width="77" height="52" rx="5"
+        fill="white" stroke="#334155" stroke-width="3"/>
+  <path d="M1370 770 H1534" class="wire ground"/>
+  <text x="1572" y="775" text-anchor="middle" font-size="18">Qwiic</text>
+  <text x="1780" y="790" class="silk">3V3–VDDA jumper: keep closed</text>
+  <g text-anchor="middle">
+    <g data-signal="J2_Y" data-ain="3">
+      <use href="#pad" x="1630" y="541"/>
+      <path d="M1630 530 V475" class="wire y"/>
+      <text x="1630" y="434" class="label">J2_Y</text>
+      <text x="1630" y="466" class="note">AIN3</text>
+    </g>
+    <g data-signal="J2_TWIST" data-ain="2">
+      <use href="#pad" x="1774" y="541"/>
+      <path d="M1774 530 V475" class="wire twist"/>
+      <text x="1774" y="407" class="label">J2_TWIST</text>
+      <text x="1774" y="466" class="note">AIN2</text>
+    </g>
+    <use href="#pad" x="1918" y="541"/>
+    <path d="M1918 530 V475" class="wire ground"/>
+    <text x="1918" y="434" class="label">GND</text>
+    <text x="1918" y="466" class="note">REFN</text>
+    <use href="#pad" x="2062" y="541"/>
+    <path d="M2062 530 V475" class="wire power"/>
+    <text x="2062" y="434" class="label">3V3</text>
+    <text x="2062" y="466" class="note">REFP</text>
+    <g data-signal="J2_BTN" data-ain="1">
+      <use href="#pad" x="2206" y="541"/>
+      <path d="M2206 530 V475" class="wire button"/>
+      <text x="2206" y="407" class="label">J2_BTN</text>
+      <text x="2206" y="466" class="note">AIN1</text>
+    </g>
+    <g data-signal="J2_X" data-ain="0">
+      <use href="#pad" x="2350" y="541"/>
+      <path d="M2350 530 V475" class="wire x"/>
+      <text x="2350" y="434" class="label">J2_X</text>
+      <text x="2350" y="466" class="note">AIN0</text>
+    </g>
+  </g>
+  <g fill="#cbd5e1">
+    <circle cx="1630" cy="588" r="8"/><circle cx="1774" cy="588" r="8"/>
+    <circle cx="1918" cy="588" r="8"/><circle cx="2062" cy="588" r="8"/>
+    <circle cx="2206" cy="588" r="8"/><circle cx="2350" cy="588" r="8"/>
+  </g>
+  <text x="1990" y="625" text-anchor="middle" class="silk">Inner row is NOT duplicate signal inputs</text>
+  <text x="1450" y="888" class="label">Required jumpers: REFP → 3V3; REFN → GND</text>
+  <text x="1450" y="928" class="note">Use breakout 3V3/GND pads for these reference connections and joystick 2 power.</text>
+  <text x="1450" y="962" class="note">REFP is not a power output. Qwiic power alone does not connect the reference.</text>
+  <text x="1450" y="992" class="note">DRDY unused; RESET stays at breakout default. See the photo detail for pad locations.</text>
+
+  <!-- Matching net names connect the three circuit cards to the board maps. -->
+  <rect x="40" y="1050" width="800" height="760" rx="20" class="card"/>
+  <text x="70" y="1097" class="heading">3 / JOYSTICK 1 · DIRECT TO PRO MICRO</text>
+  <text x="70" y="1132" class="note">Three 10 kΩ pots + normally open top button</text>
+  <g transform="translate(410 1200)"><use href="#pot"/></g>
+  <g transform="translate(410 1350)"><use href="#pot"/></g>
+  <g transform="translate(410 1500)"><use href="#pot"/></g>
+  <g class="label">
+    <text x="80" y="1208">X</text><text x="80" y="1358">Y</text>
+    <text x="80" y="1508">TWIST</text>
+    <text x="203" y="1208" style="fill:#d22d43">3V3</text>
+    <text x="203" y="1358" style="fill:#d22d43">3V3</text>
+    <text x="203" y="1508" style="fill:#d22d43">3V3</text>
+    <text x="555" y="1208">GND</text><text x="555" y="1358">GND</text>
+    <text x="555" y="1508">GND</text>
+  </g>
+  <path d="M410 1275 H580" class="wire x"/>
+  <path d="M410 1425 H580" class="wire y"/>
+  <path d="M410 1575 H580" class="wire twist"/>
+  <text x="595" y="1283" class="label">J1_X</text>
+  <text x="595" y="1433" class="label">J1_Y</text>
+  <text x="595" y="1583" class="label">J1_TWIST</text>
+  <path d="M215 1640 H410" class="wire button"/>
+  <text x="80" y="1648" class="label">J1_BTN</text>
+  <use href="#no-switch" x="410" y="1640"/>
+  <use href="#gnd" x="410" y="1750"/>
+  <text x="465" y="1680" class="body">Top button (NO)</text>
+  <text x="465" y="1720" class="note">GPIO2 internal pull-up;</text>
+  <text x="465" y="1750" class="note">no external resistor needed.</text>
+
+  <rect x="870" y="1050" width="830" height="760" rx="20" class="card"/>
+  <text x="900" y="1097" class="heading">4 / JOYSTICK 2 · VIA ADS1219</text>
+  <text x="900" y="1132" class="note">Same pot wiring; button needs the external pull-up</text>
+  <g transform="translate(1190 1200)"><use href="#pot"/></g>
+  <g transform="translate(1190 1350)"><use href="#pot"/></g>
+  <g transform="translate(1190 1500)"><use href="#pot"/></g>
+  <g class="label">
+    <text x="900" y="1208">X</text><text x="900" y="1358">Y</text>
+    <text x="900" y="1508">TWIST</text>
+    <text x="1000" y="1208" style="fill:#d22d43">3V3</text>
+    <text x="1000" y="1358" style="fill:#d22d43">3V3</text>
+    <text x="1000" y="1508" style="fill:#d22d43">3V3</text>
+    <text x="1335" y="1208">GND</text><text x="1335" y="1358">GND</text>
+    <text x="1335" y="1508">GND</text>
+  </g>
+  <path d="M1190 1275 H1380" class="wire x"/>
+  <path d="M1190 1425 H1380" class="wire y"/>
+  <path d="M1190 1575 H1380" class="wire twist"/>
+  <text x="1395" y="1283" class="label">J2_X / AIN0</text>
+  <text x="1395" y="1433" class="label">J2_Y / AIN3</text>
+  <text x="1395" y="1583" class="label">J2_TWIST / AIN2</text>
+  <text x="900" y="1655" class="label">Button circuit is enlarged at right →</text>
+  <text x="900" y="1700" class="note">Connect each pot's two outer terminals to 3V3 and GND.</text>
+  <text x="900" y="1734" class="note">Only its center wiper goes to the signal input.</text>
+  <text x="900" y="1775" class="note">Verify switch and wiper wires with a meter; colors vary.</text>
+
+  <rect x="1730" y="1050" width="830" height="435" rx="20" class="card"/>
+  <text x="1760" y="1097" class="heading">5 / AIN1 BUTTON · YOUR 4.7 kΩ PULL-UP</text>
+  <text x="1760" y="1140" class="label">REFP (tied to 3V3)</text>
+  <path d="M1800 1154 V1180" class="wire power"/>
+  <rect x="1787" y="1180" width="26" height="60" fill="white"
+        stroke="#334155" stroke-width="4"/>
+  <text x="1835" y="1207" class="label">R1 · 4.7 kΩ</text>
+  <path d="M1800 1240 V1270 H2420" class="wire button"/>
+  <text x="1880" y="1255" class="label">J2_BTN / AIN1</text>
+  <circle cx="2150" cy="1270" r="7" fill="#b32386"/>
+  <circle cx="2420" cy="1270" r="7" fill="#b32386"/>
+  <path d="M2150 1270 V1305 M2127 1305 H2173 M2127 1323 H2173
+           M2150 1323 V1380" class="wire ground"/>
+  <use href="#no-switch" x="2420" y="1270"/>
+  <use href="#gnd" x="2150" y="1380"/><use href="#gnd" x="2420" y="1380"/>
+  <text x="1835" y="1340" class="body">C1 · 100 nF</text>
+  <text x="1835" y="1373" class="note">Optional filter →</text>
+  <text x="2240" y="1335" class="note">Button</text>
+  <text x="2240" y="1365" class="note">NO →</text>
+  <text x="1760" y="1454" class="note">Do not bridge AIN1 directly to REFP — always use the resistor.</text>
+
+  <rect x="1730" y="1510" width="830" height="300" rx="20" class="card"/>
+  <text x="1760" y="1557" class="heading">6 / STOP · AUXILIARY CONTACT ONLY</text>
+  <text x="1760" y="1627" class="label">3V3</text>
+  <path d="M1830 1620 H1860 M1940 1620 H2150 V1650 H2270"
+        class="wire stop"/>
+  <rect x="1860" y="1607" width="80" height="26" fill="white"
+        stroke="#334155" stroke-width="4"/>
+  <text x="1850" y="1588" class="small">R2 · 4.7 kΩ</text>
+  <circle cx="2150" cy="1620" r="7" fill="#526475"/>
+  <text x="2050" y="1597" class="label">STOP / GPIO3</text>
+  <!-- NC switch shown closed in its healthy/released position. -->
+  <path d="M2270 1650 H2360 M2360 1650 H2410 V1675"
+        class="wire ground"/>
+  <circle cx="2270" cy="1650" r="5" fill="white" stroke="#334155" stroke-width="3"/>
+  <circle cx="2360" cy="1650" r="5" fill="white" stroke="#334155" stroke-width="3"/>
+  <use href="#gnd" x="2410" y="1675"/>
+  <text x="2252" y="1629" class="small">NC</text>
+  <text x="2342" y="1629" class="small">COM</text>
+  <text x="1760" y="1728" class="note">Closed = healthy. Pressed / open wire = USB Button 3.</text>
+  <text x="1760" y="1760" class="note">Status only. Axes and top buttons keep reporting.</text>
+  <text x="1760" y="1792" class="note">Not a safety-rated emergency stop; no motor power here.</text>
+
+  <rect x="40" y="1840" width="2520" height="170" rx="18" fill="#172638"/>
+  <text x="70" y="1885" font-size="27" font-weight="700" style="fill:#c8ec89">HOW TO READ / BEFORE POWERING UP</text>
+  <text x="70" y="1923" font-size="23" style="fill:white">Matching net names connect together: J1_X to J1_X, J2_BTN to J2_BTN, etc. All 3V3 labels share one supply; all GND symbols share ground.</text>
+  <text x="70" y="1957" font-size="23" style="fill:white">Line colors identify signals, NOT joystick wire colors. NO = normally open; NC = normally closed. Button released ≈ 3.3 V; pressed ≈ 0 V.</text>
+  <text x="70" y="1991" font-size="23" style="fill:white">Power off before wiring. Never feed RAW / 5 V into the pots or ADC inputs. An unwired, enabled stop input asserts Button 3 without blocking joystick reports.</text>
+  <text x="50" y="2047" class="small">90° RIGHT MOUNT: labels are ORIGINAL pot wires. J1: X = old Y, Y = -old X. J2: Rx = -old Y, Ry = -old X. Do not swap wires. Twist unchanged.</text>
+  <text x="50" y="2080" class="small">Pro Micro header order is component-side, USB-C up. ADS1219 outer row is left-to-right AIN3, AIN2, REFN, REFP, AIN1, AIN0. See images/README.md for references.</text>
+</svg>

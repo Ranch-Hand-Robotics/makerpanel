@@ -18,20 +18,20 @@
 #endif
 #define ADS1219_ADDRESS 0x40
 #define ADS1219_X_CHANNEL 0
-#define ADS1219_Y_CHANNEL 1
+#define ADS1219_Y_CHANNEL 3
 #define ADS1219_YAW_CHANNEL 2
-#define ADS1219_BUTTON_CHANNEL 3
+#define ADS1219_BUTTON_CHANNEL 1
 #define ADS1219_I2C_TIMEOUT_US 2000
 #define ADS1219_CONVERSION_TIMEOUT_US 20000
 #define ADS1219_RETRY_US 1000000
 
 // Normalized 12-bit button levels: <=25% pressed, >=75% released.
-// AIN3 needs an EXTERNAL 4.7k pull-up to 3V3; switch shorts it to GND.
+// AIN1 needs an EXTERNAL 4.7k pull-up to REFP (3V3); switch goes to GND.
 #define ADS1219_BUTTON_PRESS_RAW 1024
 #define ADS1219_BUTTON_RELEASE_RAW 3072
 
 // Dedicated NC stop contact: GPIO3 -> NC contact -> GND; 4.7k to 3V3.
-// High/open means stopped (including a broken wire). USB indication only!
+// High/open asserts Button 3 (including a broken wire). Status only!
 #ifndef ESTOP_ENABLED
 #define ESTOP_ENABLED 1
 #endif
@@ -325,7 +325,7 @@ static void init_estop(ButtonState *stop) {
     gpio_init(ESTOP_PIN);
     gpio_set_dir(ESTOP_PIN, GPIO_IN);
     gpio_pull_up(ESTOP_PIN);
-    // Start stopped; require a stable closed contact before clearing.
+    // Start with stop status asserted until the contact is stably closed.
     *stop = {true, true, time_us_64()};
 #else
     *stop = {};
@@ -457,22 +457,25 @@ static void poll_ads1219(Ads1219State *adc, uint64_t now_us) {
 static void send_hid_report(const JoystickState *js,
                             const Ads1219State *adc,
                             const ButtonState *stop) {
-    int8_t x = (int8_t)clamp_axis_value(js->x.filtered);
-    int8_t y = (int8_t)clamp_axis_value(js->y.filtered);
-    int8_t rz = (int8_t)clamp_axis_value(js->yaw.filtered);
+    // Both sticks mount 90 degrees right. Keep calibration on the wired
+    // pots; rotate only the report: old up -> left, old right -> up.
+    int8_t x = (int8_t)clamp_axis_value(js->y.filtered);
+    int8_t y = (int8_t)clamp_axis_value(-js->x.filtered);
+    // RP twist reports Z; ADS twist reports Rz. Wiring/polarity stay intact.
+    int8_t z = (int8_t)clamp_axis_value(js->yaw.filtered);
     uint32_t buttons = js->button.pressed ? 0x01u : 0u;
-    int8_t rx = 0, ry = 0, z = 0;
+    int8_t rx = 0, ry = 0, rz = 0;
     if (ADS1219_ENABLED && adc->ready) {
-        rx = (int8_t)clamp_axis_value(adc->joystick.x.filtered);
-        ry = (int8_t)clamp_axis_value(adc->joystick.y.filtered);
-        z = (int8_t)clamp_axis_value(adc->joystick.yaw.filtered);
+        // ADS stick horizontal polarity correction; leave vertical alone.
+        rx = (int8_t)clamp_axis_value(-adc->joystick.y.filtered);
+        ry = (int8_t)clamp_axis_value(-adc->joystick.x.filtered);
+        rz = (int8_t)clamp_axis_value(adc->joystick.yaw.filtered);
         if (adc->joystick.button.pressed) buttons |= 0x02u;
     } else if (ADS1219_ENABLED) {
         buttons |= 0x08u; // Button 4: expansion unavailable
     }
     if (stop->pressed) {
-        x = y = z = rz = rx = ry = 0;
-        buttons = (buttons & ~0x03u) | 0x04u; // Button 3: stop
+        buttons |= 0x04u; // Button 3: status only; preserve joystick input.
     }
 
     tud_hid_gamepad_report(0, x, y, z, rz, rx, ry,

@@ -16,7 +16,7 @@
 
 // This file is not actually using MakerPanels, Rails or Racks, it is showing those measurements only.
 
-include <common.scad>
+include <makerpanel/common.scad>
 
 /* [Part Selection] */
 part = "makerpanel"; // [makerpanel, rail, rack]
@@ -34,9 +34,11 @@ module rail_ruler() {
     
     union() {
         // Base rectangle for the rail
-        cube([hp_to_mm(horizontalPitch), 10, panel_thickness], center=false);
+        color("white")
+            cube([hp_to_mm(horizontalPitch), 10, panel_thickness], center=false);
         
         // Ticks and labels for measurements
+        color("black")
         for (i = [1:horizontalPitch-1]) {
             if (i % 9 == 0) {
                 // Major measurement tick
@@ -58,9 +60,11 @@ module panel_ruler() {
     
     union() {
         // Base rectangle for the panel
-        cube([hp_to_mm(horizontalPitch), u_to_mm(verticalUnits), panel_thickness], center=false);
+        color("white")
+            cube([hp_to_mm(horizontalPitch), u_to_mm(verticalUnits), panel_thickness], center=false);
         
         // Bottom and right bars for each U section (top and left are open to panel edges)
+        color("black")
         for (i = [1:verticalUnits]) {
             y_pos = u_to_mm(verticalUnits) - u_to_mm(i); // Y from bottom: bottom of section i from the top
 
